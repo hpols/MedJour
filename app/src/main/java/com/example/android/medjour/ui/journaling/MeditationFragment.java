@@ -3,6 +3,7 @@ package com.example.android.medjour.ui.journaling;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -52,38 +53,42 @@ public class MeditationFragment extends Fragment {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
 
-            youTubePlayerFragment = (YouTubePlayerSupportFragment) getChildFragmentManager()
-                    .findFragmentById(R.id.youtube_player_fragment);
-
-        //fragMan = getChildFragmentManager();
-        //fragMan.beginTransaction().replace(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
-
-            youTubePlayerFragment.initialize(BuildConfig.API_KEY,
-                    new YouTubePlayer.OnInitializedListener() {
-                        @Override
-                        public void onInitializationSuccess(YouTubePlayer.Provider provider,
-                                                            YouTubePlayer player, boolean b) {
-                            if (!b) {
-                                youTubePlayer = player;
-                                youTubePlayer.setFullscreen(true);
-                                youTubePlayer.cueVideo(String.valueOf(R.string.meditation_test));
-                                //youTubePlayer.play();
-                            }
-
-                        }
-
-                        @Override
-                        public void onInitializationFailure(YouTubePlayer.Provider provider,
-                                                            YouTubeInitializationResult youTubeInitializationResult) {
-                            Timber.e("Youtube Player could not be initialized.");
-                            //TODO: handle failure
-                        }
-                    });
         }
-        //TODO: when media player is needed (check settings)
+
 
 
         return root;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        //TODO: when media player is needed (check settings)
+        youTubePlayerFragment = (YouTubePlayerSupportFragment) getChildFragmentManager()
+                .findFragmentById(R.id.youtube_player_fragment);
+
+        youTubePlayerFragment.initialize(BuildConfig.API_KEY,
+                new YouTubePlayer.OnInitializedListener() {
+                    @Override
+                    public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                                                        YouTubePlayer player, boolean b) {
+                        if (!b) {
+                            youTubePlayer = player;
+                            youTubePlayer.setFullscreen(true);
+                            youTubePlayer.cueVideo(String.valueOf(R.string.meditation_test));
+                            //youTubePlayer.play();
+                        }
+
+                    }
+
+                    @Override
+                    public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                                        YouTubeInitializationResult youTubeInitializationResult) {
+                        Timber.e("Youtube Player could not be initialized.");
+                        //TODO: handle failure
+                    }
+                });
     }
 
     @Override
@@ -92,19 +97,4 @@ public class MeditationFragment extends Fragment {
         super.onSaveInstanceState(outState);
 
     }
-
-//    @Override
-//    public void onInitializationSuccess(YouTubePlayer.Provider provider, YouTubePlayer youTubePlayer, boolean b) {
-//        youTubePlayer.loadVideo(String.valueOf(R.string.meditation_test));
-//        startPlaying();
-//    }
-//
-//    private void startPlaying() {
-//        youTubePlayer.initialize(BuildConfig.API_KEY, this);
-//    }
-//
-//    @Override
-//    public void onInitializationFailure(YouTubePlayer.Provider provider, YouTubeInitializationResult youTubeInitializationResult) {
-//
-//    }
 }
