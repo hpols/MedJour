@@ -4,6 +4,8 @@ package com.example.android.medjour.ui.journaling;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +13,7 @@ import android.view.ViewGroup;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
+import com.example.android.medjour.ui.NewEntryActivity;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -22,6 +25,9 @@ import timber.log.Timber;
  * A simple {@link Fragment} subclass.
  */
 public class MeditationFragment extends Fragment {
+
+    FragmentManager fragMan;
+    NewEntryActivity newEntryActivity;
 
     public MeditationFragment() {
         // Required empty public constructor
@@ -46,11 +52,11 @@ public class MeditationFragment extends Fragment {
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
 
-            youTubePlayerFragment = (YouTubePlayerSupportFragment) getActivity().getSupportFragmentManager()
+            youTubePlayerFragment = (YouTubePlayerSupportFragment) getChildFragmentManager()
                     .findFragmentById(R.id.youtube_player_fragment);
 
-//        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-//        transaction.add(R.id.youtube_player, youTubePlayerFragment).commit();
+        //fragMan = getChildFragmentManager();
+        //fragMan.beginTransaction().replace(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
 
             youTubePlayerFragment.initialize(BuildConfig.API_KEY,
                     new YouTubePlayer.OnInitializedListener() {
