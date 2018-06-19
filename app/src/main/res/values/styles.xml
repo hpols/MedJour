@@ -8,6 +8,7 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
     </style>
 
+    <!-- theme for new entries -->
     <style name="EntryTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -18,7 +19,7 @@
     <style name="button">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">@dimen/button_pad</item>
+        <item name="android:padding">@dimen/button_space</item>
     </style>
 
     <style name="primaryColor_bt" parent="button">
@@ -38,8 +39,26 @@
     </style>
 
     <style name="title" parent="text">
-        <item name="android:textSize">24sp</item>
+        <item name="android:textSize">@dimen/title_size</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="label" parent="text">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/category_size</item>
+    </style>
+
+    <style name="label.accent">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="entry">
+        <item name="android:background">@drawable/corner_light</item>
+        <item name="android:padding">@dimen/half_space</item>
+    </style>
+
+    <style name="text.accent">
+        <item name="android:textColor">@color/colorAccent</item>
     </style>
 
 </resources>

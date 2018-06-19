@@ -19,7 +19,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.JournalActivity" />
-        <activity android:name=".ui.NewEntryActivity"></activity>
+        <activity android:name=".ui.NewEntryActivity"
+            android:theme="@style/EntryTheme"/>
     </application>
 
 </manifest>

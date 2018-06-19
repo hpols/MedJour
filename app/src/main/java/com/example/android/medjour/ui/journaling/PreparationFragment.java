@@ -1,8 +1,6 @@
 package com.example.android.medjour.ui.journaling;
 
 
-import android.animation.ArgbEvaluator;
-import android.animation.ObjectAnimator;
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,22 +11,22 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.medjour.R;
+import com.example.android.medjour.utils.UiUtils;
 import com.example.android.medjour.databinding.FragmentPreparationBinding;
 
 import java.util.Calendar;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PreparationFragment extends Fragment {
 
-    long startTime;
+    static long prepStartTime;
     FragmentPreparationBinding prepBinder;
-    StartButtonCallback startCallback;
+    toMeditationCallback meditationCallback;
 
-    public interface StartButtonCallback {
-        void onClick(long preparationTime);
+    public interface toMeditationCallback {
+        void toMeditation(long preparationTime);
     }
 
     public PreparationFragment() {
@@ -38,13 +36,13 @@ public class PreparationFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        // This makes sure that the host activity has implemented the callback interface
+        // This ensures that the host activity has implemented the callback interface
         // If not, it throws an exception
         try {
-            startCallback = (StartButtonCallback) context;
+            meditationCallback = (toMeditationCallback) context;
         } catch (ClassCastException e) {
             throw new ClassCastException(context.toString()
-                    + " must implement StartButtonCallback");
+                    + " must implement toMeditationCallback");
         }
     }
 
@@ -56,38 +54,25 @@ public class PreparationFragment extends Fragment {
                 false);
         View root = prepBinder.getRoot();
 
-        getTimeStamp();
+        UiUtils.getTimeStamp(prepStartTime);
 
+        //gradually change background color to indigo, in preparation for the meditation
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            changeBackground(root);
+            int endColor = ContextCompat.getColor(getActivity(), R.color.indigo);
+
+            int startColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
+            UiUtils.changeBackground(root, startColor, endColor);
         }
 
         prepBinder.preparationStartBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 long clickTime = Calendar.getInstance().getTimeInMillis();
-                startCallback.onClick(clickTime - startTime);
+                meditationCallback.toMeditation(clickTime - prepStartTime);
             }
         });
         return root;
     }
 
-    private void getTimeStamp() {
-        startTime = Calendar.getInstance().getTimeInMillis();
-    }
-
-    private void changeBackground(View root) {
-        int MAX_MINS = 5; //minutes
-        long MAX_TIME = TimeUnit.MINUTES.toMillis(MAX_MINS);
-
-        int endColor = ContextCompat.getColor(getActivity(), R.color.indigo);
-
-        int startColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
-
-        ObjectAnimator colorFade = ObjectAnimator.ofObject(root, "backgroundColor",
-                new ArgbEvaluator(), startColor, endColor);
-        colorFade.setDuration(MAX_TIME);
-        colorFade.start();
-    }
 
 }

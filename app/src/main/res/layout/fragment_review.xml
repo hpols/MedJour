@@ -1,14 +1,133 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".ui.journaling.ReviewFragment">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        tools:context=".ui.journaling.ReviewFragment">
 
-</FrameLayout>
+        <android.support.v7.widget.CardView
+            android:id="@+id/table"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="spread"
+            card_view:cardBackgroundColor="@color/colorPrimaryDark"
+            card_view:cardCornerRadius="@dimen/corner_radius">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <TextView
+                    android:id="@+id/review_date_tv"
+                    style="@style/entry"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/border_margin"
+                    android:layout_marginRight="@dimen/border_margin"
+                    android:layout_marginTop="@dimen/border_margin"
+                    android:textColor="@color/colorPrimaryDark"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="01/01/2018" />
+
+                <TextView
+                    android:id="@+id/review_prep_label"
+                    style="@style/label"
+                    android:layout_marginLeft="@dimen/std_space"
+                    android:layout_marginStart="@dimen/std_space"
+                    android:layout_marginTop="@dimen/std_space"
+                    android:text="@string/review_prep_label"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/review_prep_tv"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/std_space"
+                    android:layout_marginStart="@dimen/std_space"
+                    app:layout_constraintBottom_toBottomOf="@+id/review_prep_label"
+                    app:layout_constraintStart_toEndOf="@+id/review_prep_label"
+                    app:layout_constraintTop_toTopOf="@+id/review_prep_label"
+                    tools:text="5 min" />
+
+                <TextView
+                    android:id="@+id/review_med_label"
+                    style="@style/label"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginTop="@dimen/std_space"
+                    android:text="@string/review_med_label"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="@+id/review_prep_label"
+                    app:layout_constraintTop_toBottomOf="@+id/review_prep_label" />
+
+                <TextView
+                    android:id="@+id/review_med_tv"
+                    style="@style/text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginStart="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/review_med_label"
+                    app:layout_constraintStart_toEndOf="@+id/review_med_label"
+                    app:layout_constraintTop_toTopOf="@+id/review_med_label"
+                    tools:text="20 min" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/assessment_bg"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="16dp"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/table"
+            card_view:cardBackgroundColor="@color/colorLightAccent"
+            card_view:cardCornerRadius="@dimen/corner_radius">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/review_assessment_label"
+                    style="@style/label"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/banner_label"
+                    android:padding="@dimen/half_space"
+                    android:text="@string/review_assessment_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <EditText
+                    android:id="@+id/editText"
+                    style="@style/entry"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/std_space"
+                    android:hint="@string/review_assessment_hint"
+                    android:inputType="textMultiLine|textLongMessage"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="@+id/review_assessment_label"
+                    app:layout_constraintStart_toStartOf="@+id/review_assessment_label"
+                    app:layout_constraintTop_toBottomOf="@+id/review_assessment_label" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+    </android.support.constraint.ConstraintLayout>
+</layout>

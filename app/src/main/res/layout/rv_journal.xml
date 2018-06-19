@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/corner_dark">
+
+        <android.support.v7.widget.CardView
+            android:id="@+id/tot_date_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@drawable/corner_dark">
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/journal_total_label"
+                    style="@style/label.accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="16dp"
+                    android:layout_marginLeft="@dimen/std_space"
+                    android:layout_marginStart="@dimen/std_space"
+                    android:layout_marginTop="@dimen/std_space"
+                    android:text="@string/journal_session_label"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/journal_total_tv"
+                    style="@style/text.accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="8dp"
+                    android:layout_marginStart="8dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/journal_total_label"
+                    app:layout_constraintStart_toEndOf="@+id/journal_total_label"
+                    app:layout_constraintTop_toTopOf="@+id/journal_total_label"
+                    tools:text="35 min" />
+
+                <TextView
+                    android:id="@+id/journal_date_label"
+                    style="@style/label.accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    android:text="@string/journal_date_label"
+                    app:layout_constraintBottom_toBottomOf="@+id/journal_total_label"
+                    app:layout_constraintEnd_toStartOf="@+id/journal_date_tv"
+                    app:layout_constraintTop_toTopOf="@+id/journal_total_label" />
+
+                <TextView
+                    android:id="@+id/journal_date_tv"
+                    style="@style/text.accent"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginRight="16dp"
+                    app:layout_constraintBottom_toBottomOf="@+id/journal_date_label"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/journal_date_label"
+                    tools:text="01/01/2018" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+
+        <TextView
+            android:id="@+id/journal_prep_label"
+            style="@style/label"
+            android:layout_marginLeft="@dimen/std_space"
+            android:layout_marginStart="@dimen/std_space"
+            android:layout_marginTop="16dp"
+            android:text="@string/journal_prep_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tot_date_card" />
+
+        <TextView
+            android:id="@+id/journal_prep_tv"
+            style="@style/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/std_space"
+            android:layout_marginStart="@dimen/std_space"
+            app:layout_constraintBottom_toBottomOf="@+id/journal_prep_label"
+            app:layout_constraintStart_toEndOf="@+id/journal_prep_label"
+            app:layout_constraintTop_toTopOf="@+id/journal_prep_label"
+            tools:text="5 min" />
+
+        <TextView
+            android:id="@+id/journal_meditation_label"
+            style="@style/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/std_space"
+            android:text="@string/journal_med_label"
+            app:layout_constraintStart_toStartOf="@+id/journal_prep_label"
+            app:layout_constraintTop_toBottomOf="@+id/journal_prep_label" />
+
+        <TextView
+            android:id="@+id/journal_med_tv"
+            style="@style/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/journal_meditation_label"
+            app:layout_constraintStart_toEndOf="@+id/journal_meditation_label"
+            app:layout_constraintTop_toTopOf="@+id/journal_meditation_label"
+            tools:text="20 min" />
+
+        <TextView
+            android:id="@+id/journal_review_label"
+            style="@style/label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/journal_rev_label"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/journal_meditation_label"
+            app:layout_constraintTop_toBottomOf="@+id/journal_meditation_label" />
+
+        <TextView
+            android:id="@+id/journal_review_tv"
+            style="@style/text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginStart="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/journal_review_label"
+            app:layout_constraintStart_toEndOf="@+id/journal_review_label"
+            app:layout_constraintTop_toTopOf="@+id/journal_review_label"
+            tools:text="10 min" />
+
+        <TextView
+            android:id="@+id/journal_assessment_tv"
+            style="@style/entry"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/border_margin"
+            android:layout_marginEnd="@dimen/border_margin"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="@dimen/border_margin"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="1dp"
+            android:maxLines="5"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/journal_med_tv"
+            app:layout_constraintTop_toBottomOf="@+id/tot_date_card"
+            tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
+
+        <!-- TODO: only visible when viewing the full text -->
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/floatingActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginRight="16dp"
+            android:clickable="true"
+            android:focusable="true"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+    </android.support.constraint.ConstraintLayout>
+</layout>

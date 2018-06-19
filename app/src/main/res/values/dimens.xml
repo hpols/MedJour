@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="button_pad">8dp</dimen>
-    <dimen name="std_pad">16dp</dimen>
+    <dimen name="button_space">8dp</dimen>
+    <dimen name="std_space">16dp</dimen>
+
+    <dimen name="title_size">24sp</dimen>
+    <dimen name="category_size">16sp</dimen>
+    <dimen name="corner_radius">10dp</dimen>
+    <dimen name="half_space">8dp</dimen>
+    <dimen name="elevation_2">2dp</dimen>
+    <dimen name="border_margin">1dp</dimen>
 </resources>

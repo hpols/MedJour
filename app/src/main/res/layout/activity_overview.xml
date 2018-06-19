@@ -12,8 +12,8 @@
         <TextView
             android:id="@+id/main_journal_tv"
             style="@style/text"
-            android:layout_marginBottom="16dp"
-            android:padding="@dimen/std_pad"
+            android:layout_marginBottom="@dimen/std_space"
+            android:padding="@dimen/std_space"
             android:textSize="20sp"
             android:textStyle="bold"
             app:layout_constraintBottom_toTopOf="@+id/main_cumulative_tv"

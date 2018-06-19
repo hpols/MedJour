@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Youtube Player -->
-<fragment xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/youtube_player_fragment"
-    android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent">
+
+    <!-- Youtube Player -->
+    <fragment
+        android:id="@+id/youtube_player_fragment"
+        android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <!-- TODO: for testing purposes. Remove once app is completely functional -->
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/meditation_next_test_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/std_space"
+        android:layout_marginEnd="@dimen/std_space"
+        android:layout_marginRight="@dimen/std_space"
+        android:clickable="true"
+        android:focusable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:srcCompat="@android:drawable/ic_media_next"
+        tools:ignore="MissingConstraints" />
+</android.support.constraint.ConstraintLayout>
