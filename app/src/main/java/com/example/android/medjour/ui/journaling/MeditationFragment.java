@@ -83,8 +83,7 @@ public class MeditationFragment extends Fragment {
         TestFb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long clickTime = Calendar.getInstance().getTimeInMillis();
-                reviewCallback.toReview(clickTime - medStartTime);
+                GoToReview();
             }
         });
         return root;
@@ -128,8 +127,7 @@ public class MeditationFragment extends Fragment {
 
                                 @Override
                                 public void onVideoEnded() {
-                                    long clickTime = Calendar.getInstance().getTimeInMillis();
-                                    reviewCallback.toReview(clickTime - medStartTime);
+                                    GoToReview();
                                 }
 
                                 @Override
@@ -137,7 +135,37 @@ public class MeditationFragment extends Fragment {
 
                                 }
                             });
-                            youTubePlayer.cueVideo(String.valueOf(R.string.meditation_test));
+
+                            //whenever the user interacts with the playback, this equals the end of
+                            //their meditation as they are no longer in focus.
+                            youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
+                                @Override
+                                public void onPlaying() {
+
+                                }
+
+                                @Override
+                                public void onPaused() {
+                                    GoToReview();
+                                }
+
+                                @Override
+                                public void onStopped() {
+                                    GoToReview();
+                                }
+
+                                @Override
+                                public void onBuffering(boolean b) {
+
+                                }
+
+                                @Override
+                                public void onSeekTo(int i) {
+                                    GoToReview();
+                                }
+                            });
+                            //TODO: replace hardcoded example with video from setting
+                            youTubePlayer.loadVideo(getString(R.string.meditation_test));
                         }
                     }
 
@@ -150,8 +178,12 @@ public class MeditationFragment extends Fragment {
                 });
     }
 
+    private void GoToReview() {
+        long clickTime = Calendar.getInstance().getTimeInMillis();
+        reviewCallback.toReview(clickTime - medStartTime);
+    }
 
 
     //TODO: Get length of video or set meditation time (dependent on settings) and move to next
-    // fragment once meditation is completeld.
+    // fragment once meditation is completed.
 }

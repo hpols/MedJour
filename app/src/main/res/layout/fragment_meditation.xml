@@ -10,7 +10,11 @@
         android:id="@+id/youtube_player_fragment"
         android:name="com.google.android.youtube.player.YouTubePlayerSupportFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/meditation_next_test_bt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!-- TODO: for testing purposes. Remove once app is completely functional -->
     <android.support.design.widget.FloatingActionButton

@@ -12,8 +12,8 @@ import com.example.android.medjour.ui.journaling.ReviewFragment;
 
 import timber.log.Timber;
 
-public class NewEntryActivity extends AppCompatActivity implements PreparationFragment.toMeditationCallback,
-        MeditationFragment.ToReviewCallback {
+public class NewEntryActivity extends AppCompatActivity implements
+        PreparationFragment.toMeditationCallback, MeditationFragment.ToReviewCallback {
 
     FragmentManager fragMan;
 
