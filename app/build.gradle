@@ -10,7 +10,7 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         // Please use your own valid API KEY for themoviedb.org to use this app
-        // A valid key will need to be entered
+        // A valid key will need to be entered to proceed
         buildConfigField("String", "API_KEY", API_KEY)
     }
     buildTypes {
@@ -23,6 +23,9 @@ android {
 }
 
 dependencies {
+    def androidSupportVersion = "27.1.1"
+    def room_version = "1.1.1"
+
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "com.android.support:appcompat-v7:$androidSupportVersion"
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -41,4 +44,11 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
     implementation "com.android.support:cardview-v7:$androidSupportVersion" //cardview
     implementation 'com.android.support:design:27.1.1'
+
+    //room dependencies
+    implementation "android.arch.persistence.room:runtime:$room_version"
+    annotationProcessor "android.arch.persistence.room:compiler:$room_version"
+    testImplementation "android.arch.persistence.room:testing:$room_version" // Test helpers
+
+
 }

@@ -1,12 +1,39 @@
 package com.example.android.medjour.model;
 
-public class Journal {
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.PrimaryKey;
 
+@Entity (tableName = "journal")
+public class JournalEntry {
+
+    @PrimaryKey(autoGenerate = true)
+    private int id;
     private long date;
     private long prepTime;
     private long medTime;
     private long revTime;
     private String assessment;
+
+    //constructor without ID
+    @Ignore
+    public JournalEntry(long date, long prepTime, long medTime, long revTime, String assessment) {
+        this.date = date;
+        this.prepTime = prepTime;
+        this.medTime = medTime;
+        this.revTime = revTime;
+        this.assessment = assessment;
+    }
+
+    //constructor with ID for Room
+    public JournalEntry(int id, long date, long prepTime, long medTime, long revTime, String assessment) {
+        this.id = id;
+        this.date = date;
+        this.prepTime = prepTime;
+        this.medTime = medTime;
+        this.revTime = revTime;
+        this.assessment = assessment;
+    }
 
 
     public long getDate() {
