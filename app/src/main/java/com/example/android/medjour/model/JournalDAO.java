@@ -25,4 +25,5 @@ public interface JournalDAO {
     void deleteEntry (JournalEntry journalEntry);
 
 
+
 }

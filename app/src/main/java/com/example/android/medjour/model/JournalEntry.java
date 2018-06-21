@@ -4,12 +4,14 @@ import android.arch.persistence.room.Entity;
 import android.arch.persistence.room.Ignore;
 import android.arch.persistence.room.PrimaryKey;
 
-@Entity (tableName = "journal")
+import java.util.Date;
+
+@Entity(tableName = "journal")
 public class JournalEntry {
 
     @PrimaryKey(autoGenerate = true)
     private int id;
-    private long date;
+    private Date date;
     private long prepTime;
     private long medTime;
     private long revTime;
@@ -17,7 +19,7 @@ public class JournalEntry {
 
     //constructor without ID
     @Ignore
-    public JournalEntry(long date, long prepTime, long medTime, long revTime, String assessment) {
+    public JournalEntry(Date date, long prepTime, long medTime, long revTime, String assessment) {
         this.date = date;
         this.prepTime = prepTime;
         this.medTime = medTime;
@@ -26,7 +28,7 @@ public class JournalEntry {
     }
 
     //constructor with ID for Room
-    public JournalEntry(int id, long date, long prepTime, long medTime, long revTime, String assessment) {
+    public JournalEntry(int id, Date date, long prepTime, long medTime, long revTime, String assessment) {
         this.id = id;
         this.date = date;
         this.prepTime = prepTime;
@@ -36,11 +38,11 @@ public class JournalEntry {
     }
 
 
-    public long getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(long date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
