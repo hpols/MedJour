@@ -13,12 +13,9 @@ import android.view.ViewGroup;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
-import com.example.android.medjour.utils.UiUtils;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
-
-import java.util.Calendar;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -72,7 +69,7 @@ public class MeditationFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_meditation, container, false);
         ButterKnife.bind(this, root);
 
-        UiUtils.getTimeStamp(medStartTime);
+        medStartTime = System.currentTimeMillis();
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
@@ -96,6 +93,7 @@ public class MeditationFragment extends Fragment {
         //TODO: when media player is needed (check settings)
         youTubePlayerFragment = (YouTubePlayerSupportFragment) getChildFragmentManager()
                 .findFragmentById(R.id.youtube_player_fragment);
+
 
         youTubePlayerFragment.initialize(BuildConfig.API_KEY,
                 new YouTubePlayer.OnInitializedListener() {
@@ -138,34 +136,9 @@ public class MeditationFragment extends Fragment {
 
                             //whenever the user interacts with the playback, this equals the end of
                             //their meditation as they are no longer in focus.
-                            youTubePlayer.setPlaybackEventListener(new YouTubePlayer.PlaybackEventListener() {
-                                @Override
-                                public void onPlaying() {
 
-                                }
-
-                                @Override
-                                public void onPaused() {
-                                    GoToReview();
-                                }
-
-                                @Override
-                                public void onStopped() {
-                                    GoToReview();
-                                }
-
-                                @Override
-                                public void onBuffering(boolean b) {
-
-                                }
-
-                                @Override
-                                public void onSeekTo(int i) {
-                                    GoToReview();
-                                }
-                            });
                             //TODO: replace hardcoded example with video from setting
-                            youTubePlayer.loadVideo(getString(R.string.meditation_test));
+                            youTubePlayer.loadVideo(getString(R.string.meditation_5min));
                         }
                     }
 
@@ -179,8 +152,8 @@ public class MeditationFragment extends Fragment {
     }
 
     private void GoToReview() {
-        long clickTime = Calendar.getInstance().getTimeInMillis();
-        reviewCallback.toReview(clickTime - medStartTime);
+        long medTime = System.currentTimeMillis() - medStartTime;
+        reviewCallback.toReview(medTime);
     }
 
 

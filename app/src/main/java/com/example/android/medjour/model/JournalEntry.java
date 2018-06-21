@@ -77,4 +77,12 @@ public class JournalEntry {
     public void setAssessment(String assessment) {
         this.assessment = assessment;
     }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 }

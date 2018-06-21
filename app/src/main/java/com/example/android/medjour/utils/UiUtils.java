@@ -4,7 +4,6 @@ import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
 import android.view.View;
 
-import java.util.Calendar;
 import java.util.concurrent.TimeUnit;
 
 public class UiUtils {
@@ -20,6 +19,6 @@ public class UiUtils {
     }
 
     public static void getTimeStamp(long startTime) {
-        startTime = Calendar.getInstance().getTimeInMillis();
+        startTime = System.currentTimeMillis();
     }
 }

@@ -22,8 +22,8 @@ public class NewEntryActivity extends AppCompatActivity implements
     ReviewFragment revFrag;
 
     //info gathered for DB
-    long preparationTime;
-    long meditationTime;
+    public static long preparationTime;
+    public static long meditationTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,15 +46,23 @@ public class NewEntryActivity extends AppCompatActivity implements
 
     @Override
     public void toMeditation(long preparationTime) {
-        this.preparationTime = preparationTime;
+        NewEntryActivity.preparationTime = preparationTime;
         Timber.v("preparationTime recorded: " + preparationTime);
         fragMan.beginTransaction().replace(R.id.new_entry_fragment_container, medFrag).commit();
     }
 
     @Override
     public void toReview(long meditationTime) {
-       this.meditationTime = meditationTime;
+       NewEntryActivity.meditationTime = meditationTime;
        Timber.v("meditation time recorded: " + meditationTime);
        fragMan.beginTransaction().replace(R.id.new_entry_fragment_container, revFrag).commit();
+    }
+
+    public static long getPreparationTime() {
+        return preparationTime;
+    }
+
+    public static long getMeditationTime() {
+        return meditationTime;
     }
 }

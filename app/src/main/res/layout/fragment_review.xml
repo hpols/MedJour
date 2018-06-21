@@ -83,6 +83,7 @@
                     app:layout_constraintStart_toEndOf="@+id/review_med_label"
                     app:layout_constraintTop_toTopOf="@+id/review_med_label"
                     tools:text="20 min" />
+
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
 
@@ -116,7 +117,7 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/editText"
+                    android:id="@+id/review_assessment_et"
                     style="@style/entry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -127,7 +128,22 @@
                     app:layout_constraintEnd_toEndOf="@+id/review_assessment_label"
                     app:layout_constraintStart_toStartOf="@+id/review_assessment_label"
                     app:layout_constraintTop_toBottomOf="@+id/review_assessment_label" />
+
             </android.support.constraint.ConstraintLayout>
+
         </android.support.v7.widget.CardView>
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/review_save_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/std_space"
+            android:layout_marginRight="@dimen/std_space"
+            android:clickable="true"
+            android:focusable="true"
+            app:layout_constraintBottom_toTopOf="@+id/assessment_bg"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/table"
+            card_view:srcCompat="@android:drawable/ic_menu_save" />
     </android.support.constraint.ConstraintLayout>
 </layout>

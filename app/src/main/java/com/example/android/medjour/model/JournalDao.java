@@ -1,5 +1,6 @@
 package com.example.android.medjour.model;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
 import android.arch.persistence.room.Delete;
 import android.arch.persistence.room.Insert;
@@ -10,10 +11,10 @@ import android.arch.persistence.room.Update;
 import java.util.List;
 
 @Dao
-public interface JournalDAO {
+public interface JournalDao {
 
     @Query("SELECT * FROM journal")
-    public List<JournalEntry> getAllEntries();
+    LiveData<List<JournalEntry>> getAllEntries();
 
     @Insert
     void createEntry (JournalEntry journalEntry);

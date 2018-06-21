@@ -1,6 +1,5 @@
 package com.example.android.medjour.ui.journaling;
 
-
 import android.content.Context;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -11,17 +10,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.android.medjour.R;
-import com.example.android.medjour.utils.UiUtils;
 import com.example.android.medjour.databinding.FragmentPreparationBinding;
-
-import java.util.Calendar;
+import com.example.android.medjour.utils.UiUtils;
 
 /**
  * A simple {@link Fragment} subclass.
  */
 public class PreparationFragment extends Fragment {
 
-    static long prepStartTime;
+    long prepStartTime;
     FragmentPreparationBinding prepBinder;
     toMeditationCallback meditationCallback;
 
@@ -54,7 +51,7 @@ public class PreparationFragment extends Fragment {
                 false);
         View root = prepBinder.getRoot();
 
-        UiUtils.getTimeStamp(prepStartTime);
+        prepStartTime = System.currentTimeMillis();
 
         //gradually change background color to indigo, in preparation for the meditation
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
@@ -67,8 +64,8 @@ public class PreparationFragment extends Fragment {
         prepBinder.preparationStartBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                long clickTime = Calendar.getInstance().getTimeInMillis();
-                meditationCallback.toMeditation(clickTime - prepStartTime);
+                long prepTime = System.currentTimeMillis() - prepStartTime;
+                meditationCallback.toMeditation(prepTime);
             }
         });
         return root;
