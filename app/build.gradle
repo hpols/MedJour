@@ -54,4 +54,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$aac_version"
     annotationProcessor "android.arch.persistence.room:compiler:$aac_version"
     testImplementation "android.arch.persistence.room:testing:$aac_version" // Test helpers
+
+    //debug helper
+    implementation 'com.facebook.stetho:stetho:1.5.0'
 }

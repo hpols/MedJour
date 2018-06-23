@@ -43,4 +43,5 @@
     <string name="journal_prep_label">Prep:</string>
     <string name="journal_med_label">Med:</string>
     <string name="journal_rev_label">Rev:</string>
+    <string name="overview_no_entries">You have not written any journal entries so far. Start by hitting \"Add new entry \".</string>
 </resources>

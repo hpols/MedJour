@@ -16,6 +16,15 @@ public interface JournalDao {
     @Query("SELECT * FROM journal")
     LiveData<List<JournalEntry>> getAllEntries();
 
+    @Query("SELECT SUM(prepTime) FROM journal")
+    long getTotalPrep();
+
+    @Query("SELECT SUM(medTime) FROM journal")
+    long getTotalMed();
+
+    @Query("SELECT SUM(revTime) FROM journal")
+    long getTotalRev();
+
     @Insert
     void createEntry (JournalEntry journalEntry);
 

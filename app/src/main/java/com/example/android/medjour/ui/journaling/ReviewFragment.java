@@ -21,7 +21,6 @@ import com.example.android.medjour.utils.UiUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
-import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,8 +33,7 @@ public class ReviewFragment extends Fragment {
     JournalDao journalDao;
     JournalDb dB;
 
-    long prepTime;
-    long medTime;
+    long startReviewTime;
     long reviewTime;
 
 
@@ -50,6 +48,8 @@ public class ReviewFragment extends Fragment {
         reviewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_review, container,
                 false);
         View root = reviewBinding.getRoot();
+
+        startReviewTime = System.currentTimeMillis();
 
         dB = JournalDb.getInstance(getActivity().getApplicationContext());
 
@@ -66,8 +66,8 @@ public class ReviewFragment extends Fragment {
         String dateDisplay= DateFormat.getDateInstance().format(date);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
-        reviewBinding.reviewPrepTv.setText(toMinutes(NewEntryActivity.getPreparationTime()));
-        reviewBinding.reviewMedTv.setText(toMinutes(NewEntryActivity.getMeditationTime()));
+        reviewBinding.reviewPrepTv.setText(UiUtils.toMinutes(NewEntryActivity.getPreparationTime()));
+        reviewBinding.reviewMedTv.setText(UiUtils.toMinutes(NewEntryActivity.getMeditationTime()));
 
         reviewBinding.reviewSaveFab.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -83,6 +83,7 @@ public class ReviewFragment extends Fragment {
 
     private void writeToDb() {
         String assessment = reviewBinding.reviewAssessmentEt.getText().toString().trim();
+        reviewTime = System.currentTimeMillis() - startReviewTime;
         journalEntry = new JournalEntry(date, NewEntryActivity.getPreparationTime(),
                 NewEntryActivity.getMeditationTime(), reviewTime, assessment);
 
@@ -96,9 +97,5 @@ public class ReviewFragment extends Fragment {
             }
         });
 
-    }
-
-    private String toMinutes(long timeInMillis) {
-        return String.valueOf(TimeUnit.MILLISECONDS.toMinutes(timeInMillis)) + " min";
     }
 }
