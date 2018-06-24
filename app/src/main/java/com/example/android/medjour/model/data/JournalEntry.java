@@ -1,4 +1,4 @@
-package com.example.android.medjour.model;
+package com.example.android.medjour.model.data;
 
 import android.arch.persistence.room.ColumnInfo;
 import android.arch.persistence.room.Entity;
@@ -44,7 +44,6 @@ public class JournalEntry {
         this.revTime = revTime;
         this.assessment = assessment;
     }
-
 
     public Date getDate() {
         return date;

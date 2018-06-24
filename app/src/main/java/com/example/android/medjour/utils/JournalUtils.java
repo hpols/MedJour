@@ -7,10 +7,11 @@ import android.view.View;
 
 import java.util.concurrent.TimeUnit;
 
-public class UiUtils {
+public class JournalUtils {
     static int MAX_PREP_MINS = 5; //minutes
     static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(MAX_PREP_MINS);
 
+    //slowly change background colour according to the maximum time allowed
     public static void changeBackground(View root, int startColor, int endColor) {
 
         ObjectAnimator colorFade = ObjectAnimator.ofObject(root, "backgroundColor",
@@ -19,10 +20,12 @@ public class UiUtils {
         colorFade.start();
     }
 
+    //convert the retrieved/stored milliseconds into readable time
     public static String toMinutes(long timeInMillis) {
 
         long time = TimeUnit.MILLISECONDS.toSeconds(timeInMillis);
 
+        //TODO: add format and remove "min"
         return DateUtils.formatElapsedTime(time) + " min";
     }
 }

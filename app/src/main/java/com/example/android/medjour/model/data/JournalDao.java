@@ -1,4 +1,4 @@
-package com.example.android.medjour.model;
+package com.example.android.medjour.model.data;
 
 import android.arch.lifecycle.LiveData;
 import android.arch.persistence.room.Dao;
@@ -17,13 +17,13 @@ public interface JournalDao {
     LiveData<List<JournalEntry>> getAllEntries();
 
     @Query("SELECT SUM(prepTime) FROM journal")
-    long getTotalPrep();
+    long getTotalPrepTime();
 
     @Query("SELECT SUM(medTime) FROM journal")
-    long getTotalMed();
+    long getTotalMedTime();
 
     @Query("SELECT SUM(revTime) FROM journal")
-    long getTotalRev();
+    long getTotalRevTime();
 
     @Insert
     void createEntry (JournalEntry journalEntry);

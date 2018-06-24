@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.FragmentPreparationBinding;
-import com.example.android.medjour.utils.UiUtils;
+import com.example.android.medjour.utils.JournalUtils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -58,7 +58,7 @@ public class PreparationFragment extends Fragment {
             int endColor = ContextCompat.getColor(getActivity(), R.color.indigo);
 
             int startColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
-            UiUtils.changeBackground(root, startColor, endColor);
+            JournalUtils.changeBackground(root, startColor, endColor);
         }
 
         prepBinder.preparationStartBt.setOnClickListener(new View.OnClickListener() {

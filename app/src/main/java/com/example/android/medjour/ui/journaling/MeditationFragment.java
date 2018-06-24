@@ -76,13 +76,17 @@ public class MeditationFragment extends Fragment {
         }
 
         //for debugging/testing purposes:
-        // this button goes direct to the next fragment of the new-entry flow
-        TestFb.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                GoToReview();
-            }
-        });
+        // this button goes direct to the next fragment of the new-entry flow.
+        // Keep it hidden when not debugging
+        if(BuildConfig.DEBUG) {
+            TestFb.setVisibility(View.VISIBLE);
+            TestFb.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    GoToReview();
+                }
+            });
+        }
         return root;
     }
 
@@ -102,6 +106,8 @@ public class MeditationFragment extends Fragment {
                                                         YouTubePlayer player, boolean b) {
                         if (!b) {
                             youTubePlayer = player;
+
+                            //when video has finished automatically move forward to next fragment
                             youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
                                 @Override
                                 public void onLoading() {
@@ -155,8 +161,4 @@ public class MeditationFragment extends Fragment {
         long medTime = System.currentTimeMillis() - medStartTime;
         reviewCallback.toReview(medTime);
     }
-
-
-    //TODO: Get length of video or set meditation time (dependent on settings) and move to next
-    // fragment once meditation is completed.
 }

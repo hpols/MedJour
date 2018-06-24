@@ -12,12 +12,12 @@ import android.view.ViewGroup;
 import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.FragmentReviewBinding;
 import com.example.android.medjour.model.EntryExecutor;
-import com.example.android.medjour.model.JournalDao;
-import com.example.android.medjour.model.JournalDb;
-import com.example.android.medjour.model.JournalEntry;
+import com.example.android.medjour.model.data.JournalDao;
+import com.example.android.medjour.model.data.JournalDb;
+import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.ui.NewEntryActivity;
 import com.example.android.medjour.ui.OverviewActivity;
-import com.example.android.medjour.utils.UiUtils;
+import com.example.android.medjour.utils.JournalUtils;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -59,15 +59,15 @@ public class ReviewFragment extends Fragment {
             int endColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
 
             int startColor = ContextCompat.getColor(getActivity(), R.color.indigo);
-            UiUtils.changeBackground(root, startColor, endColor);
+            JournalUtils.changeBackground(root, startColor, endColor);
         }
 
         date = new Date();
         String dateDisplay= DateFormat.getDateInstance().format(date);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
-        reviewBinding.reviewPrepTv.setText(UiUtils.toMinutes(NewEntryActivity.getPreparationTime()));
-        reviewBinding.reviewMedTv.setText(UiUtils.toMinutes(NewEntryActivity.getMeditationTime()));
+        reviewBinding.reviewPrepTv.setText(JournalUtils.toMinutes(NewEntryActivity.getPreparationTime()));
+        reviewBinding.reviewMedTv.setText(JournalUtils.toMinutes(NewEntryActivity.getMeditationTime()));
 
         reviewBinding.reviewSaveFab.setOnClickListener(new View.OnClickListener() {
             @Override
