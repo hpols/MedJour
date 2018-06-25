@@ -32,7 +32,6 @@ public class JournalActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         journalBinder = DataBindingUtil.setContentView(this, R.layout.activity_journal);
-        setContentView(R.layout.activity_journal);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());

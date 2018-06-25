@@ -1,84 +1,75 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/half_space"
+    card_view:cardBackgroundColor="@color/colorPrimaryDark"
+    card_view:cardCornerRadius="@dimen/corner_radius">
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/corner_dark">
+        android:layout_height="match_parent">
 
-        <android.support.v7.widget.CardView
-            android:id="@+id/tot_date_card"
-            android:layout_width="match_parent"
+        <TextView
+            android:id="@+id/rv_total_label"
+            style="@style/label.accent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@drawable/corner_dark">
+            android:layout_marginLeft="@dimen/std_space"
+            android:layout_marginStart="@dimen/std_space"
+            android:layout_marginTop="@dimen/std_space"
+            android:text="@string/journal_session_label"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <android.support.constraint.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/rv_total_tv"
+            style="@style/text.accent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="@dimen/half_space"
+            android:layout_marginStart="@dimen/half_space"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
+            app:layout_constraintStart_toEndOf="@+id/rv_total_label"
+            app:layout_constraintTop_toTopOf="@+id/rv_total_label"
+            tools:text="35 min" />
 
-                <TextView
-                    android:id="@+id/rv_total_label"
-                    style="@style/label.accent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="16dp"
-                    android:layout_marginLeft="@dimen/std_space"
-                    android:layout_marginStart="@dimen/std_space"
-                    android:layout_marginTop="@dimen/std_space"
-                    android:text="@string/journal_session_label"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+        <TextView
+            android:id="@+id/rv_date_label"
+            style="@style/label.accent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/std_space"
+            android:layout_marginRight="@dimen/std_space"
+            android:text="@string/journal_date_label"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
+            app:layout_constraintEnd_toStartOf="@+id/rv_date_tv"
+            app:layout_constraintTop_toTopOf="@+id/rv_total_label" />
 
-                <TextView
-                    android:id="@+id/rv_total_tv"
-                    style="@style/text.accent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="@dimen/half_space"
-                    android:layout_marginStart="@dimen/half_space"
-                    app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
-                    app:layout_constraintStart_toEndOf="@+id/rv_total_label"
-                    app:layout_constraintTop_toTopOf="@+id/rv_total_label"
-                    tools:text="35 min" />
-
-                <TextView
-                    android:id="@+id/rv_date_label"
-                    style="@style/label.accent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/std_space"
-                    android:layout_marginRight="@dimen/std_space"
-                    android:text="@string/journal_date_label"
-                    app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
-                    app:layout_constraintEnd_toStartOf="@+id/rv_date_tv"
-                    app:layout_constraintTop_toTopOf="@+id/rv_total_label" />
-
-                <TextView
-                    android:id="@+id/rv_date_tv"
-                    style="@style/text.accent"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/std_space"
-                    android:layout_marginRight="@dimen/std_space"
-                    app:layout_constraintBottom_toBottomOf="@+id/rv_date_label"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="@+id/rv_date_label"
-                    tools:text="01/01/2018" />
-            </android.support.constraint.ConstraintLayout>
-        </android.support.v7.widget.CardView>
+        <TextView
+            android:id="@+id/rv_date_tv"
+            style="@style/text.accent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/std_space"
+            android:layout_marginRight="@dimen/std_space"
+            app:layout_constraintBottom_toBottomOf="@+id/rv_date_label"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/rv_date_label"
+            tools:text="01/01/2018" />
 
         <TextView
             android:id="@+id/rv_prep_label"
             style="@style/label"
             android:layout_marginLeft="@dimen/std_space"
             android:layout_marginStart="@dimen/std_space"
-            android:layout_marginTop="@dimen/std_space"
+            android:layout_marginTop="16dp"
             android:text="@string/journal_prep_label"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tot_date_card" />
+            app:layout_constraintTop_toBottomOf="@+id/rv_total_label" />
 
         <TextView
             android:id="@+id/rv_prep_tv"
@@ -148,11 +139,12 @@
             android:layout_marginLeft="@dimen/half_space"
             android:layout_marginRight="@dimen/border_margin"
             android:layout_marginStart="@dimen/half_space"
+            android:layout_marginTop="8dp"
             android:maxLines="5"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@+id/rv_med_tv"
-            app:layout_constraintTop_toBottomOf="@+id/tot_date_card"
+            app:layout_constraintTop_toBottomOf="@+id/rv_date_tv"
             tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
 
         <!-- TODO: only visible when viewing the full text -->
@@ -169,6 +161,5 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:srcCompat="@android:drawable/ic_menu_edit" />
-
     </android.support.constraint.ConstraintLayout>
-</layout>
+</android.support.v7.widget.CardView>
