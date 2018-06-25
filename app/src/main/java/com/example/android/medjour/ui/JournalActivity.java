@@ -12,9 +12,11 @@ import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
 import com.example.android.medjour.adapter.JournalAdapter;
 import com.example.android.medjour.databinding.ActivityJournalBinding;
+import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.JournalViewModel;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
+import com.example.android.medjour.utils.JournalUtils;
 
 import java.util.List;
 
@@ -36,6 +38,12 @@ public class JournalActivity extends AppCompatActivity {
             Timber.plant(new Timber.DebugTree());
         }
 
+        //setup adapter and recyclerView
+        journalBinder.journalRv.setLayoutManager(new LinearLayoutManager(this));
+        journalAdapter = new JournalAdapter(this);
+        journalBinder.journalRv.setAdapter(journalAdapter);
+        Timber.v("adapter and recyclerview setup");
+
         dB = JournalDb.getInstance(getApplicationContext());
 
         //setup viewModel
@@ -48,10 +56,14 @@ public class JournalActivity extends AppCompatActivity {
             }
         });
 
-        //setup adapter and recyclerview
-        journalAdapter = new JournalAdapter();
-        journalBinder.journalRv.setAdapter(journalAdapter);
-        journalBinder.journalRv.setLayoutManager(new LinearLayoutManager(this));
-        journalAdapter.notifyDataSetChanged();
+        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+
+                String totalTime = JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
+                journalBinder.journalAccTimeTv.setText(totalTime);
+            }
+        });
     }
+
 }

@@ -5,6 +5,8 @@ import android.animation.ObjectAnimator;
 import android.text.format.DateUtils;
 import android.view.View;
 
+import com.example.android.medjour.model.data.JournalDb;
+
 import java.util.concurrent.TimeUnit;
 
 public class JournalUtils {
@@ -27,5 +29,13 @@ public class JournalUtils {
 
         //TODO: add format and remove "min"
         return DateUtils.formatElapsedTime(time) + " min";
+    }
+
+    public static long getCumulativeTime(JournalDb dB) {
+        long prepTime = dB.journalDao().getTotalPrepTime();
+        long medTime = dB.journalDao().getTotalMedTime();
+        long revTime = dB.journalDao().getTotalRevTime();
+
+        return prepTime + medTime + revTime;
     }
 }

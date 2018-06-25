@@ -17,11 +17,17 @@ import java.text.DateFormat;
 import java.util.List;
 
 import butterknife.BindView;
+import timber.log.Timber;
 
 public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalViewHolder> {
 
     Context ctxt;
     private List<JournalEntry> journalEntries;
+
+    //constructor
+    public JournalAdapter(Context ctxt) {
+        this.ctxt = ctxt;
+    }
 
     @NonNull
     @Override
@@ -30,6 +36,8 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
         View root = LayoutInflater.from(ctxt).inflate(R.layout.rv_journal, parent,
                 false);
         root.setFocusable(true);
+
+        Timber.v("ViewHolder created");
 
         return new JournalViewHolder(root);
     }
@@ -55,6 +63,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
                 //TODO: go to reviewFragment to enable edits
             }
         });
+        Timber.v("ViewHolder bound");
     }
 
     @Override

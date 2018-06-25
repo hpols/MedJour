@@ -56,21 +56,13 @@ public class OverviewActivity extends AppCompatActivity {
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                long prepTime = dB.journalDao().getTotalPrepTime();
-                Timber.v("prep: " + prepTime);
-                long medTime = dB.journalDao().getTotalMedTime();
-                Timber.v("med: " + medTime);
-                long revTime = dB.journalDao().getTotalRevTime();
-                Timber.v("rev: " + revTime);
-
-                long cumulativeTime = prepTime + medTime + revTime;
-
                 String cumulativetv;
-                if (cumulativeTime == 0) {
+                if (JournalUtils.getCumulativeTime(dB) == 0) {
                     cumulativetv= getString(R.string.overview_no_entries);
                     overviewBinder.mainJournalBt.setVisibility(View.GONE);
                 } else {
-                    cumulativetv = "Cumulative Time: " + JournalUtils.toMinutes(cumulativeTime);
+                    cumulativetv = "Cumulative Time: "
+                            + JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
                     overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
                 }
 

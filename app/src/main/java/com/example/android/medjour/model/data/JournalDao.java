@@ -34,6 +34,4 @@ public interface JournalDao {
     @Delete
     void deleteEntry (JournalEntry journalEntry);
 
-
-
 }
