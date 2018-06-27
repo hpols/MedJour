@@ -10,10 +10,8 @@
     <ListPreference
         android:title="Callback Type"
         android:entries="@array/pref_entries_callback"
+        android:entryValues="@array/pref_entryvalues_callback"
         android:defaultValue="@string/app_own_callback"
+        android:key="@string/pref_callback_key"
         android:summary="@string/pref_callback_summary"/>
-
-    <RingtonePreference
-        android:ringtoneType="alarm"
-        android:showDefault="true" />
 </PreferenceScreen>
