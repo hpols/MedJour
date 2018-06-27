@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.example.android.medjour.BuildConfig;
@@ -11,6 +13,7 @@ import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.ActivityOverviewBinding;
 import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
+import com.example.android.medjour.ui.settings.SettingsActivity;
 import com.example.android.medjour.utils.JournalUtils;
 import com.facebook.stetho.Stetho;
 
@@ -58,7 +61,7 @@ public class OverviewActivity extends AppCompatActivity {
             public void run() {
                 String cumulativetv;
                 if (JournalUtils.getCumulativeTime(dB) == 0) {
-                    cumulativetv= getString(R.string.overview_no_entries);
+                    cumulativetv = getString(R.string.overview_no_entries);
                     overviewBinder.mainJournalBt.setVisibility(View.GONE);
                 } else {
                     cumulativetv = "Cumulative Time: "
@@ -69,5 +72,29 @@ public class OverviewActivity extends AppCompatActivity {
                 overviewBinder.mainCumulativeTv.setText(cumulativetv);
             }
         });
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_overview, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.menu_settings:
+                startActivity(new Intent(this, SettingsActivity.class));
+                break;
+            case R.id.menu_activation:
+                //TODO: create activation dialogue
+                break;
+            case R.id.menu_guidelines:
+                //TODO: go to guidelines
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

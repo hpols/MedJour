@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <com.example.android.medjour.ui.settings.NumberPickerPreference
+        android:key="@string/pref_key_med_time"
+        android:title="@string/pref_med_time_title"
+        android:summary="@string/pref_med_time_summary"
+        android:defaultValue="@string/pref_default_med_time"/>
+
+    <ListPreference
+        android:title="Callback Type"
+        android:entries="@array/pref_entries_callback"
+        android:defaultValue="@string/app_own_callback"
+        android:summary="@string/pref_callback_summary"/>
+
+    <RingtonePreference
+        android:ringtoneType="alarm"
+        android:showDefault="true" />
+</PreferenceScreen>

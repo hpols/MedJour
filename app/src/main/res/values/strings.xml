@@ -13,6 +13,11 @@
     <string name="meditation_30min">8K6acvCdQqU</string>
     <string name="meditation_45min">unq70DyzeZI</string>
 
+    <!-- Settings callback choices-->
+    <string name="ringtone_callback">Ringtone</string>
+    <string name="app_own_callback">App own</string>
+    <string name="video_callback">Meditation Video</string>
+
     <!-- Activation dialog-->
     <string name="activation_text">This journal for your meditation practice is developed based on the guidelines of the C.MI. course*. However it can be used by anyone who to keep track of their practice.\n\nIf you are a C.MI. student press the \"C.MI. Student\" button and enter your activation code. Otherwise press the \"free use\" button to continue.</string>
     <string name="activation_student_bt">C.MI. Student</string>
@@ -44,4 +49,16 @@
     <string name="journal_med_label">Med:</string>
     <string name="journal_rev_label">Rev:</string>
     <string name="overview_no_entries">You have not written any journal entries so far. Start by hitting \"Add new entry \".</string>
+
+    <!-- menu -->
+    <string name="menu_title_settings">Settings</string>
+    <string name="menu_guidelines">Guidelines</string>
+    <string name="menu_activation">Enter Activation Code</string>
+
+    <!-- preferences -->
+    <string name="pref_med_time_title">Meditation Time</string>
+    <string name="pref_key_med_time">Meditation Time</string>
+    <string name="pref_default_med_time">20</string>
+    <string name="pref_med_time_summary">How long do you want to meditate?</string>
+    <string name="pref_callback_summary">Select how you want to be alerted at the end of your meditation.</string>
 </resources>
