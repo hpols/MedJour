@@ -8,6 +8,8 @@
         <item name="android:windowBackground">@color/colorPrimary</item>
         <item name="preferenceTheme">@style/PreferenceThemeOverlay</item>
         <item name="cardViewStyle">@style/CardView</item>
+        <item name="dialogTheme">@style/DialogTheme</item>
+        <item name="alertDialogTheme">@style/DialogTheme</item>
     </style>
 
     <!-- theme for new entries -->
@@ -16,6 +18,11 @@
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
         <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="SettingsTheme" parent="AppTheme">
+        <item name="android:textColor">@color/colorLightAccent</item>
+        <item name="android:textColorSecondary">@color/colorLightAccent</item>
     </style>
 
     <style name="button">
@@ -61,6 +68,23 @@
 
     <style name="text.accent">
         <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="AppAlertDialogContent" parent="Theme.AppCompat.DayNight">
+        <!-- To tint EditText and TimePicker -->
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowBackground">@color/colorPrimary</item>
+    </style>
+
+    <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
+        <!-- Used for the title and text -->
+        <item name="android:textColorPrimary">@color/colorLightAccent</item>
+        <!-- Used for the background -->
+        <item name="android:background">@color/colorPrimary</item>
+        <!-- Used for the buttons -->
+        <item name="colorAccent">@color/colorLightAccent</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
 
 </resources>

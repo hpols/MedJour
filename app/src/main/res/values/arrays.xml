@@ -1,5 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <string-array name="pref_entries_duration">
+        <item>@string/min_5</item>
+        <item>@string/min_10</item>
+        <item>@string/min_15</item>
+        <item>@string/min_20</item>
+        <item>@string/min_30</item>
+        <item>@string/min_45</item>
+    </string-array>
+
+    <string-array name="pref_entries_duration_values">
+        <item>@string/min_5_value</item>
+        <item>@string/min_10_value</item>
+        <item>@string/min_15_value</item>
+        <item>@string/min_20_value</item>
+        <item>@string/min_30_value</item>
+        <item>@string/min_45_value</item>
+    </string-array>
+
     <string-array name="pref_entries_callback">
        <item>@string/ringtone_callback</item>
         <item>@string/app_own_callback</item>
@@ -11,4 +30,18 @@
         <item>@string/app_own_value_callback</item>
         <item>@string/video_value_callback</item>
     </string-array>
+
+    <string-array name="pref_app_sounds">
+        <item>@string/a_tone</item>
+        <item>@string/computer_magic</item>
+        <item>@string/metal_gong</item>
+        <item>@string/temple_bell</item>
+    </string-array>
+
+    <array name="pref_app_sounds_values">
+        <item>@string/a_tone_value</item>
+        <item>@string/computer_magic_value</item>
+        <item>@string/metal_gong_value</item>
+        <item>@string/temple_bell_value</item>
+    </array>
 </resources>

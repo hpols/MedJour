@@ -2,7 +2,7 @@
 
 An app supporting meditation students in their practice and journaling.
 
-Especially when learning meditate it can be daunting to hold your focus without getting distracted by whether the meditation time is correctly setup, you have logged your preparation time and having your journal always on hand to immediately take notes afterwards.
+Especially when learning meditate it can be daunting to hold your focus without getting distracted by whether the meditation timeInMinutes is correctly setup, you have logged your preparation timeInMinutes and having your journal always on hand to immediately take notes afterwards.
 
 This app takes care of this all. Following the C.MI. course rules, it guides the meditator through the process from setup to review. It automatically keeps track of the times needed for logging, offers recall sounds or meditation audio and stores each jounral entry ready for future rereading and submission.
 

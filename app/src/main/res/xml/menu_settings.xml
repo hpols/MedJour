@@ -1,17 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.example.android.medjour.ui.settings.NumberPickerPreference
+    <ListPreference
+        android:defaultValue="@string/pref_default_med_time"
+        android:entries="@array/pref_entries_duration"
+        android:entryValues="@array/pref_entries_duration_values"
         android:key="@string/pref_key_med_time"
-        android:title="@string/pref_med_time_title"
         android:summary="@string/pref_med_time_summary"
-        android:defaultValue="@string/pref_default_med_time"/>
+        android:title="@string/pref_med_time_title" />
 
     <ListPreference
-        android:title="Callback Type"
+        android:defaultValue="@string/app_own_callback"
         android:entries="@array/pref_entries_callback"
         android:entryValues="@array/pref_entryvalues_callback"
-        android:defaultValue="@string/app_own_callback"
         android:key="@string/pref_callback_key"
-        android:summary="@string/pref_callback_summary"/>
+        android:summary="@string/pref_callback_summary"
+        android:title="Callback Type" />
+
+    <ListPreference
+        android:defaultValue="@string/temple_bell"
+        android:entries="@array/pref_app_sounds"
+        android:entryValues="@array/pref_app_sounds_values"
+        android:key="@string/pref_key_app_sounds"
+        android:summary="@string/pref_callback_sound_summary"
+        android:title="Choose Callback Sound" />
+
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="@string/pref_med_reminder_key"
+        android:summaryOff="@string/pref_reminder_off"
+        android:summaryOn="@string/pref_reminder_on"
+        android:title="@string/pref_med_reminder_title" />
+
+    <com.example.android.medjour.ui.settings.TimePickerPreference
+        android:defaultValue="720"
+        android:dependency="@string/pref_med_reminder_key"
+        android:key="@string/pref_time_key"
+        android:title="@string/pref_time_title" />
 </PreferenceScreen>

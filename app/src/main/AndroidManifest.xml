@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.android.medjour">
 
-    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application
         android:allowBackup="true"
@@ -19,9 +19,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.JournalActivity" />
-        <activity android:name=".ui.NewEntryActivity"
-            android:theme="@style/EntryTheme"/>
-        <activity android:name=".ui.settings.SettingsActivity" />
+        <activity
+            android:name=".ui.NewEntryActivity"
+            android:theme="@style/EntryTheme" />
+        <activity
+            android:name=".ui.settings.SettingsActivity"
+            android:theme="@style/SettingsTheme" />
     </application>
 
 </manifest>

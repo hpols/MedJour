@@ -13,13 +13,37 @@
     <string name="meditation_30min">8K6acvCdQqU</string>
     <string name="meditation_45min">unq70DyzeZI</string>
 
-    <!-- Settings callback choices-->
+    <!-- Settings -->
+    <!-- durations -->
+    <string name="min_5">5 minutes</string>
+    <string name="min_10">10 minutes</string>
+    <string name="min_15">15 minutes</string>
+    <string name="min_20">20 minutes</string>
+    <string name="min_30">30 minutes</string>
+    <string name="min_45">45 minutes</string>
+    <string name="min_5_value">5m</string>
+    <string name="min_10_value">10m</string>
+    <string name="min_15_value">15m</string>
+    <string name="min_20_value">20m</string>
+    <string name="min_30_value">30m</string>
+    <string name="min_45_value">45m</string>
+
+    <!--callback choices-->
     <string name="ringtone_callback">Ringtone</string>
     <string name="app_own_callback">App own</string>
     <string name="video_callback">Meditation Video</string>
     <string name="ringtone_value_callback">ringtone</string>
     <string name="app_own_value_callback">appOwn</string>
     <string name="video_value_callback">meditationVideo</string>
+    <!--app sounds -->
+    <string name="a_tone">A Tone</string>
+    <string name="computer_magic">Computer Magic</string>
+    <string name="metal_gong">Gong</string>
+    <string name="temple_bell">Temple Bell</string>
+    <string name="a_tone_value">a tone</string>
+    <string name="computer_magic_value">computer magic</string>
+    <string name="metal_gong_value">gong</string>
+    <string name="temple_bell_value">temple bell</string>
 
     <!-- Activation dialog-->
     <string name="activation_text">This journal for your meditation practice is developed based on the guidelines of the C.MI. course*. However it can be used by anyone who to keep track of their practice.\n\nIf you are a C.MI. student press the \"C.MI. Student\" button and enter your activation code. Otherwise press the \"free use\" button to continue.</string>
@@ -32,13 +56,13 @@
     <string name="main_journal_bt">View Journal</string>
 
     <!-- new entry flow -->
-    <string name="preparation_instruction">Take your time to setup and prepare.\n\nOnce you are ready, click on \"start meditation\".</string>
+    <string name="preparation_instruction">Take your timeInMinutes to setup and prepare.\n\nOnce you are ready, click on \"start meditation\".</string>
     <string name="preparation_start_bt">Start Meditation</string>
     <string name="category_date">Date:</string>
     <string name="review_preparation_time">Preparation Time:</string>
-    <string name="review_meditation_time">meditation time</string>
-    <string name="review_prep_label">Preparation time:</string>
-    <string name="review_med_label">Meditation time:</string>
+    <string name="review_meditation_time">meditation timeInMinutes</string>
+    <string name="review_prep_label">Preparation timeInMinutes:</string>
+    <string name="review_med_label">Meditation timeInMinutes:</string>
     <string name="review_assessment_label">Self-assessment:</string>
     <string name="review_assessment_hint">Write your self-assessment …</string>
 
@@ -65,4 +89,15 @@
     <string name="pref_med_time_summary">How long do you want to meditate?</string>
     <string name="pref_callback_summary">Select how you want to be alerted at the end of your meditation.</string>
     <string name="pref_callback_key">callback type</string>
+    <string name="pref_key_ringtone">audio from device</string>
+    <string name="pref_ringtone_summary">Select audio from your device as callback</string>
+    <string name="pref_ringtone_title">Audio from your device</string>
+    <string name="pref_key_app_sounds">callback_app_sound</string>
+    <string name="pref_callback_sound_summary">Select the callback audio</string>
+    <string name="pref_med_reminder_title">Meditation Reminder</string>
+    <string name="pref_med_reminder_key">meditation reminder</string>
+    <string name="pref_time_title">Time of Day</string>
+    <string name="pref_time_key">timeInMinutes</string>
+    <string name="pref_reminder_on">Reminder enabled</string>
+    <string name="pref_reminder_off">Reminder disabled</string>
 </resources>
