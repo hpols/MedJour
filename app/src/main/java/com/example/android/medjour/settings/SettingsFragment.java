@@ -1,33 +1,33 @@
-package com.example.android.medjour.ui.settings;
+package com.example.android.medjour.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.support.v7.preference.CheckBoxPreference;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceScreen;
 
 import com.example.android.medjour.R;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
-        SharedPreferences.OnSharedPreferenceChangeListener{
-
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
     @Override
     public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
         addPreferencesFromResource(R.xml.menu_settings);
 
-        SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
-
-//        PreferenceScreen prefScreen = getPreferenceScreen();
-//        int count = prefScreen.getPreferenceCount();
-//        for (int i = 0; i < count; i++) {
-//            Preference p = prefScreen.getPreference(i);
-//            if (!(p instanceof CheckBoxPreference)) {
-//                String value = sharedPreferences.getString(p.getKey(), "");
-//                setPreferenceSummary(p, value);
-//            }
-//        }
+        SharedPreferences sharedPref = getPreferenceScreen().getSharedPreferences();
+        PreferenceScreen prefScreen = getPreferenceScreen();
+        int count = prefScreen.getPreferenceCount();
+        for (int i = 0; i < count; i++) {
+            Preference p = prefScreen.getPreference(i);
+            if (!(p instanceof CheckBoxPreference)) {
+                String value = sharedPref.getString(p.getKey(), "");
+                setPreferenceSummary(p, value);
+            }
+        }
     }
 
     private void setPreferenceSummary(Preference preference, Object value) {
@@ -44,6 +44,38 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
         } else {
             // For other preferences, set the summary to the value's simple string representation.
             preference.setSummary(stringValue);
+        }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        // unregister the preference change listener
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        // register the preference change listener
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+        if (key.equals(getString(R.string.pref_key_med_time))) {
+            //TODO: retrieve set meditation time length
+        } else if (key.equals(getString(R.string.pref_callback_key))) {
+            //TODO: retrieve chosen callback type
+        } else if (key.equals(getString(R.string.pref_key_app_sounds))) {
+            //TODO: retrieve app sound
+        } else if (key.equals(getString(R.string.pref_med_reminder_key))) {
+            //TODO: set reminder intent
+        } else if (key.equals(getString(R.string.pref_time_key))) {
+            //TODO: pass selected time to reminder
         }
     }
 
@@ -67,27 +99,5 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
             // Dialog creation could not be handled here. Try with the super method.
             super.onDisplayPreferenceDialog(preference);
         }
-
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        // unregister the preference change listener
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // register the preference change listener
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
     }
 }

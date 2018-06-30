@@ -1,4 +1,4 @@
-package com.example.android.medjour.ui.settings;
+package com.example.android.medjour.settings;
 
 import android.os.Build;
 import android.os.Bundle;

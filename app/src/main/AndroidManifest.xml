@@ -23,7 +23,7 @@
             android:name=".ui.NewEntryActivity"
             android:theme="@style/EntryTheme" />
         <activity
-            android:name=".ui.settings.SettingsActivity"
+            android:name=".settings.SettingsActivity"
             android:theme="@style/SettingsTheme" />
     </application>
 

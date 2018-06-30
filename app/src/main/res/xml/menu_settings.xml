@@ -32,8 +32,8 @@
         android:summaryOn="@string/pref_reminder_on"
         android:title="@string/pref_med_reminder_title" />
 
-    <com.example.android.medjour.ui.settings.TimePickerPreference
-        android:defaultValue="720"
+    <com.example.android.medjour.settings.TimePickerPreference
+        android:defaultValue="12:00"
         android:dependency="@string/pref_med_reminder_key"
         android:key="@string/pref_time_key"
         android:title="@string/pref_time_title" />
