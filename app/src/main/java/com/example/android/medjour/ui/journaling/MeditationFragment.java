@@ -26,6 +26,17 @@ import timber.log.Timber;
  */
 public class MeditationFragment extends Fragment {
 
+    public void setMedLength(int medLength) {
+        this.medLength = medLength;
+    }
+
+    public void setMediaType(int mediaType) {
+        this.mediaType = mediaType;
+    }
+
+    int medLength;
+    int mediaType;
+
     public MeditationFragment() {
         // Required empty public constructor
     }

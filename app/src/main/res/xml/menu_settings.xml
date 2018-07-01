@@ -1,29 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:auto="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
         android:defaultValue="@string/pref_default_med_time"
         android:entries="@array/pref_entries_duration"
         android:entryValues="@array/pref_entries_duration_values"
         android:key="@string/pref_key_med_time"
-        android:summary="@string/pref_med_time_summary"
+        android:summary="%s"
         android:title="@string/pref_med_time_title" />
 
     <ListPreference
-        android:defaultValue="@string/app_own_callback"
+        android:defaultValue="@string/pref_default_callback"
         android:entries="@array/pref_entries_callback"
         android:entryValues="@array/pref_entryvalues_callback"
         android:key="@string/pref_callback_key"
-        android:summary="@string/pref_callback_summary"
+        android:summary="%s"
         android:title="Callback Type" />
 
-    <ListPreference
-        android:defaultValue="@string/temple_bell"
-        android:entries="@array/pref_app_sounds"
-        android:entryValues="@array/pref_app_sounds_values"
+    <com.example.android.medjour.settings.custom.SoundPreference
+        android:defaultValue="@string/pref_default_tone"
         android:key="@string/pref_key_app_sounds"
-        android:summary="@string/pref_callback_sound_summary"
-        android:title="Choose Callback Sound" />
+        android:title="Choose Callback Sound"
+        auto:extraRingtoneTitles="@array/extraRingtoneTitles"
+        auto:extraRingtones="@array/extraRingtones"
+        auto:ringtoneType="notification"
+        auto:showDefault="true"
+        auto:showSilent="true" />
 
     <SwitchPreference
         android:defaultValue="false"
@@ -32,7 +35,7 @@
         android:summaryOn="@string/pref_reminder_on"
         android:title="@string/pref_med_reminder_title" />
 
-    <com.example.android.medjour.settings.TimePickerPreference
+    <com.example.android.medjour.settings.custom.TimePreference
         android:defaultValue="12:00"
         android:dependency="@string/pref_med_reminder_key"
         android:key="@string/pref_time_key"

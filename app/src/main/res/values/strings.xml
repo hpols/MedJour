@@ -40,10 +40,10 @@
     <string name="computer_magic">Computer Magic</string>
     <string name="metal_gong">Gong</string>
     <string name="temple_bell">Temple Bell</string>
-    <string name="a_tone_value">a tone</string>
-    <string name="computer_magic_value">computer magic</string>
-    <string name="metal_gong_value">gong</string>
-    <string name="temple_bell_value">temple bell</string>
+    <string name="a_tone_value">a_tone</string>
+    <string name="computer_magic_value">computer_magic</string>
+    <string name="metal_gong_value">metal_gong</string>
+    <string name="temple_bell_value">temple_bell</string>
 
     <!-- Activation dialog-->
     <string name="activation_text">This journal for your meditation practice is developed based on the guidelines of the C.MI. course*. However it can be used by anyone who to keep track of their practice.\n\nIf you are a C.MI. student press the \"C.MI. Student\" button and enter your activation code. Otherwise press the \"free use\" button to continue.</string>
@@ -85,19 +85,25 @@
     <!-- preferences -->
     <string name="pref_med_time_title">Meditation Time</string>
     <string name="pref_key_med_time">Meditation Time</string>
-    <string name="pref_default_med_time">20</string>
-    <string name="pref_med_time_summary">How long do you want to meditate?</string>
-    <string name="pref_callback_summary">Select how you want to be alerted at the end of your meditation.</string>
+    <string name="pref_default_med_time">@string/min_20</string>
+    <string name="pref_default_callback">@string/app_own_callback</string>
     <string name="pref_callback_key">callback type</string>
-    <string name="pref_key_ringtone">audio from device</string>
-    <string name="pref_ringtone_summary">Select audio from your device as callback</string>
-    <string name="pref_ringtone_title">Audio from your device</string>
+    <string name="pref_default_tone">@string/temple_bell</string>
+    <string name="pref_key_ringtone">ringtone</string>
+    <string name="pref_key_tone">audio from device</string>
+    <string name="pref_tone_title">Audio from your device</string>
     <string name="pref_key_app_sounds">callback_app_sound</string>
-    <string name="pref_callback_sound_summary">Select the callback audio</string>
     <string name="pref_med_reminder_title">Meditation Reminder</string>
     <string name="pref_med_reminder_key">meditation reminder</string>
     <string name="pref_time_title">Time of Day</string>
     <string name="pref_time_key">timeInMinutes</string>
     <string name="pref_reminder_on">Reminder enabled</string>
     <string name="pref_reminder_off">Reminder disabled</string>
+
+    <!-- sound preference -->
+    <string name="silent">Silent</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
+    <string name="ringtoneTitle">Ringtone</string>
+    <string name="ringtoneSummary">Ringtone: %s</string>
 </resources>
