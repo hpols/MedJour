@@ -36,7 +36,7 @@
         android:title="@string/pref_med_reminder_title" />
 
     <com.example.android.medjour.settings.custom.TimePreference
-        android:defaultValue="12:00"
+        android:defaultValue="12:00 pm"
         android:dependency="@string/pref_med_reminder_key"
         android:key="@string/pref_time_key"
         android:title="@string/pref_time_title" />

@@ -1,35 +1,39 @@
 package com.example.android.medjour.settings;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.v14.preference.SwitchPreference;
-import android.support.v4.app.DialogFragment;
-import android.support.v7.preference.ListPreference;
-import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
+import android.preference.ListPreference;
+import android.preference.Preference;
+import android.preference.PreferenceFragment;
+import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.settings.custom.SoundPreference;
-import com.example.android.medjour.settings.custom.SoundPreferenceDialog;
 import com.example.android.medjour.settings.custom.TimePreference;
-import com.example.android.medjour.settings.custom.TimePreferenceDialog;
 
-public class SettingsFragment extends PreferenceFragmentCompat implements
-        SharedPreferences.OnSharedPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragment implements
+        Preference.OnPreferenceChangeListener {
+
+    private static final String SHARED_PREFERENCES = "medPrefs"; // shared preferences identifier
 
     @Override
-    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
         addPreferencesFromResource(R.xml.menu_settings);
 
-        SharedPreferences sharedPref = getPreferenceScreen().getSharedPreferences();
-        PreferenceScreen prefScreen = getPreferenceScreen();
-        int count = prefScreen.getPreferenceCount();
-        for (int i = 0; i < count; i++) {
-            Preference p = prefScreen.getPreference(i);
-            if (!(p instanceof SwitchPreference)) {
-                String value = sharedPref.getString(p.getKey(), "");
-                setPreferenceSummary(p, value);
+        Preference medtime = findPreference(getString(R.string.pref_key_med_time));
+        setValueToSummary(medtime);
+        Preference callback = findPreference(getString(R.string.pref_callback_key));
+        setValueToSummary(callback);
+        Preference sound = findPreference(getString(R.string.pref_key_app_sounds));
+        setValueToSummary(sound);
+        Preference medReminder = findPreference(getString(R.string.pref_med_reminder_key));
+        setValueToSummary(medReminder);
+        Preference reminderTime = findPreference(getString(R.string.pref_time_key));
+        setValueToSummary(reminderTime);
 
 //                final ListPreference callbackType = (ListPreference) findPreference(getString(R.string.pref_callback_key));
 //                final SoundPreference callbackTone = (SoundPreference) findPreference(getString(R.string.pref_key_tone));
@@ -56,87 +60,58 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 //                        return true;
 //                    }
 //                });
-            }
+    }
+
+    private void setValueToSummary(Preference preference) {
+        preference.setOnPreferenceChangeListener(this);
+        if (preference instanceof ListPreference) {
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
+            String preferenceString = preferences.getString(preference.getKey(), "");
+            onPreferenceChange(preference, preferenceString);
+        } else {
+            String preferenceString = restorePreferences(preference.getKey());
+            onPreferenceChange(preference, preferenceString);
         }
     }
 
-    //TODO: not showing up fro List & Edit preferences!
-    private void setPreferenceSummary(Preference preference, Object value) {
-        String stringValue = value.toString();
+    // This method to store the custom preferences changes
+    public void savePreferences(String key, String value) {
+        SharedPreferences myPreferences = this.getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        SharedPreferences.Editor myEditor = myPreferences.edit();
+        myEditor.putString(key, value);
+        myEditor.apply();
+    }
 
+    // This method to restore the custom preferences data
+    public String restorePreferences(String key) {
+        SharedPreferences myPreferences = this.getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
+        if (myPreferences.contains(key))
+            return myPreferences.getString(key, "");
+        else return "";
+    }
+
+    @Override
+    public boolean onPreferenceChange(Preference preference, Object newValue) {
         if (preference instanceof ListPreference) {
-            // For list preferences, look up the correct display value in
-            // the preference's 'entries' list (since they have separate labels/values).
+            String stringValue = newValue.toString();
             ListPreference listPreference = (ListPreference) preference;
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
-                preference.setSummary(listPreference.getEntries()[prefIndex]);
+                CharSequence[] labels = listPreference.getEntries();
+                preference.setSummary(labels[prefIndex]);
             }
-        } else {
-            // For other preferences, set the summary to the value's simple string representation.
-            preference.setSummary(stringValue);
+        } else if (preference instanceof TimePreference) {
+            TimePreference timePreference = (TimePreference) preference;
+            String timeDisplay = timePreference.getTime();
+            savePreferences(preference.getKey(), timeDisplay);
+            preference.setSummary(timeDisplay);
+        } else if (preference instanceof SoundPreference) {
+            SoundPreference soundPreference = (SoundPreference) preference;
+            String soundDisplay = soundPreference.getValue();
+            savePreferences(preference.getKey(), soundDisplay);
+            preference.setSummary(soundDisplay);
         }
+        return true;
     }
 
-    @Override
-    public void onStop() {
-        super.onStop();
-        // unregister the preference change listener
-        getPreferenceScreen().getSharedPreferences()
-                .unregisterOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onStart() {
-        super.onStart();
-        // register the preference change listener
-        getPreferenceScreen().getSharedPreferences()
-                .registerOnSharedPreferenceChangeListener(this);
-    }
-
-    @Override
-    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-        if (key.equals(getString(R.string.pref_key_med_time))) {
-            //TODO: retrieve set meditation time length
-        } else if (key.equals(getString(R.string.pref_callback_key))) {
-            //TODO: retrieve chosen callback type
-        } else if (key.equals(getString(R.string.pref_key_app_sounds))) {
-            //TODO: retrieve app sound
-        } else if (key.equals(getString(R.string.pref_med_reminder_key))) {
-            //TODO: set reminder intent
-        } else if (key.equals(getString(R.string.pref_time_key))) {
-            //TODO: pass selected time to reminder
-        }
-
-        Preference preference = findPreference(key);
-        if (null != preference) {
-            if (!(preference instanceof SwitchPreference)) {
-                //TODO: crashes when turning switch off
-                setPreferenceSummary(preference, sharedPreferences.getString(key, ""));
-            }
-        }
-    }
-
-    @Override
-    public void onDisplayPreferenceDialog(Preference preference) {
-        DialogFragment dialogFragment = null;
-        if (preference instanceof TimePreference || preference instanceof SoundPreference) {
-            if (preference instanceof TimePreference) {
-                dialogFragment = new TimePreferenceDialog();
-            } else {
-                dialogFragment = new SoundPreferenceDialog();
-            }
-            Bundle bundle = new Bundle(1);
-            bundle.putString("key", preference.getKey());
-            dialogFragment.setArguments(bundle);
-        }
-
-        if (dialogFragment != null) {
-            dialogFragment.setTargetFragment(this, 0);
-            dialogFragment.show(this.getFragmentManager(), "android.support.v7.preference.PreferenceFragment.DIALOG");
-        } else {
-            super.onDisplayPreferenceDialog(preference);
-        }
-    }
 }
