@@ -1,4 +1,4 @@
-package com.example.android.medjour.settings.custom;
+package com.example.android.medjour.settingsv7.settingsv7.custom;
 
 import android.content.Context;
 import android.content.DialogInterface;
