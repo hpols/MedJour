@@ -7,7 +7,6 @@
         android:entries="@array/pref_entries_duration"
         android:entryValues="@array/pref_entries_duration_values"
         android:key="@string/pref_key_med_time"
-        android:summary="%s"
         android:title="@string/pref_med_time_title" />
 
     <ListPreference
@@ -15,15 +14,14 @@
         android:entries="@array/pref_entries_callback"
         android:entryValues="@array/pref_entryvalues_callback"
         android:key="@string/pref_callback_key"
-        android:summary="%s"
         android:title="Callback Type" />
 
     <com.example.android.medjour.settings.custom.SoundPreference
         android:defaultValue="@string/pref_default_tone"
         android:key="@string/pref_key_app_sounds"
         android:title="Choose Callback Sound"
-        auto:extraRingtoneTitles="@array/extraRingtoneTitles"
-        auto:extraRingtones="@array/extraRingtones"
+        auto:appOwnSoundsTitles="@array/extraRingtoneTitles"
+        auto:appOwnSounds="@array/extraRingtones"
         auto:ringtoneType="notification" />
 
     <SwitchPreference

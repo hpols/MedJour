@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="ExtraRingtonePreference">
+    <declare-styleable name="SoundPreference">
         <attr name="ringtoneType">
             <!-- Ringtones. -->
             <flag name="ringtone" value="1" />
@@ -11,9 +11,7 @@
             <!-- All available ringtone sounds. -->
             <flag name="all" value="7" />
         </attr>
-        <attr name="showSilent" format="boolean"/>
-        <attr name="showDefault" format="boolean"/>
-        <attr name="extraRingtones" format="reference"/>
-        <attr name="extraRingtoneTitles" format="reference"/>
+        <attr name="appOwnSounds" format="reference"/>
+        <attr name="appOwnSoundsTitles" format="reference"/>
     </declare-styleable>
 </resources>

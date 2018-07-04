@@ -1,4 +1,4 @@
-package com.example.android.medjour.settingsv7.settingsv7.custom;
+package com.example.android.medjour.settingsv7.custom;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -36,14 +36,6 @@ public class SoundPreferenceDialog extends PreferenceDialogFragmentCompat
     public SoundPreferenceDialog setCallBackTye(int callBackTye) {
         this.callBackTye = callBackTye;
         return this;
-    }
-
-    @Override
-    protected View onCreateDialogView(Context context) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        onPrepareDialogBuilder(builder);
-        return super.onCreateDialogView(context);
-
     }
 
     @Override

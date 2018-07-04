@@ -7,8 +7,6 @@ import android.support.v7.preference.PreferenceDialogFragmentCompat;
 import android.view.View;
 import android.widget.TimePicker;
 
-import com.example.android.medjour.settingsv7.settingsv7.custom.TimePreference;
-
 /**
  * The Dialog to display {@link TimePreference}.
  */

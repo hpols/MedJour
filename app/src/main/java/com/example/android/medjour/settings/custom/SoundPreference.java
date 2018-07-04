@@ -23,22 +23,23 @@ import java.util.TreeMap;
  */
 public class SoundPreference extends DialogPreference {
 
-    private Context mContext;
-    private String mValue;
+    private Context ctxt;
+    private String value;
     private Ringtone ringtone;
-    private CharSequence[] mExtraRingtones;
-    private CharSequence[] mExtraRingtoneTitles;
+    private CharSequence[] appOwnSounds;
+    private CharSequence[] appOwnSoundsTitles;
 
-    public SoundPreference(Context context, AttributeSet attrs) {
+    public SoundPreference(Context ctxt, AttributeSet attrs) {
 
-        super(context, attrs);
+        super(ctxt, attrs);
 
-        mContext = context;
+        this.ctxt = ctxt;
 
-        final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExtraRingtonePreference, 0, 0);
+        final TypedArray a = ctxt.obtainStyledAttributes(attrs, R.styleable.SoundPreference,
+                0, 0);
 
-        mExtraRingtones = a.getTextArray(R.styleable.ExtraRingtonePreference_extraRingtones);
-        mExtraRingtoneTitles = a.getTextArray(R.styleable.ExtraRingtonePreference_extraRingtoneTitles);
+        appOwnSounds = a.getTextArray(R.styleable.SoundPreference_appOwnSounds);
+        appOwnSoundsTitles = a.getTextArray(R.styleable.SoundPreference_appOwnSoundsTitles);
 
         a.recycle();
     }
@@ -48,35 +49,35 @@ public class SoundPreference extends DialogPreference {
     }
 
     public String getValue() {
-        return mValue;
+        return value;
     }
 
     private Map<String, Uri> getSounds(int type) {
 
-        RingtoneManager ringtoneManager = new RingtoneManager(mContext);
-        ringtoneManager.setType(type);
-        Cursor cursor = ringtoneManager.getCursor();
+        RingtoneManager ringMan = new RingtoneManager(ctxt);
+        ringMan.setType(type);
+        Cursor csr = ringMan.getCursor();
 
         Map<String, Uri> list = new TreeMap<String, Uri>();
-        while (cursor.moveToNext()) {
-            String notificationTitle = cursor.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-            Uri notificationUri =  ringtoneManager.getRingtoneUri(cursor.getPosition());
+        while (csr.moveToNext()) {
+            String ringTitle = csr.getString(RingtoneManager.TITLE_COLUMN_INDEX);
+            Uri ringUri =  ringMan.getRingtoneUri(csr.getPosition());
 
-            list.put(notificationTitle, notificationUri);
+            list.put(ringTitle, ringUri);
         }
 
         return list;
     }
 
     private Uri uriFromRaw(String name) {
-        int resId = mContext.getResources().getIdentifier(name, "raw", mContext.getPackageName());
-        return Uri.parse("android.resource://" + mContext.getPackageName() + "/" + resId);
+        int audioId = ctxt.getResources().getIdentifier(name, "raw", ctxt.getPackageName());
+        return Uri.parse("android.resource://" + ctxt.getPackageName() + "/" + audioId);
     }
 
-    private String getExtraRingtoneTitle(CharSequence name) {
-        if (mExtraRingtones != null && mExtraRingtoneTitles != null) {
-            int index = Arrays.asList(mExtraRingtones).indexOf(name);
-            return mExtraRingtoneTitles[index].toString();
+    private String appOwnSoundsTitle(CharSequence name) {
+        if (appOwnSounds != null && appOwnSoundsTitles != null) {
+            int index = Arrays.asList(appOwnSounds).indexOf(name);
+            return appOwnSoundsTitles[index].toString();
         }
 
         return null;
@@ -85,38 +86,38 @@ public class SoundPreference extends DialogPreference {
     @Override
     public CharSequence getSummary() {
 
-        String ringtoneTitle = null;
+        String ringTitle = null;
 
-        if (mValue != null) {
+        if (value != null) {
 
-            if (ringtoneTitle == null && mExtraRingtones != null && mExtraRingtoneTitles != null) {
+            if (ringTitle == null && appOwnSounds != null && appOwnSoundsTitles != null) {
 
-                for (int i = 0; i < mExtraRingtones.length; i++) {
+                for (int i = 0; i < appOwnSounds.length; i++) {
 
-                    Uri uriExtra = uriFromRaw(mExtraRingtones[i].toString());
+                    Uri uriExtra = uriFromRaw(appOwnSounds[i].toString());
 
-                    if (uriExtra.equals(Uri.parse(mValue))) {
-                        ringtoneTitle = mExtraRingtoneTitles[i].toString();
+                    if (uriExtra.equals(Uri.parse(value))) {
+                        ringTitle = appOwnSoundsTitles[i].toString();
                         break;
                     }
                 }
             }
 
-            if (ringtoneTitle == null) {
-                Ringtone ringtone = RingtoneManager.getRingtone(mContext, Uri.parse(mValue));
-                String title = ringtone.getTitle(mContext);
+            if (ringTitle == null) {
+                Ringtone ringtone = RingtoneManager.getRingtone(ctxt, Uri.parse(value));
+                String title = ringtone.getTitle(ctxt);
                 if (title != null && title.length() > 0)
-                    ringtoneTitle = title;
+                    ringTitle = title;
             }
         }
 
         CharSequence summary = super.getSummary();
 
-        if (ringtoneTitle != null) {
+        if (ringTitle != null) {
             if (summary != null)
-                return String.format(summary.toString(), ringtoneTitle);
+                return String.format(summary.toString(), ringTitle);
             else
-                return ringtoneTitle;
+                return ringTitle;
         } else return summary;
     }
 
@@ -125,10 +126,10 @@ public class SoundPreference extends DialogPreference {
 
         final Map<String, Uri> sounds = new LinkedHashMap<String, Uri>();
 
-        if (mExtraRingtones != null) {
-            for (CharSequence extraRingtone : mExtraRingtones) {
-                Uri uri = uriFromRaw(extraRingtone.toString());
-                String title = getExtraRingtoneTitle(extraRingtone);
+        if (appOwnSounds != null) {
+            for (CharSequence appOwnSound : appOwnSounds) {
+                Uri uri = uriFromRaw(appOwnSound.toString());
+                String title = appOwnSoundsTitle(appOwnSound);
 
                 sounds.put(title, uri);
             }
@@ -140,7 +141,7 @@ public class SoundPreference extends DialogPreference {
         final String[] titleArray = sounds.keySet().toArray(new String[0]);
         final Uri[] uriArray = sounds.values().toArray(new Uri[0]);
 
-        int index = mValue != null ? Arrays.asList(uriArray).indexOf(Uri.parse(mValue)) : -1;
+        int index = value != null ? Arrays.asList(uriArray).indexOf(Uri.parse(value)) : -1;
 
         builder.setSingleChoiceItems(titleArray, index, new DialogInterface.OnClickListener() {
 
@@ -154,11 +155,11 @@ public class SoundPreference extends DialogPreference {
 
                 if (uri != null) {
                     if (uri.toString().length() > 0) {
-                        ringtone = RingtoneManager.getRingtone(mContext, uri);
+                        ringtone = RingtoneManager.getRingtone(ctxt, uri);
                         ringtone.play();
                     }
-                    mValue = uri.toString();
-                } else mValue = null;
+                    value = uri.toString();
+                } else value = null;
             }
         });
 
@@ -175,8 +176,8 @@ public class SoundPreference extends DialogPreference {
         if (ringtone != null)
             ringtone.stop();
 
-        if (positiveResult && callChangeListener(mValue)) {
-            persistString(mValue);
+        if (positiveResult && callChangeListener(value)) {
+            persistString(value);
             notifyChanged();
         }
 
@@ -191,18 +192,18 @@ public class SoundPreference extends DialogPreference {
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
         if (restoreValue)
-            mValue = getPersistedString("");
+            value = getPersistedString("");
         else {
-            if (mExtraRingtones != null && defaultValue != null && defaultValue.toString().length() > 0) {
+            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
 
-                int index = Arrays.asList(mExtraRingtones).indexOf((CharSequence) defaultValue);
+                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
                 if (index >= 0)
-                    mValue = uriFromRaw(defaultValue.toString()).toString();
-                else mValue = (String) defaultValue;
+                    value = uriFromRaw(defaultValue.toString()).toString();
+                else value = (String) defaultValue;
 
-            } else mValue = (String) defaultValue;
+            } else value = (String) defaultValue;
 
-            persistString(mValue);
+            persistString(value);
         }
     }
 }

@@ -1,4 +1,4 @@
-package com.example.android.medjour.settingsv7.settingsv7;
+package com.example.android.medjour.settingsv7;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -10,10 +10,10 @@ import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 
 import com.example.android.medjour.R;
-import com.example.android.medjour.settingsv7.settingsv7.custom.SoundPreference;
-import com.example.android.medjour.settingsv7.settingsv7.custom.SoundPreferenceDialog;
-import com.example.android.medjour.settingsv7.settingsv7.custom.TimePreference;
-import com.example.android.medjour.settingsv7.settingsv7.custom.TimePreferenceDialog;
+import com.example.android.medjour.settingsv7.custom.SoundPreference;
+import com.example.android.medjour.settingsv7.custom.SoundPreferenceDialog;
+import com.example.android.medjour.settingsv7.custom.TimePreference;
+import com.example.android.medjour.settingsv7.custom.TimePreferenceDialog;
 
 public class SettingsFragment extends PreferenceFragmentCompat implements
         SharedPreferences.OnSharedPreferenceChangeListener {

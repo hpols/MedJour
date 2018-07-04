@@ -1,4 +1,4 @@
-package com.example.android.medjour.settingsv7.settingsv7.custom;
+package com.example.android.medjour.settingsv7.custom;
 
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -21,8 +21,6 @@ public class SoundPreference extends DialogPreference {
     public String value;
     public Ringtone ringtone;
     public int ringtoneType;
-    public boolean showSilent;
-    public boolean showDefault;
     public CharSequence[] extraRingtones;
     public CharSequence[] extraRingtoneTitles;
 
@@ -33,14 +31,12 @@ public class SoundPreference extends DialogPreference {
         this.ctxt = ctxt;
 
         final TypedArray a = ctxt.obtainStyledAttributes(attrs,
-                R.styleable.ExtraRingtonePreference, 0, 0);
+                R.styleable.SoundPreference, 0, 0);
 
-        ringtoneType = a.getInt(R.styleable.ExtraRingtonePreference_ringtoneType,
+        ringtoneType = a.getInt(R.styleable.SoundPreference_ringtoneType,
                 RingtoneManager.TYPE_RINGTONE);
-        showDefault = a.getBoolean(R.styleable.ExtraRingtonePreference_showDefault, true);
-        showSilent = a.getBoolean(R.styleable.ExtraRingtonePreference_showSilent, true);
-        extraRingtones = a.getTextArray(R.styleable.ExtraRingtonePreference_extraRingtones);
-        extraRingtoneTitles = a.getTextArray(R.styleable.ExtraRingtonePreference_extraRingtoneTitles);
+        extraRingtones = a.getTextArray(R.styleable.SoundPreference_appOwnSounds);
+        extraRingtoneTitles = a.getTextArray(R.styleable.SoundPreference_appOwnSoundsTitles);
 
         a.recycle();
     }
