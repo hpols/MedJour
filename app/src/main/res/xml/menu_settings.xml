@@ -24,9 +24,7 @@
         android:title="Choose Callback Sound"
         auto:extraRingtoneTitles="@array/extraRingtoneTitles"
         auto:extraRingtones="@array/extraRingtones"
-        auto:ringtoneType="notification"
-        auto:showDefault="true"
-        auto:showSilent="true" />
+        auto:ringtoneType="notification" />
 
     <SwitchPreference
         android:defaultValue="false"

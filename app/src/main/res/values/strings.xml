@@ -101,7 +101,6 @@
     <string name="pref_reminder_off">Reminder disabled</string>
 
     <!-- sound preference -->
-    <string name="silent">Silent</string>
     <string name="ok">OK</string>
     <string name="cancel">Cancel</string>
     <string name="ringtoneTitle">Ringtone</string>

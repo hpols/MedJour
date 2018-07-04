@@ -72,9 +72,6 @@ public class SoundPreferenceDialog extends PreferenceDialogFragmentCompat
                 break;
         }
 
-        if (soundPreference.showSilent)
-            sounds.put(soundPreference.ctxt.getString(R.string.silent), Uri.parse(""));
-
         sounds.putAll(getSounds(RingtoneManager.TYPE_NOTIFICATION));
 
         final String[] titleArray = sounds.keySet().toArray(new String[0]);

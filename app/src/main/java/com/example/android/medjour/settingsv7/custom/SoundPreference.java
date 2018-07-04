@@ -65,9 +65,6 @@ public class SoundPreference extends DialogPreference {
 
         if (value != null) {
 
-            if (value.length() == 0)
-                ringtoneTitle = ctxt.getString(R.string.silent);
-
             if (ringtoneTitle == null && extraRingtones != null && extraRingtoneTitles != null) {
 
                 for (int i = 0; i < extraRingtones.length; i++) {

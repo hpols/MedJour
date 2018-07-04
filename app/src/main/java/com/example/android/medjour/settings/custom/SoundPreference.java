@@ -26,9 +26,6 @@ public class SoundPreference extends DialogPreference {
     private Context mContext;
     private String mValue;
     private Ringtone ringtone;
-    private int mRingtoneType;
-    private boolean mShowSilent;
-    private boolean mShowDefault;
     private CharSequence[] mExtraRingtones;
     private CharSequence[] mExtraRingtoneTitles;
 
@@ -40,9 +37,6 @@ public class SoundPreference extends DialogPreference {
 
         final TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ExtraRingtonePreference, 0, 0);
 
-        mRingtoneType = a.getInt(R.styleable.ExtraRingtonePreference_ringtoneType, RingtoneManager.TYPE_RINGTONE);
-        mShowDefault = a.getBoolean(R.styleable.ExtraRingtonePreference_showDefault, true);
-        mShowSilent = a.getBoolean(R.styleable.ExtraRingtonePreference_showSilent, true);
         mExtraRingtones = a.getTextArray(R.styleable.ExtraRingtonePreference_extraRingtones);
         mExtraRingtoneTitles = a.getTextArray(R.styleable.ExtraRingtonePreference_extraRingtoneTitles);
 
@@ -95,9 +89,6 @@ public class SoundPreference extends DialogPreference {
 
         if (mValue != null) {
 
-            if (mValue.length() == 0)
-                ringtoneTitle = mContext.getString(R.string.silent);
-
             if (ringtoneTitle == null && mExtraRingtones != null && mExtraRingtoneTitles != null) {
 
                 for (int i = 0; i < mExtraRingtones.length; i++) {
@@ -142,20 +133,6 @@ public class SoundPreference extends DialogPreference {
                 sounds.put(title, uri);
             }
         }
-
-        if (mShowDefault) {
-            Uri uriDefault = RingtoneManager.getDefaultUri(mRingtoneType);
-            if (uriDefault != null) {
-                Ringtone ringtoneDefault = RingtoneManager.getRingtone(mContext, uriDefault);
-                if (ringtoneDefault != null) {
-                    sounds.put(ringtoneDefault.getTitle(mContext), uriDefault);
-                }
-            }
-        }
-
-        if (mShowSilent)
-            sounds.put(mContext.getString(R.string.silent), Uri.parse(""));
-
 
         sounds.putAll(getSounds(RingtoneManager.TYPE_NOTIFICATION));
 

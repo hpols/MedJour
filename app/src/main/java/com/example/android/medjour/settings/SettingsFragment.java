@@ -16,7 +16,8 @@ import com.example.android.medjour.settings.custom.TimePreference;
 public class SettingsFragment extends PreferenceFragment implements
         Preference.OnPreferenceChangeListener {
 
-    private static final String SHARED_PREFERENCES = "medPrefs"; // shared preferences identifier
+    private static final String MED_PREFS = "medPrefs"; // shared preferences identifier
+    SharedPreferences sharedPref;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -24,8 +25,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         addPreferencesFromResource(R.xml.menu_settings);
 
-        Preference medtime = findPreference(getString(R.string.pref_key_med_time));
-        setValueToSummary(medtime);
+        Preference medTime = findPreference(getString(R.string.pref_key_med_time));
+        setValueToSummary(medTime);
         Preference callback = findPreference(getString(R.string.pref_callback_key));
         setValueToSummary(callback);
         Preference sound = findPreference(getString(R.string.pref_key_app_sounds));
@@ -34,84 +35,57 @@ public class SettingsFragment extends PreferenceFragment implements
         setValueToSummary(medReminder);
         Preference reminderTime = findPreference(getString(R.string.pref_time_key));
         setValueToSummary(reminderTime);
-
-//                final ListPreference callbackType = (ListPreference) findPreference(getString(R.string.pref_callback_key));
-//                final SoundPreference callbackTone = (SoundPreference) findPreference(getString(R.string.pref_key_tone));
-//                callbackType.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//                    @Override
-//                    public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                        SoundPreferenceDialog soundPreferenceDialog = new SoundPreferenceDialog();
-//                        int callBack = SettingsUtils.getMeditationCallback(getContext());
-//                        boolean boolEnable = false;
-//                        switch (callBack) {
-//                            case SettingsUtils.RINGTONE_CB:
-//                                soundPreferenceDialog.setCallBackSelection(soundPreferenceDialog.SHOW_RINGTONES);
-//                                boolEnable = true;
-//                                break;
-//                            case SettingsUtils.APP_SOUND_CB:
-//                                soundPreferenceDialog.setCallBackSelection(soundPreferenceDialog.SHOW_APP_SOUNDS);
-//                                boolEnable = true;
-//                                break;
-//                            case SettingsUtils.VIDEO_CB:
-//                                boolEnable = false;
-//                                break;
-//                        }
-//                        callbackTone.setVisible(boolEnable);
-//                        return true;
-//                    }
-//                });
     }
 
-    private void setValueToSummary(Preference preference) {
-        preference.setOnPreferenceChangeListener(this);
-        if (preference instanceof ListPreference) {
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(preference.getContext());
-            String preferenceString = preferences.getString(preference.getKey(), "");
-            onPreferenceChange(preference, preferenceString);
+    private void setValueToSummary(Preference pref) {
+        pref.setOnPreferenceChangeListener(this);
+        if (pref instanceof ListPreference) {
+            sharedPref  = PreferenceManager.getDefaultSharedPreferences(pref.getContext());
+            String preferenceString = sharedPref.getString(pref.getKey(), "");
+            onPreferenceChange(pref, preferenceString);
         } else {
-            String preferenceString = restorePreferences(preference.getKey());
-            onPreferenceChange(preference, preferenceString);
+            String preferenceText = resetPref(pref.getKey());
+            onPreferenceChange(pref, preferenceText);
         }
     }
 
     // This method to store the custom preferences changes
-    public void savePreferences(String key, String value) {
-        SharedPreferences myPreferences = this.getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        SharedPreferences.Editor myEditor = myPreferences.edit();
-        myEditor.putString(key, value);
-        myEditor.apply();
+    public void savePref(String key, String value) {
+        sharedPref = this.getActivity().getSharedPreferences(MED_PREFS, Context.MODE_PRIVATE);
+        SharedPreferences.Editor prefEditor = sharedPref.edit();
+        prefEditor.putString(key, value);
+        prefEditor.apply();
     }
 
     // This method to restore the custom preferences data
-    public String restorePreferences(String key) {
-        SharedPreferences myPreferences = this.getActivity().getSharedPreferences(SHARED_PREFERENCES, Context.MODE_PRIVATE);
-        if (myPreferences.contains(key))
-            return myPreferences.getString(key, "");
+    public String resetPref(String key) {
+        sharedPref = this.getActivity().getSharedPreferences(MED_PREFS, Context.MODE_PRIVATE);
+        if (sharedPref.contains(key))
+            return sharedPref.getString(key, "");
         else return "";
     }
 
     @Override
-    public boolean onPreferenceChange(Preference preference, Object newValue) {
-        if (preference instanceof ListPreference) {
+    public boolean onPreferenceChange(Preference pref, Object newValue) {
+        if (pref instanceof ListPreference) {
             String stringValue = newValue.toString();
-            ListPreference listPreference = (ListPreference) preference;
+            ListPreference listPreference = (ListPreference) pref;
             int prefIndex = listPreference.findIndexOfValue(stringValue);
             if (prefIndex >= 0) {
                 CharSequence[] labels = listPreference.getEntries();
-                preference.setSummary(labels[prefIndex]);
+                pref.setSummary(labels[prefIndex]);
             }
-        } else if (preference instanceof TimePreference) {
-            TimePreference timePreference = (TimePreference) preference;
+        } else if (pref instanceof TimePreference) {
+            TimePreference timePreference = (TimePreference) pref;
             String timeDisplay = timePreference.getTime();
-            savePreferences(preference.getKey(), timeDisplay);
-            preference.setSummary(timeDisplay);
-        } else if (preference instanceof SoundPreference) {
-            SoundPreference soundPreference = (SoundPreference) preference;
+            savePref(pref.getKey(), timeDisplay);
+            pref.setSummary(timeDisplay);
+        } else if (pref instanceof SoundPreference) {
+            SoundPreference soundPreference = (SoundPreference) pref;
             String soundDisplay = soundPreference.getValue();
-            savePreferences(preference.getKey(), soundDisplay);
-            preference.setSummary(soundDisplay);
+            savePref(pref.getKey(), soundDisplay);
+            pref.setSummary(soundDisplay);
         }
         return true;
     }
-
 }

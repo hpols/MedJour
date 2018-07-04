@@ -16,17 +16,17 @@ public class TimePreference extends DialogPreference {
 
     private int lastHour = 0;
     private int lastMinute = 0;
-    boolean isAm;
+    private boolean isAm;
     private TimePicker picker = null;
 
 
-    public static int getHour(String time) {
+    private static int getHour(String time) {
         String[] pieces = time.split(":");
 
         return (Integer.parseInt(pieces[0]));
     }
 
-    public static int getMinute(String time) {
+    private static int getMinute(String time) {
         String[] pieces = time.split(":");
 
         return (Integer.parseInt(pieces[1]));
@@ -94,7 +94,7 @@ public class TimePreference extends DialogPreference {
         lastHour = getHour(time);
         lastMinute = getMinute(time);
 
-        TimePickerDialog.OnTimeSetListener onStartTimeListener = new TimePickerDialog.OnTimeSetListener() {
+        new TimePickerDialog.OnTimeSetListener() {
 
             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                 isAm = hourOfDay < 12;
@@ -106,9 +106,9 @@ public class TimePreference extends DialogPreference {
         String meridianId;
         if (isAm) {
             if (lastHour > 12) {
-                meridianId = "pm";
+                meridianId = " pm";
             } else {
-                meridianId = "am";
+                meridianId = " am";
             }
         } else {
             meridianId = "";
