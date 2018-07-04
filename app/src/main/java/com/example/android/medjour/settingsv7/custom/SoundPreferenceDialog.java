@@ -1,6 +1,5 @@
 package com.example.android.medjour.settingsv7.custom;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.database.Cursor;
 import android.media.Ringtone;
@@ -10,7 +9,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceDialogFragmentCompat;
-import android.view.View;
 
 import com.example.android.medjour.R;
 

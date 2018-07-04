@@ -13,7 +13,7 @@ import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.ActivityOverviewBinding;
 import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
-import com.example.android.medjour.settings.SettingsActivity;
+import com.example.android.medjour.settingsv7.SettingsActivity;
 import com.example.android.medjour.utils.JournalUtils;
 import com.facebook.stetho.Stetho;
 

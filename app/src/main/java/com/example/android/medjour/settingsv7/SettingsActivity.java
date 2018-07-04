@@ -1,4 +1,4 @@
-package com.example.android.medjour.settingsv7.settingsv7;
+package com.example.android.medjour.settingsv7;
 
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
