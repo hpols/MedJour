@@ -21,8 +21,8 @@
     </style>
 
     <style name="SettingsTheme" parent="AppTheme">
-        <item name="android:textColor">@color/colorLightAccent</item>
-        <item name="android:textColorSecondary">@color/colorLightAccent</item>
+        <item name="android:textColorPrimary">@color/pref_text_color_selector</item>
+        <item name="android:textColorSecondary">@color/pref_text_color_selector</item>
     </style>
 
     <style name="button">

@@ -48,13 +48,11 @@ public class SettingsUtils {
     public static int getMeditationCallback(Context ctxt) {
         sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
-        String keyforCallback = ctxt.getString(R.string.pref_callback_key);
-        String defaultCallback = ctxt.getString(R.string.app_own_callback);
+        String keyforCallback = ctxt.getString(R.string.pref_key_callback);
+        String defaultCallback = ctxt.getString(R.string.sound_callback);
 
         String chosenCallback = sp.getString(keyforCallback, defaultCallback);
-        if (chosenCallback.equals(ctxt.getString(R.string.ringtone_callback))) {
-            return RINGTONE_CB;
-        } else if (chosenCallback.equals(ctxt.getString(R.string.app_own_callback))) {
+        if (chosenCallback.equals(ctxt.getString(R.string.sound_callback))) {
             return APP_SOUND_CB;
         } else {
             return VIDEO_CB;

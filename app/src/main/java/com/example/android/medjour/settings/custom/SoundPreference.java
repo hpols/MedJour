@@ -90,7 +90,7 @@ public class SoundPreference extends DialogPreference {
 
         if (value != null) {
 
-            if (ringTitle == null && appOwnSounds != null && appOwnSoundsTitles != null) {
+            if (appOwnSounds != null && appOwnSoundsTitles != null) {
 
                 for (int i = 0; i < appOwnSounds.length; i++) {
 

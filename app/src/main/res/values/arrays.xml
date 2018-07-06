@@ -34,14 +34,12 @@
     </string-array>
 
     <string-array name="pref_entries_callback">
-       <item>@string/ringtone_callback</item>
-        <item>@string/app_own_callback</item>
+       <item>@string/sound_callback</item>
         <item>@string/video_callback</item>
     </string-array>
 
     <string-array name="pref_entryvalues_callback">
-        <item>@string/ringtone_value_callback</item>
-        <item>@string/app_own_value_callback</item>
+        <item>@string/sound_value_callback</item>
         <item>@string/video_value_callback</item>
     </string-array>
 

@@ -1,91 +1,133 @@
 package com.example.android.medjour.settings;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
-import android.preference.PreferenceManager;
+import android.preference.PreferenceScreen;
+import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.settings.custom.SoundPreference;
-import com.example.android.medjour.settings.custom.TimePreference;
 
 public class SettingsFragment extends PreferenceFragment implements
-        Preference.OnPreferenceChangeListener {
+        SharedPreferences.OnSharedPreferenceChangeListener {
 
-    private static final String MED_PREFS = "medPrefs"; // shared preferences identifier
     SharedPreferences sharedPref;
 
+    //preferences that need further setup beyond what the xml provides
+    ListPreference callback;
+    SoundPreference sound;
+
+    /**
+     * create the Fragment, set the preference summaries and ensure the sound preference is only
+     * active when the sound callback is selected
+     *
+     * @param savedInstanceState retaining information as needed
+     */
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         addPreferencesFromResource(R.xml.menu_settings);
 
-        Preference medTime = findPreference(getString(R.string.pref_key_med_time));
-        setValueToSummary(medTime);
-        Preference callback = findPreference(getString(R.string.pref_callback_key));
-        setValueToSummary(callback);
-        Preference sound = findPreference(getString(R.string.pref_key_app_sounds));
-        setValueToSummary(sound);
-        Preference medReminder = findPreference(getString(R.string.pref_med_reminder_key));
-        setValueToSummary(medReminder);
-        Preference reminderTime = findPreference(getString(R.string.pref_time_key));
-        setValueToSummary(reminderTime);
-    }
+        setSoundPrefActivation(callback.getValue());
 
-    private void setValueToSummary(Preference pref) {
-        pref.setOnPreferenceChangeListener(this);
-        if (pref instanceof ListPreference) {
-            sharedPref  = PreferenceManager.getDefaultSharedPreferences(pref.getContext());
-            String preferenceString = sharedPref.getString(pref.getKey(), "");
-            onPreferenceChange(pref, preferenceString);
-        } else {
-            String preferenceText = resetPref(pref.getKey());
-            onPreferenceChange(pref, preferenceText);
+        sharedPref = getPreferenceScreen().getSharedPreferences();
+
+        PreferenceScreen prefScreen = getPreferenceScreen();
+        int count = prefScreen.getPreferenceCount();
+        for (int i = 0; i < count; i++) {
+            Preference pref = prefScreen.getPreference(i);
+            if (!(pref instanceof SwitchPreference || pref instanceof SoundPreference)) {
+                setPrefSummary(pref, sharedPref.getString(pref.getKey(), ""));
+            }
+        }
+
+        callback = (ListPreference) findPreference(getString(R.string.pref_key_callback));
+
+        sound = (SoundPreference) findPreference(getString(R.string.pref_key_sounds));
+        if (sound.getValue() == null) {
+            sharedPref.getString(getString(R.string.pref_key_tone),
+                    getString(R.string.pref_default_sound));
+            sound.getSummary();
         }
     }
 
-    // This method to store the custom preferences changes
-    public void savePref(String key, String value) {
-        sharedPref = this.getActivity().getSharedPreferences(MED_PREFS, Context.MODE_PRIVATE);
-        SharedPreferences.Editor prefEditor = sharedPref.edit();
-        prefEditor.putString(key, value);
-        prefEditor.apply();
+    /**
+     * set the preference summary
+     *
+     * @param pref  is the preference in question
+     * @param value is the value to be displayed in the summary
+     */
+    private void setPrefSummary(Preference pref, Object value) {
+        String stringValue = value.toString();
+
+        if (pref instanceof ListPreference) {
+            // For list preferences, look up the correct display value in
+            // the preference's 'entries' list (since they have separate labels/values).
+            ListPreference listPref = (ListPreference) pref;
+            int prefIndex = listPref.findIndexOfValue(stringValue);
+            if (prefIndex >= 0) {
+                pref.setSummary(listPref.getEntries()[prefIndex]);
+            }
+        } else {
+            // For other preferences, set the summary to the value's simple string representation.
+            pref.setSummary(stringValue);
+        }
     }
 
-    // This method to restore the custom preferences data
-    public String resetPref(String key) {
-        sharedPref = this.getActivity().getSharedPreferences(MED_PREFS, Context.MODE_PRIVATE);
-        if (sharedPref.contains(key))
-            return sharedPref.getString(key, "");
-        else return "";
+    /** Only enable the soundPreference if the user wants a callback sound. When video is selected
+     * we do not need to select anything further.
+     *
+     * @param value of the callback preference which acts as a flag to know whether the sound
+     *              preference option should be enabled
+     */
+    private void setSoundPrefActivation(String value) {
+        if (value.equals(getString(R.string.video_value_callback))) {
+            sound.setEnabled(false);
+            sound.setSummary("");
+        } else {
+            sound.setEnabled(true);
+        }
+    }
+
+    /**
+     * Update summaries and activitation of the sound preference
+     *
+     * @param sharedPref holds the information of the preference just changed
+     * @param key        is the key of the preference just changed
+     */
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPref, String key) {
+        setSoundPrefActivation(callback.getValue());
+
+        Preference preference = findPreference(key);
+        if (null != preference) {
+            if (!(preference instanceof SwitchPreference || preference instanceof SoundPreference)) {
+                setPrefSummary(preference, sharedPref.getString(key, ""));
+            }
+        }
+
+        if (key.equals(getString(R.string.pref_key_sounds))) {
+            sound.setSummary(sharedPref.getString(key,
+                    getString(R.string.pref_key_sounds)));
+        }
     }
 
     @Override
-    public boolean onPreferenceChange(Preference pref, Object newValue) {
-        if (pref instanceof ListPreference) {
-            String stringValue = newValue.toString();
-            ListPreference listPreference = (ListPreference) pref;
-            int prefIndex = listPreference.findIndexOfValue(stringValue);
-            if (prefIndex >= 0) {
-                CharSequence[] labels = listPreference.getEntries();
-                pref.setSummary(labels[prefIndex]);
-            }
-        } else if (pref instanceof TimePreference) {
-            TimePreference timePreference = (TimePreference) pref;
-            String timeDisplay = timePreference.getTime();
-            savePref(pref.getKey(), timeDisplay);
-            pref.setSummary(timeDisplay);
-        } else if (pref instanceof SoundPreference) {
-            SoundPreference soundPreference = (SoundPreference) pref;
-            String soundDisplay = soundPreference.getValue();
-            savePref(pref.getKey(), soundDisplay);
-            pref.setSummary(soundDisplay);
-        }
-        return true;
+    public void onResume() {
+        super.onResume();
+        getPreferenceScreen().getSharedPreferences()
+                .registerOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        getPreferenceScreen().getSharedPreferences()
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 }

@@ -99,13 +99,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements
 
         if (key.equals(getString(R.string.pref_key_med_time))) {
             //TODO: retrieve set meditation time length
-        } else if (key.equals(getString(R.string.pref_callback_key))) {
+        } else if (key.equals(getString(R.string.pref_key_callback))) {
             //TODO: retrieve chosen callback type
-        } else if (key.equals(getString(R.string.pref_key_app_sounds))) {
+        } else if (key.equals(getString(R.string.pref_key_sounds))) {
             //TODO: retrieve app sound
         } else if (key.equals(getString(R.string.pref_med_reminder_key))) {
             //TODO: set reminder intent
-        } else if (key.equals(getString(R.string.pref_time_key))) {
+        } else if (key.equals(getString(R.string.pref_key_reminder_time))) {
             //TODO: pass selected time to reminder
         }
 

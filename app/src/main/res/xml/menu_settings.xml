@@ -7,22 +7,22 @@
         android:entries="@array/pref_entries_duration"
         android:entryValues="@array/pref_entries_duration_values"
         android:key="@string/pref_key_med_time"
-        android:title="@string/pref_med_time_title" />
+        android:title="@string/pref_med_time_title"/>
 
     <ListPreference
         android:defaultValue="@string/pref_default_callback"
         android:entries="@array/pref_entries_callback"
         android:entryValues="@array/pref_entryvalues_callback"
-        android:key="@string/pref_callback_key"
-        android:title="Callback Type" />
+        android:key="@string/pref_key_callback"
+        android:title="Callback Type"/>
 
     <com.example.android.medjour.settings.custom.SoundPreference
-        android:defaultValue="@string/pref_default_tone"
-        android:key="@string/pref_key_app_sounds"
+        android:defaultValue="@string/pref_default_sound"
+        android:key="@string/pref_key_sounds"
         android:title="Choose Callback Sound"
         auto:appOwnSoundsTitles="@array/extraRingtoneTitles"
         auto:appOwnSounds="@array/extraRingtones"
-        auto:ringtoneType="notification" />
+        auto:ringtoneType="notification"/>
 
     <SwitchPreference
         android:defaultValue="false"
@@ -32,8 +32,8 @@
         android:title="@string/pref_med_reminder_title" />
 
     <com.example.android.medjour.settings.custom.TimePreference
-        android:defaultValue="12:00 pm"
+        android:defaultValue="@string/pref_default_reminder_time"
         android:dependency="@string/pref_med_reminder_key"
-        android:key="@string/pref_time_key"
-        android:title="@string/pref_time_title" />
+        android:key="@string/pref_key_reminder_time"
+        android:title="@string/pref_time_title"/>
 </PreferenceScreen>

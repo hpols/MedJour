@@ -15,26 +15,24 @@
 
     <!-- Settings -->
     <!-- durations -->
-    <string name="min_5">5 minutes</string>
-    <string name="min_10">10 minutes</string>
-    <string name="min_15">15 minutes</string>
-    <string name="min_20">20 minutes</string>
-    <string name="min_30">30 minutes</string>
-    <string name="min_45">45 minutes</string>
-    <string name="min_5_value">5m</string>
-    <string name="min_10_value">10m</string>
-    <string name="min_15_value">15m</string>
-    <string name="min_20_value">20m</string>
-    <string name="min_30_value">30m</string>
-    <string name="min_45_value">45m</string>
+    <string name="min_5">5min</string>
+    <string name="min_10">10min</string>
+    <string name="min_15">15min</string>
+    <string name="min_20">20min</string>
+    <string name="min_30">30min</string>
+    <string name="min_45">45min</string>
+    <string name="min_5_value">5 minutes</string>
+    <string name="min_10_value">10 minutes</string>
+    <string name="min_15_value">15 minutes</string>
+    <string name="min_20_value">20 minutes</string>
+    <string name="min_30_value">30 minutes</string>
+    <string name="min_45_value">45 minutes</string>
 
     <!--callback choices-->
-    <string name="ringtone_callback">Ringtone</string>
-    <string name="app_own_callback">App own</string>
+    <string name="sound_callback">Sound</string>
     <string name="video_callback">Meditation Video</string>
-    <string name="ringtone_value_callback">ringtone</string>
-    <string name="app_own_value_callback">appOwn</string>
-    <string name="video_value_callback">meditationVideo</string>
+    <string name="sound_value_callback">Sound</string>
+    <string name="video_value_callback">Meditation Video</string>
     <!--app sounds -->
     <string name="a_tone">A Tone</string>
     <string name="computer_magic">Computer Magic</string>
@@ -75,7 +73,7 @@
     <string name="journal_prep_label">Prep:</string>
     <string name="journal_med_label">Med:</string>
     <string name="journal_rev_label">Rev:</string>
-    <string name="overview_no_entries">You have not written any journal entries so far. Start by hitting \"Add new entry \".</string>
+    <string name="overview_no_entries">You have not written any journal entries so far.\nStart by tapping \"Add new journal entry \".</string>
 
     <!-- menu -->
     <string name="menu_title_settings">Settings</string>
@@ -84,19 +82,23 @@
 
     <!-- preferences -->
     <string name="pref_med_time_title">Meditation Time</string>
+    <string name="pref_time_title">Time of Day</string>
+    <string name="pref_tone_title">Audio from your device</string>
+    <string name="pref_med_reminder_title">Meditation Reminder</string>
+
     <string name="pref_key_med_time">Meditation Time</string>
-    <string name="pref_default_med_time">@string/min_20</string>
-    <string name="pref_default_callback">@string/app_own_callback</string>
-    <string name="pref_callback_key">callback type</string>
-    <string name="pref_default_tone">@string/temple_bell</string>
+    <string name="pref_key_callback">callback type</string>
+    <string name="pref_key_sounds">callback sound</string>
     <string name="pref_key_ringtone">ringtone</string>
     <string name="pref_key_tone">audio from device</string>
-    <string name="pref_tone_title">Audio from your device</string>
-    <string name="pref_key_app_sounds">callback_app_sound</string>
-    <string name="pref_med_reminder_title">Meditation Reminder</string>
     <string name="pref_med_reminder_key">meditation reminder</string>
-    <string name="pref_time_title">Time of Day</string>
-    <string name="pref_time_key">timeInMinutes</string>
+    <string name="pref_key_reminder_time">timeInMinutes</string>
+
+    <string name="pref_default_med_time">@string/min_20</string>
+    <string name="pref_default_callback">@string/sound_callback</string>
+    <string name="pref_default_reminder_time">12:00 pm</string>
+    <string name="pref_default_sound">@string/temple_bell</string>
+
     <string name="pref_reminder_on">Reminder enabled</string>
     <string name="pref_reminder_off">Reminder disabled</string>
 
