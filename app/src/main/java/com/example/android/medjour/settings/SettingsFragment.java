@@ -33,8 +33,6 @@ public class SettingsFragment extends PreferenceFragment implements
 
         addPreferencesFromResource(R.xml.menu_settings);
 
-        setSoundPrefActivation(callback.getValue());
-
         sharedPref = getPreferenceScreen().getSharedPreferences();
 
         PreferenceScreen prefScreen = getPreferenceScreen();
@@ -54,6 +52,9 @@ public class SettingsFragment extends PreferenceFragment implements
                     getString(R.string.pref_default_sound));
             sound.getSummary();
         }
+
+
+        setSoundPrefActivation(callback.getValue());
     }
 
     /**
