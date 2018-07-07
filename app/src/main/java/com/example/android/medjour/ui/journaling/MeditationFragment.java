@@ -6,13 +6,16 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
+import com.example.android.medjour.utils.SettingsUtils;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
@@ -89,7 +92,7 @@ public class MeditationFragment extends Fragment {
         //for debugging/testing purposes:
         // this button goes direct to the next fragment of the new-entry flow.
         // Keep it hidden when not debugging
-        if(BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG) {
             TestFb.setVisibility(View.VISIBLE);
             TestFb.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -99,16 +102,34 @@ public class MeditationFragment extends Fragment {
             });
         }
         return root;
+
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        //TODO: when media player is needed (check settings)
-        youTubePlayerFragment = (YouTubePlayerSupportFragment) getChildFragmentManager()
-                .findFragmentById(R.id.youtube_player_fragment);
+        if (SettingsUtils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB) {
+            playVideo();
+        } else {
+            //TODO: set timer and play tone once completed & hide the youtubefragment
+            SettingsUtils.getSound(getActivity());
 
+           // Uri notification = RingtoneManager.getDefaultUri(Ri);
+            //Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
+            //r.play();
+            Toast.makeText(getActivity(), "Sound Callback", Toast.LENGTH_SHORT).show();
+
+        }
+
+
+    }
+
+    private void playVideo() {
+        youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+
+        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+        transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
 
         youTubePlayerFragment.initialize(BuildConfig.API_KEY,
                 new YouTubePlayer.OnInitializedListener() {

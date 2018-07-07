@@ -1,7 +1,11 @@
 package com.example.android.medjour.utils;
 
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.example.android.medjour.R;
@@ -19,9 +23,8 @@ public class SettingsUtils {
     private static final int MIN_45 = 45;
 
     //Callback types
-    public static final int RINGTONE_CB = 1;
-    public static final int APP_SOUND_CB = 2;
-    public static final int VIDEO_CB = 3;
+    public static final int APP_SOUND_CB = 1;
+    public static final int VIDEO_CB = 2;
 
     public static int getMeditationLength(Context ctxt) {
         sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
@@ -57,5 +60,38 @@ public class SettingsUtils {
         } else {
             return VIDEO_CB;
         }
+    }
+
+    public static void getSound(Context ctxt) {
+
+        String keyForSounds = ctxt.getString(R.string.pref_key_tone);
+        String defaultSound = ctxt.getString(R.string.pref_default_val_sound);
+
+        String chosenSound = PreferenceManager.getDefaultSharedPreferences(ctxt)
+                .getString(keyForSounds, defaultSound);
+        RingtoneManager manager = new RingtoneManager(ctxt);
+        manager.setType(RingtoneManager.TYPE_NOTIFICATION);
+
+        Ringtone r;
+
+
+        if (isAppOwn(ctxt, chosenSound)) {
+            r = RingtoneManager.getRingtone(ctxt, Uri.parse(chosenSound));
+        } else {
+            int ringtoneId = (int) ContentUris.parseId(Uri.parse(chosenSound));
+
+            r = manager.getRingtone(ringtoneId);
+
+        }
+        r.play();
+        //TODO: playing back wrong tone (always the same even when changed in settings)
+    }
+
+    private static boolean isAppOwn(Context ctxt, String chosenSound) {
+        return chosenSound.equals(ctxt.getString(R.string.a_tone_value))
+                || chosenSound.equals(ctxt.getString(R.string.computer_magic_value))
+                || chosenSound.equals(ctxt.getString(R.string.metal_gong_value))
+                || chosenSound.equals(ctxt.getString(R.string.temple_bell_value));
+
     }
 }

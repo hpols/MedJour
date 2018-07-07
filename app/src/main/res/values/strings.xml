@@ -58,9 +58,9 @@
     <string name="preparation_start_bt">Start Meditation</string>
     <string name="category_date">Date:</string>
     <string name="review_preparation_time">Preparation Time:</string>
-    <string name="review_meditation_time">meditation timeInMinutes</string>
-    <string name="review_prep_label">Preparation timeInMinutes:</string>
-    <string name="review_med_label">Meditation timeInMinutes:</string>
+    <string name="review_meditation_time">meditation time</string>
+    <string name="review_prep_label">Preparation time:</string>
+    <string name="review_med_label">Meditation time:</string>
     <string name="review_assessment_label">Self-assessment:</string>
     <string name="review_assessment_hint">Write your self-assessment …</string>
 
@@ -98,6 +98,7 @@
     <string name="pref_default_callback">@string/sound_callback</string>
     <string name="pref_default_reminder_time">12:00 pm</string>
     <string name="pref_default_sound">@string/temple_bell</string>
+    <string name="pref_default_val_sound">@string/temple_bell_value</string>
 
     <string name="pref_reminder_on">Reminder enabled</string>
     <string name="pref_reminder_off">Reminder disabled</string>

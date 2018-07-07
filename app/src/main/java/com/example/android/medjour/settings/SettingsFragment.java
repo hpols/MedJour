@@ -12,6 +12,8 @@ import android.support.annotation.Nullable;
 import com.example.android.medjour.R;
 import com.example.android.medjour.settings.custom.SoundPreference;
 
+import timber.log.Timber;
+
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -115,6 +117,9 @@ public class SettingsFragment extends PreferenceFragment implements
         if (key.equals(getString(R.string.pref_key_sounds))) {
             sound.setSummary(sharedPref.getString(key,
                     getString(R.string.pref_key_sounds)));
+
+            String soundValue = sound.getValue();
+            Timber.v("soundValue : " + soundValue);
         }
     }
 
