@@ -1,6 +1,5 @@
 package com.example.android.medjour.utils;
 
-import android.content.ContentUris;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.Ringtone;
@@ -9,6 +8,8 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.example.android.medjour.R;
+
+import timber.log.Timber;
 
 public class SettingsUtils {
 
@@ -75,15 +76,28 @@ public class SettingsUtils {
         Ringtone r;
 
 
+        Uri soundToPlay;
         if (isAppOwn(ctxt, chosenSound)) {
-            r = RingtoneManager.getRingtone(ctxt, Uri.parse(chosenSound));
+            // Syntax : android.resource://[package]/[resource_id]
+            String packageName = "android.resource://com.example.android.medjour/";
+            if (chosenSound.equals(ctxt.getString(R.string.a_tone_value))) {
+                soundToPlay = Uri.parse(packageName + R.raw.a_tone);
+            } else if (chosenSound.equals(ctxt.getString(R.string.computer_magic_value))) {
+                soundToPlay = Uri.parse(packageName + R.raw.computer_magic);
+            } else if (chosenSound.equals(ctxt.getString(R.string.metal_gong_value))) {
+                soundToPlay = Uri.parse(packageName + R.raw.metal_gong);
+            } else {
+                soundToPlay = Uri.parse(packageName + R.raw.temple_bell);
+            }
         } else {
-            int ringtoneId = (int) ContentUris.parseId(Uri.parse(chosenSound));
-
-            r = manager.getRingtone(ringtoneId);
-
+            soundToPlay = Uri.parse(chosenSound);
         }
-        r.play();
+
+        RingtoneManager.setActualDefaultRingtoneUri(ctxt, RingtoneManager.TYPE_NOTIFICATION,
+                soundToPlay);
+        RingtoneManager.getRingtone(ctxt, soundToPlay).play();
+
+        Timber.v(String.valueOf(RingtoneManager.getActualDefaultRingtoneUri(ctxt, RingtoneManager.TYPE_NOTIFICATION)));
         //TODO: playing back wrong tone (always the same even when changed in settings)
     }
 
