@@ -34,15 +34,15 @@ public class SettingsUtils {
         String defaultTime = ctxt.getString(R.string.min_20);
 
         String chosenLength = sharedPref.getString(keyForTime, defaultTime);
-        if (chosenLength.equals(ctxt.getString(R.string.min_5))) {
+        if (chosenLength.equals(ctxt.getString(R.string.min_5_value))) {
             return MIN_5;
-        } else if (chosenLength.equals(ctxt.getString(R.string.min_10))) {
+        } else if (chosenLength.equals(ctxt.getString(R.string.min_10_value))) {
             return MIN_10;
-        } else if (chosenLength.equals(ctxt.getString(R.string.min_15))) {
+        } else if (chosenLength.equals(ctxt.getString(R.string.min_15_value))) {
             return MIN_15;
-        } else if (chosenLength.equals(defaultTime)) {
+        } else if (chosenLength.equals(ctxt.getString(R.string.min_20_value))) {
             return MIN_20;
-        } else if (chosenLength.equals(ctxt.getString(R.string.min_30))) {
+        } else if (chosenLength.equals(ctxt.getString(R.string.min_30_value))) {
             return MIN_30;
         } else {
             return MIN_45;
