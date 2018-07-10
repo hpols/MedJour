@@ -170,6 +170,7 @@ public class MeditationFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         if (isVideo) {
+            counterTv.setVisibility(View.GONE); // no need for the counterTv when video is playing
             playVideo();
         } else {
             if (!timerIsRunning) {
@@ -331,8 +332,7 @@ public class MeditationFragment extends Fragment {
                             //whenever the user interacts with the playback, this equals the end of
                             //their meditation as they are no longer in focus.
 
-                            //TODO: replace hardcoded example with video from setting
-                            youTubePlayer.loadVideo(getString(R.string.meditation_5min));
+                            youTubePlayer.loadVideo(pref.getVideofromPrefSetting(getActivity()));
                         }
                     }
 

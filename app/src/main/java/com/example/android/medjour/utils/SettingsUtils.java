@@ -7,6 +7,8 @@ import android.preference.PreferenceManager;
 
 import com.example.android.medjour.R;
 
+import timber.log.Timber;
+
 public class SettingsUtils {
 
     private SharedPreferences sharedPref;
@@ -85,8 +87,35 @@ public class SettingsUtils {
         }
 
         return soundToPlay;
+    }
 
-        //TODO: playing back wrong tone (always the same even when changed in settings)
+    public String getVideofromPrefSetting(Context ctxt) {
+        String video = null;
+        switch (getMeditationLength(ctxt)) {
+            case MIN_5:
+                video = ctxt.getString(R.string.meditation_5min);
+                break;
+            case MIN_10:
+                video = ctxt.getString(R.string.meditation_10min);
+                break;
+            case MIN_15:
+                video = ctxt.getString(R.string.meditation_15min);
+                break;
+            case MIN_20:
+                video = ctxt.getString(R.string.meditation_20min);
+                break;
+            case MIN_30:
+                video = ctxt.getString(R.string.meditation_30min);
+                break;
+            case MIN_45:
+                video = ctxt.getString(R.string.meditation_45min);
+                break;
+            default:
+                Timber.e("there is no video provided for a meditation length of "
+                        + getMeditationLength(ctxt));
+                video = ctxt.getString(R.string.meditation_test);
+        }
+        return video;
     }
 
     public long getStartedTime() {
