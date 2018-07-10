@@ -15,18 +15,18 @@
 
     <!-- Settings -->
     <!-- durations -->
-    <string name="min_5">5min</string>
-    <string name="min_10">10min</string>
-    <string name="min_15">15min</string>
-    <string name="min_20">20min</string>
-    <string name="min_30">30min</string>
-    <string name="min_45">45min</string>
-    <string name="min_5_value">5 minutes</string>
-    <string name="min_10_value">10 minutes</string>
-    <string name="min_15_value">15 minutes</string>
-    <string name="min_20_value">20 minutes</string>
-    <string name="min_30_value">30 minutes</string>
-    <string name="min_45_value">45 minutes</string>
+    <string name="min_5">5 minutes</string>
+    <string name="min_10">10 minutes</string>
+    <string name="min_15">15 minutes</string>
+    <string name="min_20">20 minutes</string>
+    <string name="min_30">30 minutes</string>
+    <string name="min_45">45 minutes</string>
+    <string name="min_5_value">5</string>
+    <string name="min_10_value">10</string>
+    <string name="min_15_value">15</string>
+    <string name="min_20_value">20</string>
+    <string name="min_30_value">30</string>
+    <string name="min_45_value">45</string>
 
     <!--callback choices-->
     <string name="sound_callback">Sound</string>
@@ -96,7 +96,7 @@
 
     <string name="pref_default_med_time">@string/min_20</string>
     <string name="pref_default_callback">@string/sound_callback</string>
-    <string name="pref_default_reminder_time">12:00 pm</string>
+    <string name="pref_default_reminder_time">12:00</string>
     <string name="pref_default_sound">@string/temple_bell</string>
     <string name="pref_default_val_sound">@string/temple_bell_value</string>
 

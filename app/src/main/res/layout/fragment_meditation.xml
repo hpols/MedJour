@@ -13,7 +13,9 @@
         app:layout_constraintBottom_toTopOf="@+id/meditation_next_test_bt"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </FrameLayout>
 
     <!-- TODO: for testing purposes. Remove once app is completely functional -->
     <android.support.design.widget.FloatingActionButton
@@ -30,4 +32,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_media_next"
         tools:ignore="MissingConstraints" />
+
+    <TextView
+        android:id="@+id/meditation_counter_tv"
+        style="@style/text.accent"
+        android:textSize="24sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="5:00" />
 </android.support.constraint.ConstraintLayout>

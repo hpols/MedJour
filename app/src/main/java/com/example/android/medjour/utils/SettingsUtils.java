@@ -2,18 +2,15 @@ package com.example.android.medjour.utils;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 
 import com.example.android.medjour.R;
 
-import timber.log.Timber;
-
 public class SettingsUtils {
 
-    private static SharedPreferences sp;
+    private SharedPreferences sharedPref;
+    private static final String STARTED_TIME = "started_time";
 
     //Meditation lengths
     private static final int MIN_5 = 5;
@@ -27,13 +24,16 @@ public class SettingsUtils {
     public static final int APP_SOUND_CB = 1;
     public static final int VIDEO_CB = 2;
 
-    public static int getMeditationLength(Context ctxt) {
-        sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
+    public SettingsUtils(Context ctxt) {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+    }
+
+    public int getMeditationLength(Context ctxt) {
 
         String keyForTime = ctxt.getString(R.string.pref_key_med_time);
         String defaultTime = ctxt.getString(R.string.min_20);
 
-        String chosenLength = sp.getString(keyForTime, defaultTime);
+        String chosenLength = sharedPref.getString(keyForTime, defaultTime);
         if (chosenLength.equals(ctxt.getString(R.string.min_5))) {
             return MIN_5;
         } else if (chosenLength.equals(ctxt.getString(R.string.min_10))) {
@@ -49,13 +49,11 @@ public class SettingsUtils {
         }
     }
 
-    public static int getMeditationCallback(Context ctxt) {
-        sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
-
+    public int getMeditationCallback(Context ctxt) {
         String keyforCallback = ctxt.getString(R.string.pref_key_callback);
         String defaultCallback = ctxt.getString(R.string.sound_callback);
 
-        String chosenCallback = sp.getString(keyforCallback, defaultCallback);
+        String chosenCallback = sharedPref.getString(keyforCallback, defaultCallback);
         if (chosenCallback.equals(ctxt.getString(R.string.sound_callback))) {
             return APP_SOUND_CB;
         } else {
@@ -63,49 +61,41 @@ public class SettingsUtils {
         }
     }
 
-    public static void getSound(Context ctxt) {
+    public Uri playCallbackSound(Context ctxt) {
 
         String keyForSounds = ctxt.getString(R.string.pref_key_tone);
         String defaultSound = ctxt.getString(R.string.pref_default_val_sound);
 
         String chosenSound = PreferenceManager.getDefaultSharedPreferences(ctxt)
                 .getString(keyForSounds, defaultSound);
-        RingtoneManager manager = new RingtoneManager(ctxt);
-        manager.setType(RingtoneManager.TYPE_NOTIFICATION);
-
-        Ringtone r;
-
 
         Uri soundToPlay;
-        if (isAppOwn(ctxt, chosenSound)) {
-            // Syntax : android.resource://[package]/[resource_id]
-            String packageName = "android.resource://com.example.android.medjour/";
-            if (chosenSound.equals(ctxt.getString(R.string.a_tone_value))) {
-                soundToPlay = Uri.parse(packageName + R.raw.a_tone);
-            } else if (chosenSound.equals(ctxt.getString(R.string.computer_magic_value))) {
-                soundToPlay = Uri.parse(packageName + R.raw.computer_magic);
-            } else if (chosenSound.equals(ctxt.getString(R.string.metal_gong_value))) {
-                soundToPlay = Uri.parse(packageName + R.raw.metal_gong);
-            } else {
-                soundToPlay = Uri.parse(packageName + R.raw.temple_bell);
-            }
+        // Syntax : android.resource://[package]/[resource_id]
+        String packageName = "android.resource://com.example.android.medjour/";
+        if (chosenSound.equals(ctxt.getString(R.string.a_tone_value))) {
+            soundToPlay = Uri.parse(packageName + R.raw.a_tone);
+        } else if (chosenSound.equals(ctxt.getString(R.string.computer_magic_value))) {
+            soundToPlay = Uri.parse(packageName + R.raw.computer_magic);
+        } else if (chosenSound.equals(ctxt.getString(R.string.metal_gong_value))) {
+            soundToPlay = Uri.parse(packageName + R.raw.metal_gong);
+        } else if (chosenSound.equals(ctxt.getString(R.string.temple_bell_value))) {
+            soundToPlay = Uri.parse(packageName + R.raw.temple_bell);
         } else {
             soundToPlay = Uri.parse(chosenSound);
         }
 
-        RingtoneManager.setActualDefaultRingtoneUri(ctxt, RingtoneManager.TYPE_NOTIFICATION,
-                soundToPlay);
-        RingtoneManager.getRingtone(ctxt, soundToPlay).play();
+        return soundToPlay;
 
-        Timber.v(String.valueOf(RingtoneManager.getActualDefaultRingtoneUri(ctxt, RingtoneManager.TYPE_NOTIFICATION)));
         //TODO: playing back wrong tone (always the same even when changed in settings)
     }
 
-    private static boolean isAppOwn(Context ctxt, String chosenSound) {
-        return chosenSound.equals(ctxt.getString(R.string.a_tone_value))
-                || chosenSound.equals(ctxt.getString(R.string.computer_magic_value))
-                || chosenSound.equals(ctxt.getString(R.string.metal_gong_value))
-                || chosenSound.equals(ctxt.getString(R.string.temple_bell_value));
+    public long getStartedTime() {
+        return sharedPref.getLong(STARTED_TIME, 0);
+    }
 
+    public void setStartedTime(long started) {
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(STARTED_TIME, started);
+        editor.apply();
     }
 }

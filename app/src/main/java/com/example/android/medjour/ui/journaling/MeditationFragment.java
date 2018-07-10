@@ -1,17 +1,30 @@
 package com.example.android.medjour.ui.journaling;
 
+import android.animation.Animator;
+import android.app.AlarmManager;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -19,6 +32,8 @@ import com.example.android.medjour.utils.SettingsUtils;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
 import com.google.android.youtube.player.YouTubePlayerSupportFragment;
+
+import java.util.concurrent.TimeUnit;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -29,27 +44,30 @@ import timber.log.Timber;
  */
 public class MeditationFragment extends Fragment {
 
-    public void setMedLength(int medLength) {
-        this.medLength = medLength;
-    }
-
-    public void setMediaType(int mediaType) {
-        this.mediaType = mediaType;
-    }
-
-    int medLength;
-    int mediaType;
-
     public MeditationFragment() {
         // Required empty public constructor
     }
 
-    //for testing purposes only
+    SettingsUtils pref;
+
+
     @BindView(R.id.meditation_next_test_bt)
-    FloatingActionButton TestFb;
+    FloatingActionButton TestFb; //for testing purposes only
+
+    @BindView(R.id.meditation_counter_tv)
+    TextView counterTv;
 
     long medStartTime;
+    long medLength;
+
+    long medLengthInMillis;
+    private long timeRemaining;
+    private CountDownTimer countDownTimer;
+    private boolean timerIsRunning = false;
+
     ToReviewCallback reviewCallback;
+
+    boolean isVideo;
 
     public interface ToReviewCallback {
         void toReview(long meditationTime);
@@ -58,6 +76,8 @@ public class MeditationFragment extends Fragment {
     // YoutubePlayer implementation:
     // https://stackoverflow.com/questions/26458919/integrating-youtube-to-fragment#comment77123807_26459181
     // http://www.androhub.com/implement-youtube-player-fragment-android-app/
+
+    // Counter implementation: http://fedepaol.github.io/blog/2016/06/20/how-to-a-timer/
 
     private YouTubePlayerSupportFragment youTubePlayerFragment; //the player fragment
     private YouTubePlayer youTubePlayer; //the player
@@ -76,6 +96,22 @@ public class MeditationFragment extends Fragment {
     }
 
     @Override
+    public void onResume() {
+        super.onResume();
+        initTimer();
+        removeAlarm();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        if (timerIsRunning == true) {
+            countDownTimer.cancel();
+            setAlarm();
+        }
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
@@ -83,7 +119,14 @@ public class MeditationFragment extends Fragment {
         View root = inflater.inflate(R.layout.fragment_meditation, container, false);
         ButterKnife.bind(this, root);
 
-        medStartTime = System.currentTimeMillis();
+        pref = new SettingsUtils(getActivity());
+
+        medStartTime = getNow();
+        medLength = pref.getMeditationLength(getActivity());
+        Timber.d("meditation imte is set to: " + medLength);
+        medLengthInMillis = TimeUnit.MINUTES.toMillis(medLength);
+        timeRemaining = medLengthInMillis;
+        isVideo = pref.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
@@ -101,28 +144,141 @@ public class MeditationFragment extends Fragment {
                 }
             });
         }
-        return root;
 
+        //prepare countDownTimer when a soundCallback is needed.
+        if(!isVideo) {
+            countDownTimer = new CountDownTimer(medLengthInMillis, 1000) {
+                @Override
+                public void onTick(long millisUntilFinished) {
+                    getTimeRemaining();
+                    updateTimeUi(millisUntilFinished);
+                }
+
+                @Override
+                public void onFinish() {
+                    timerIsRunning = false;
+                    onTimerFinish();
+                    updateTimeUi(0);
+                }
+            };
+        }
+        return root;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (SettingsUtils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB) {
+        if (isVideo) {
             playVideo();
         } else {
-            //TODO: set timer and play tone once completed & hide the youtubefragment
-            SettingsUtils.getSound(getActivity());
-
-           // Uri notification = RingtoneManager.getDefaultUri(Ri);
-            //Ringtone r = RingtoneManager.getRingtone(getContext(), notification);
-            //r.play();
-            Toast.makeText(getActivity(), "Sound Callback", Toast.LENGTH_SHORT).show();
-
+            if (!timerIsRunning) {
+                pref.setStartedTime(getNow());
+                startTimer();
+                timerIsRunning = true;
+            }
         }
+    }
 
+    private void startTimer() {
+        timeRemaining = getTimeRemaining();
+        countDownTimer.start();
 
+        //fade out the timer
+        // TODO: add http://techdocs.zebra.com/emdk-for-android/3-1/tutorial/tutMxDisplayManager/
+        counterTv.setVisibility(View.VISIBLE);
+        counterTv.setAlpha(1);
+        counterTv.animate().setDuration(60000).alpha(0).setListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationEnd(Animator animation) {
+            counterTv.setVisibility(View.GONE);
+            }
+
+            @Override
+            public void onAnimationCancel(Animator animation) {
+            }
+
+            @Override
+            public void onAnimationRepeat(Animator animation) {
+            }
+        });
+    }
+
+    private long getNow() {
+        return System.currentTimeMillis();
+    }
+
+    private void initTimer() {
+        long startTime = pref.getStartedTime();
+        if (startTime > 0) {
+            timeRemaining = getTimeRemaining();
+            if (timeRemaining <= 0) { // TIMER EXPIRED
+                timeRemaining = medLengthInMillis;
+                timerIsRunning = false;
+                onTimerFinish();
+            } else {
+                startTimer();
+                timerIsRunning = true;
+            }
+        } else {
+            timeRemaining = medLengthInMillis;
+            timerIsRunning = false;
+        }
+        updateTimeUi(timeRemaining);
+    }
+
+    private long getTimeRemaining() {
+        return medLengthInMillis - (getNow() - pref.getStartedTime());
+    }
+
+    private void onTimerFinish() {
+        pref.setStartedTime(0);
+        timeRemaining = medLengthInMillis;
+        updateTimeUi(timeRemaining);
+        try {
+            Uri notification = pref.playCallbackSound(getActivity());
+            Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
+            r.play();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        GoToReview();
+    }
+
+    private void updateTimeUi(long millisUntilFinished) {
+
+        String timeDisplay = String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
+                - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)))
+                + ":" + String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)
+                - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
+
+        counterTv.setText(String.valueOf(timeDisplay));
+    }
+
+    public void setAlarm() {
+        long wakeUpTime = pref.getStartedTime() + medLengthInMillis;
+        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            assert am != null;
+            am.setAlarmClock(new AlarmManager.AlarmClockInfo(wakeUpTime, sender), sender);
+        } else {
+            am.set(AlarmManager.RTC_WAKEUP, wakeUpTime, sender);
+        }
+    }
+
+    public void removeAlarm() {
+        Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
+        PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, intent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+        AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
+        am.cancel(sender);
     }
 
     private void playVideo() {
@@ -192,5 +348,31 @@ public class MeditationFragment extends Fragment {
     private void GoToReview() {
         long medTime = System.currentTimeMillis() - medStartTime;
         reviewCallback.toReview(medTime);
+    }
+
+    public class TimerExpiredReceiver extends BroadcastReceiver {
+        private String NOT_CALLBACK = "notification_callback";
+
+        @Override
+        public void onReceive(Context ctxt, Intent intent) {
+            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+
+            Intent callbackReceiver = new Intent(ctxt, MeditationFragment.class);
+            PendingIntent pIntent = PendingIntent.getActivity(ctxt, 0, callbackReceiver, 0);
+
+            NotificationCompat.Builder notBuild = new NotificationCompat.Builder(ctxt, NOT_CALLBACK);
+            Uri notTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            notBuild.setSound(notTone)
+                    .setContentTitle("Meditation finished")
+                    .setAutoCancel(true)
+                    .setContentText("Meditation finished")
+                    .setSmallIcon(android.R.drawable.ic_notification_clear_all)
+                    .setContentIntent(pIntent);
+
+            Notification not = notBuild.build();
+            NotificationManager notMan =
+                    (NotificationManager) ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
+            notMan.notify(0, not);
+        }
     }
 }

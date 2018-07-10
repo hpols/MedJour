@@ -121,6 +121,10 @@ public class SettingsFragment extends PreferenceFragment implements
             String soundValue = sound.getValue();
             Timber.v("soundValue : " + soundValue);
         }
+
+        if (key.equals(getString(R.string.pref_key_med_time))) {
+            Timber.d("time set to: " + sharedPref.getString(key, getString(R.string.pref_key_med_time)));
+        }
     }
 
     @Override
