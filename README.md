@@ -21,3 +21,6 @@ That said, the app also offers a free flavor so other users, who just want to jo
 The app is still being developed in a stand-alone form. Once completed it will be further adapted based on the needs of the course organisers. This will include replacing the YoutTube Player by exoplayer, to provide the course-specific meditation audio. See the design for a detailed overview of what is to come.
 
 ## [License](https://github.com/hpols/MedJour/blob/master/LICENSE)
+
+## App Icon
+Icon made by Freepik from www.flaticon.com 
