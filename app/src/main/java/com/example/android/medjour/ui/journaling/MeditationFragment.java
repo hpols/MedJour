@@ -48,8 +48,7 @@ public class MeditationFragment extends Fragment {
         // Required empty public constructor
     }
 
-    SettingsUtils pref;
-
+    SettingsUtils utils;
 
     @BindView(R.id.meditation_next_test_bt)
     FloatingActionButton TestFb; //for testing purposes only
@@ -98,35 +97,37 @@ public class MeditationFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        initTimer();
-        removeAlarm();
+        if (!isVideo) {
+            initTimer();
+            removeAlarm();
+        }
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        if (timerIsRunning == true) {
+        if (timerIsRunning && !isVideo) {
             countDownTimer.cancel();
             setAlarm();
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         // Inflate the layout for this fragment
         View root = inflater.inflate(R.layout.fragment_meditation, container, false);
         ButterKnife.bind(this, root);
 
-        pref = new SettingsUtils(getActivity());
+        utils = new SettingsUtils(getActivity());
 
         medStartTime = getNow();
-        medLength = pref.getMeditationLength(getActivity());
+        medLength = utils.getMeditationLength(getActivity());
         Timber.d("meditation imte is set to: " + medLength);
         medLengthInMillis = TimeUnit.MINUTES.toMillis(medLength);
         timeRemaining = medLengthInMillis;
-        isVideo = pref.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;
+        isVideo = utils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
@@ -146,7 +147,7 @@ public class MeditationFragment extends Fragment {
         }
 
         //prepare countDownTimer when a soundCallback is needed.
-        if(!isVideo) {
+        if (!isVideo) {
             countDownTimer = new CountDownTimer(medLengthInMillis, 1000) {
                 @Override
                 public void onTick(long millisUntilFinished) {
@@ -174,7 +175,7 @@ public class MeditationFragment extends Fragment {
             playVideo();
         } else {
             if (!timerIsRunning) {
-                pref.setStartedTime(getNow());
+                utils.setStartedTime(getNow());
                 startTimer();
                 timerIsRunning = true;
             }
@@ -196,7 +197,7 @@ public class MeditationFragment extends Fragment {
 
             @Override
             public void onAnimationEnd(Animator animation) {
-            counterTv.setVisibility(View.GONE);
+                counterTv.setVisibility(View.GONE);
             }
 
             @Override
@@ -214,7 +215,7 @@ public class MeditationFragment extends Fragment {
     }
 
     private void initTimer() {
-        long startTime = pref.getStartedTime();
+        long startTime = utils.getStartedTime();
         if (startTime > 0) {
             timeRemaining = getTimeRemaining();
             if (timeRemaining <= 0) { // TIMER EXPIRED
@@ -233,15 +234,15 @@ public class MeditationFragment extends Fragment {
     }
 
     private long getTimeRemaining() {
-        return medLengthInMillis - (getNow() - pref.getStartedTime());
+        return medLengthInMillis - (getNow() - utils.getStartedTime());
     }
 
     private void onTimerFinish() {
-        pref.setStartedTime(0);
+        utils.setStartedTime(0);
         timeRemaining = medLengthInMillis;
         updateTimeUi(timeRemaining);
         try {
-            Uri notification = pref.playCallbackSound(getActivity());
+            Uri notification = utils.playCallbackSound(getActivity());
             Ringtone r = RingtoneManager.getRingtone(getActivity(), notification);
             r.play();
         } catch (Exception e) {
@@ -260,8 +261,9 @@ public class MeditationFragment extends Fragment {
         counterTv.setText(String.valueOf(timeDisplay));
     }
 
+    //ensure the device wakes up so as to play the notification to end the meditation time
     public void setAlarm() {
-        long wakeUpTime = pref.getStartedTime() + medLengthInMillis;
+        long wakeUpTime = utils.getStartedTime() + medLengthInMillis;
         AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, intent,
@@ -274,6 +276,7 @@ public class MeditationFragment extends Fragment {
         }
     }
 
+    //cancel the device-wake-up when no longer needed
     public void removeAlarm() {
         Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, intent,
@@ -282,6 +285,7 @@ public class MeditationFragment extends Fragment {
         am.cancel(sender);
     }
 
+    //setup and play the chosen video
     private void playVideo() {
         youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
 
@@ -332,7 +336,7 @@ public class MeditationFragment extends Fragment {
                             //whenever the user interacts with the playback, this equals the end of
                             //their meditation as they are no longer in focus.
 
-                            youTubePlayer.loadVideo(pref.getVideofromPrefSetting(getActivity()));
+                            youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
                         }
                     }
 
@@ -345,11 +349,16 @@ public class MeditationFragment extends Fragment {
                 });
     }
 
+    //go to the next fragment of the new-entry-flow
     private void GoToReview() {
         long medTime = System.currentTimeMillis() - medStartTime;
         reviewCallback.toReview(medTime);
     }
 
+    /**{@link TimerExpiredReceiver} is a {@link BroadcastReceiver} providing the end of meditation
+     * signal if the device has gone to sleep.
+     *
+     */
     public class TimerExpiredReceiver extends BroadcastReceiver {
         private String NOT_CALLBACK = "notification_callback";
 
@@ -361,7 +370,7 @@ public class MeditationFragment extends Fragment {
             PendingIntent pIntent = PendingIntent.getActivity(ctxt, 0, callbackReceiver, 0);
 
             NotificationCompat.Builder notBuild = new NotificationCompat.Builder(ctxt, NOT_CALLBACK);
-            Uri notTone = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+            Uri notTone = utils.playCallbackSound(getActivity());
             notBuild.setSound(notTone)
                     .setContentTitle("Meditation finished")
                     .setAutoCancel(true)
@@ -373,6 +382,8 @@ public class MeditationFragment extends Fragment {
             NotificationManager notMan =
                     (NotificationManager) ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
             notMan.notify(0, not);
+
+            GoToReview();
         }
     }
 }

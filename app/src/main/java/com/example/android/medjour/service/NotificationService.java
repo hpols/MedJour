@@ -3,13 +3,14 @@ package com.example.android.medjour.service;
 import android.app.IntentService;
 import android.content.Intent;
 
-import timber.log.Timber;
-
-public class AlarmService extends IntentService {
+/**
+ * holds the service for the reminder
+ */
+public class NotificationService extends IntentService {
     /**
      * Creates an IntentService.  Invoked by your subclass's constructor.
      */
-    public AlarmService() {
+    public NotificationService() {
         super("AlarmService");
     }
 
@@ -17,8 +18,6 @@ public class AlarmService extends IntentService {
     protected void onHandleIntent(Intent intent) {
         String action = intent.getAction();
         assert action != null;
-        AlarmTask.executeTask(this, action);
-
-        Timber.v("on Handle Intent called");
+        NotificationTask.executeTask(this, action);
     }
 }

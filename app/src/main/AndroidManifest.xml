@@ -26,17 +26,17 @@
             android:name=".settings.SettingsActivity"
             android:theme="@style/SettingsTheme" />
 
-        <!--<service-->
-            <!--android:name=".service.AlarmJobService"-->
-            <!--android:exported="false">-->
-            <!--<intent-filter>-->
-                <!--<action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />-->
-            <!--</intent-filter>-->
-        <!--</service>-->
-        <!--<service-->
-            <!--android:name=".service.AlarmService"-->
-            <!--android:exported="false">-->
-        <!--</service>-->
+        <service
+            android:name=".service.NotificationJobService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
+            </intent-filter>
+        </service>
+        <service
+            android:name=".service.NotificationService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

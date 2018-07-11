@@ -1,8 +1,10 @@
 package com.example.android.medjour.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -15,19 +17,26 @@ import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.settings.SettingsActivity;
 import com.example.android.medjour.utils.JournalUtils;
+import com.example.android.medjour.utils.NotificationUtils;
+import com.example.android.medjour.utils.SettingsUtils;
 import com.facebook.stetho.Stetho;
 
 import timber.log.Timber;
 
-public class OverviewActivity extends AppCompatActivity {
+public class OverviewActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     ActivityOverviewBinding overviewBinder;
     JournalDb dB;
+    SettingsUtils utils;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overviewBinder = DataBindingUtil.setContentView(this, R.layout.activity_overview);
+
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .registerOnSharedPreferenceChangeListener(this);
+
 
         //integrating stetho for debugging
         Stetho.initializeWithDefaults(this);
@@ -46,6 +55,19 @@ public class OverviewActivity extends AppCompatActivity {
                 startActivity(journalIntent);
             }
         });
+        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                if (JournalUtils.hasMeditatedToday(dB)) {
+                    overviewBinder.mainEntryBt.setEnabled(false);
+                } else {
+                    overviewBinder.mainEntryBt.setEnabled(true);
+                }
+            }
+        });
+
+        //if the user has enabled notification schedule the next one
+        setupNotification();
 
         overviewBinder.mainEntryBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -59,19 +81,48 @@ public class OverviewActivity extends AppCompatActivity {
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                String cumulativetv;
+                String cumulativeTv;
                 if (JournalUtils.getCumulativeTime(dB) == 0) {
-                    cumulativetv = getString(R.string.overview_no_entries);
+                    cumulativeTv = getString(R.string.overview_no_entries);
                     overviewBinder.mainJournalBt.setVisibility(View.GONE);
                 } else {
-                    cumulativetv = "Cumulative Time: "
+                    cumulativeTv = "Cumulative Time: "
                             + JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
                     overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
                 }
 
-                overviewBinder.mainCumulativeTv.setText(cumulativetv);
+                overviewBinder.mainCumulativeTv.setText(cumulativeTv);
             }
         });
+    }
+
+    private void setupNotification() {
+        utils = new SettingsUtils(this);
+        if (utils.reminderIsEnabled(this)) {
+            final int[] dayIndicator = new int[1];
+            EntryExecutor.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    if (JournalUtils.hasMeditatedToday(dB)) {
+                        dayIndicator[0] = NotificationUtils.SET_NOTIFICATION_FOR_TOMORROW;
+                    } else {
+                        dayIndicator[0] = NotificationUtils.SET_NOTIFICATION_FOR_TODAY;
+                    }
+                }
+            });
+
+            //TODO: add logic that checks whether the user has already meditated/logged to day.
+            // Also when returning to this activity
+            NotificationUtils.scheduleNotification(this, dayIndicator[0]);
+        }
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this)
+                .unregisterOnSharedPreferenceChangeListener(this);
     }
 
     @Override
@@ -96,5 +147,12 @@ public class OverviewActivity extends AppCompatActivity {
                 //TODO: go to guidelines
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(getString(R.string.pref_med_reminder_key))) {
+            setupNotification();
+        }
     }
 }

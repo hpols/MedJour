@@ -25,7 +25,7 @@
         auto:ringtoneType="notification"/>
 
     <SwitchPreference
-        android:defaultValue="false"
+        android:defaultValue="@bool/notification_activated_default"
         android:key="@string/pref_med_reminder_key"
         android:summaryOff="@string/pref_reminder_off"
         android:summaryOn="@string/pref_reminder_on"

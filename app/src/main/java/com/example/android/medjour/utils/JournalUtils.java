@@ -5,13 +5,23 @@ import android.animation.ObjectAnimator;
 import android.text.format.DateUtils;
 import android.view.View;
 
+import com.example.android.medjour.model.DateConverter;
 import com.example.android.medjour.model.data.JournalDb;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class JournalUtils {
-    static int MAX_PREP_MINS = 5; //minutes
-    static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(MAX_PREP_MINS);
+    static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
+    static long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
+
+    public static boolean hasMeditatedToday(JournalDb dB) {
+        Date lastDate = dB.journalDao().getLastEntryDate();
+
+        Date today = DateConverter.toDate(System.currentTimeMillis());
+
+        return lastDate == today;
+    }
 
     //slowly change background colour according to the maximum time allowed
     public static void changeBackground(View root, int startColor, int endColor) {

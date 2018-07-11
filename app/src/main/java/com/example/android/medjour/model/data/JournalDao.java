@@ -8,10 +8,18 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
+import java.util.Date;
 import java.util.List;
 
 @Dao
 public interface JournalDao {
+
+    //––– CREATE Methods –––//
+
+    @Insert
+    void createEntry(JournalEntry journalEntry);
+
+    //––– READ Methods –––//
 
     @Query("SELECT * FROM journal")
     LiveData<List<JournalEntry>> getAllEntries();
@@ -25,13 +33,16 @@ public interface JournalDao {
     @Query("SELECT SUM(revTime) FROM journal")
     long getTotalRevTime();
 
-    @Insert
-    void createEntry (JournalEntry journalEntry);
+    @Query("SELECT date FROM journal ORDER BY date DESC LIMIT 1")
+    Date getLastEntryDate();
 
-    @Update (onConflict = OnConflictStrategy.REPLACE)
-    void updateEntry (JournalEntry journalEntry);
+    //––– UPDATE Methods –––//
 
+    @Update(onConflict = OnConflictStrategy.REPLACE)
+    void updateEntry(JournalEntry journalEntry);
+
+    // –––DELETE METHODS –––//
     @Delete
-    void deleteEntry (JournalEntry journalEntry);
+    void deleteEntry(JournalEntry journalEntry);
 
 }

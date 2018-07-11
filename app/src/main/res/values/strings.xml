@@ -108,4 +108,11 @@
     <string name="cancel">Cancel</string>
     <string name="ringtoneTitle">Ringtone</string>
     <string name="ringtoneSummary">Ringtone: %s</string>
+
+    <!-- Notification -->
+    <string name="notification_channel_name">Primary</string>
+    <string name="notification_title" translatable="true">You have not meditated today. </string>
+    <string name="notification_body" translatable="true">Recharge by taking a break from the world and meditating.</string>
+    <string name="ignore_action_title" translatable="true">Not now</string>
+    <string name="open_action_title" translatable="true">Open Meditation Jounral</string>
 </resources>

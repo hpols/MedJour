@@ -7,6 +7,10 @@ import android.preference.PreferenceManager;
 
 import com.example.android.medjour.R;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import timber.log.Timber;
 
 public class SettingsUtils {
@@ -126,5 +130,32 @@ public class SettingsUtils {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong(STARTED_TIME, started);
         editor.apply();
+    }
+
+    public int getNotificationTime(Context ctxt) {
+        String keyforReminderTime = ctxt.getString(R.string.pref_key_reminder_time);
+        String defaultReminderTime = ctxt.getString(R.string.pref_default_reminder_time);
+
+        String chosenTime = PreferenceManager.getDefaultSharedPreferences(ctxt)
+                .getString(keyforReminderTime, defaultReminderTime);
+
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        long timeInMils = 0;
+        try {
+            Date timeOFDay = sdf.parse(chosenTime);
+            timeInMils = timeOFDay.getTime();
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long now = System.currentTimeMillis();
+
+        return Math.toIntExact(timeInMils - now / 1000);
+    }
+
+    public boolean reminderIsEnabled(Context ctxt) {
+        String keyForReminder = ctxt.getString(R.string.pref_med_reminder_key);
+        boolean defaultBoo = ctxt.getResources().getBoolean(R.bool.notification_activated_default);
+
+        return sharedPref.getBoolean(keyForReminder, defaultBoo);
     }
 }

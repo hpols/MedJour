@@ -8,7 +8,10 @@ import com.firebase.jobdispatcher.JobService;
 
 import timber.log.Timber;
 
-public class AlarmJobService extends JobService {
+/**
+ * Setting up the background task to run the {@link NotificationJobService} on.
+ */
+public class NotificationJobService extends JobService {
 
     private AsyncTask backgroundTask;
 
@@ -17,8 +20,8 @@ public class AlarmJobService extends JobService {
         backgroundTask = new AsyncTask() {
             @Override
             protected Object doInBackground(Object[] objects) {
-                Context ctxt = AlarmJobService.this;
-                AlarmTask.executeTask(ctxt, AlarmTask.ACTION_ALARM);
+                Context ctxt = NotificationJobService.this;
+                NotificationTask.executeTask(ctxt, NotificationTask.ACTION_NOTIFICATION);
 
                 boolean reschedule = false;
                 jobFinished(job, reschedule);
@@ -32,7 +35,6 @@ public class AlarmJobService extends JobService {
         };
         backgroundTask.execute();
 
-        Timber.v("on Start Job called");
         return false;
     }
 
