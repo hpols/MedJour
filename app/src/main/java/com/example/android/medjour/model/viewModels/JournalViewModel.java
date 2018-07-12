@@ -1,4 +1,4 @@
-package com.example.android.medjour.model;
+package com.example.android.medjour.model.viewModels;
 
 import android.app.Application;
 import android.arch.lifecycle.AndroidViewModel;

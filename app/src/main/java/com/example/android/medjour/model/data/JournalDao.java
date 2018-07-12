@@ -36,6 +36,9 @@ public interface JournalDao {
     @Query("SELECT date FROM journal ORDER BY date DESC LIMIT 1")
     Date getLastEntryDate();
 
+    @Query("SELECT * FROM journal WHERE id = :entryId")
+    LiveData<JournalEntry> getEntry(int entryId);
+
     //––– UPDATE Methods –––//
 
     @Update(onConflict = OnConflictStrategy.REPLACE)
@@ -44,5 +47,4 @@ public interface JournalDao {
     // –––DELETE METHODS –––//
     @Delete
     void deleteEntry(JournalEntry journalEntry);
-
 }

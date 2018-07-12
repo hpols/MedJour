@@ -78,6 +78,12 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
             }
         });
 
+        setupCountAndButtons();
+    }
+
+    //setup the accumulative count fo the meditation as well as the (non-)activation of the journal
+    // button.
+    private void setupCountAndButtons() {
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -92,6 +98,7 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
                 }
 
                 overviewBinder.mainCumulativeTv.setText(cumulativeTv);
+                JournalActivity.setTotalTime();
             }
         });
     }
@@ -117,12 +124,17 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(this)
                 .unregisterOnSharedPreferenceChangeListener(this);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setupCountAndButtons();
     }
 
     @Override

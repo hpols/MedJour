@@ -24,6 +24,7 @@ import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Trigger;
 
+import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class NotificationUtils {
@@ -37,6 +38,7 @@ public class NotificationUtils {
     private static boolean isInitialized;
     private static FirebaseJobDispatcher dispatcher;
     private static SettingsUtils utils;
+    private static Date lastNotificationSent;
 
     private static final String REMINDER_CHANNEL_STRING_ID = "reminder_notification_channel";
 
@@ -51,6 +53,8 @@ public class NotificationUtils {
     //Schedule the notification job
     public static synchronized void scheduleNotification(@NonNull final Context ctxt, int dayIndicator) {
         utils = new SettingsUtils(ctxt);
+
+        //get last notification sent and compare with todays date. Return if they are the same and set up for tomorrow.
 
         if (isInitialized) return;
 
@@ -80,6 +84,11 @@ public class NotificationUtils {
         dispatcher.schedule(constraintNotificationJob);
 
         isInitialized = true;
+    }
+
+    public static void cancelNotification() {
+        dispatcher.cancel(NOTIFICATION_JOB_TAG);
+
     }
 
     //create and set the notification
@@ -120,6 +129,10 @@ public class NotificationUtils {
         NotificationManager notMan = (NotificationManager)
                 ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
         notMan.cancelAll();
+        //TODO: added these two lines – now no more notification?
+        cancelNotification();
+        scheduleNotification(ctxt, SET_NOTIFICATION_FOR_TOMORROW);
+
     }
 
     public static NotificationCompat.Action openApp(Context ctxt) {

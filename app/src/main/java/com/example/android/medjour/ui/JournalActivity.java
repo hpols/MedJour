@@ -13,7 +13,7 @@ import com.example.android.medjour.R;
 import com.example.android.medjour.adapter.JournalAdapter;
 import com.example.android.medjour.databinding.ActivityJournalBinding;
 import com.example.android.medjour.model.EntryExecutor;
-import com.example.android.medjour.model.JournalViewModel;
+import com.example.android.medjour.model.viewModels.JournalViewModel;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.utils.JournalUtils;
@@ -24,8 +24,8 @@ import timber.log.Timber;
 
 public class JournalActivity extends AppCompatActivity {
 
-    ActivityJournalBinding journalBinder;
-    JournalDb dB;
+    static ActivityJournalBinding journalBinder;
+    static JournalDb dB;
     JournalAdapter journalAdapter;
 
     @Override
@@ -37,13 +37,13 @@ public class JournalActivity extends AppCompatActivity {
             Timber.plant(new Timber.DebugTree());
         }
 
+        dB = JournalDb.getInstance(getApplicationContext());
+
         //setup adapter and recyclerView
         journalBinder.journalRv.setLayoutManager(new LinearLayoutManager(this));
-        journalAdapter = new JournalAdapter(this);
+        journalAdapter = new JournalAdapter(this, dB);
         journalBinder.journalRv.setAdapter(journalAdapter);
         Timber.v("adapter and recyclerview setup");
-
-        dB = JournalDb.getInstance(getApplicationContext());
 
         //setup viewModel
         JournalViewModel viewModel = ViewModelProviders.of(this).get(JournalViewModel.class);
@@ -55,6 +55,12 @@ public class JournalActivity extends AppCompatActivity {
             }
         });
 
+
+        setTotalTime();
+
+    }
+
+    public static void setTotalTime() {
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -62,7 +68,7 @@ public class JournalActivity extends AppCompatActivity {
                 String totalTime = JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
                 journalBinder.journalAccTimeTv.setText(totalTime);
             }
+
         });
     }
-
 }

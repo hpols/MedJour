@@ -2,10 +2,12 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
+    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/half_space"
+    android:animateLayoutChanges="true"
     card_view:cardBackgroundColor="@color/colorPrimaryDark"
     card_view:cardCornerRadius="@dimen/corner_radius">
 
@@ -117,6 +119,7 @@
             app:layout_constraintStart_toStartOf="@+id/rv_med_label"
             app:layout_constraintTop_toBottomOf="@+id/rv_med_label" />
 
+
         <TextView
             android:id="@+id/rv_review_tv"
             style="@style/text"
@@ -129,37 +132,35 @@
             app:layout_constraintTop_toTopOf="@+id/rv_review_label"
             tools:text="10 min" />
 
-        <TextView
-            android:id="@+id/rv_assessment_tv"
-            style="@style/entry"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_marginBottom="@dimen/border_margin"
-            android:layout_marginEnd="@dimen/border_margin"
-            android:layout_marginLeft="@dimen/half_space"
-            android:layout_marginRight="@dimen/border_margin"
-            android:layout_marginStart="@dimen/half_space"
-            android:layout_marginTop="8dp"
-            android:maxLines="5"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@+id/rv_med_tv"
-            app:layout_constraintTop_toBottomOf="@+id/rv_date_tv"
-            tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
+            <EditText
+                android:id="@+id/rv_assessment_et"
+                style="@style/entry"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/border_margin"
+                android:layout_marginEnd="@dimen/border_margin"
+                android:layout_marginLeft="@dimen/half_space"
+                android:layout_marginRight="@dimen/border_margin"
+                android:layout_marginStart="@dimen/half_space"
+                android:layout_marginTop="@dimen/half_space"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rv_med_tv"
+                app:layout_constraintTop_toBottomOf="@+id/rv_date_tv"
+                android:inputType="textMultiLine"
+                android:maxLines="5"
+                android:enabled="false"
+                tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
 
-        <!-- TODO: only visible when viewing the full text -->
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/rv_edit_fab"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/std_space"
-            android:layout_marginEnd="@dimen/std_space"
-            android:layout_marginRight="@dimen/std_space"
             android:clickable="true"
             android:focusable="true"
-            android:visibility="invisible"
+            app:fabCustomSize="30dp"
+            android:src="@drawable/ic_expand_more"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+            app:layout_constraintEnd_toEndOf="parent" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
