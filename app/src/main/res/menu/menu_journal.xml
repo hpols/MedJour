@@ -30,7 +30,7 @@
         </group>
         <item
             android:id="@+id/pref_leave_menu"
-            android:icon="@android:drawable/ic_notification_clear_all"
+            android:icon="@drawable/ic_cancel"
             android:orderInCategory="4"
             android:title="@string/pref_leave_edit_options"
             app:showAsAction="ifRoom" />

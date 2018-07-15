@@ -158,7 +158,6 @@
             android:layout_height="wrap_content"
             android:cursorVisible="false"
             android:inputType="textMultiLine"
-            android:scrollbars="vertical"
             android:visibility="invisible"
             app:layout_constraintBottom_toBottomOf="@id/rv_assessment_tv"
             app:layout_constraintEnd_toEndOf="@id/rv_assessment_tv"
@@ -167,5 +166,11 @@
             tools:ignore="LabelFor"
             tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." /> <!-- there is no label at all -->
 
+        <TextView
+            android:id="@+id/focus_grabber"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:focusable="true"
+            android:focusableInTouchMode="true" />
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>

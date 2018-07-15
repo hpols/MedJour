@@ -6,12 +6,15 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Build;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
+import android.text.format.DateUtils;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.service.NotificationJobService;
@@ -24,21 +27,22 @@ import com.firebase.jobdispatcher.GooglePlayDriver;
 import com.firebase.jobdispatcher.Job;
 import com.firebase.jobdispatcher.Trigger;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Everything we need to send the notifications. The notification will be fired based on the user
+ * input from the settings of by which time they intend to have meditated each day(if they choose to
+ * receive this notification).
+ */
 public class NotificationUtils {
 
-    //Flextime for window (1h). The notification will be fired based on the user input from the
-    // settings of by which time they intend to have meditated each day (if they choose to receive
-    // this notification).
+    //Flextime for window (1h).
     private static final int NOTIFICATION_FLEX_TIME = (int) TimeUnit.MINUTES.toSeconds(1);
 
     private static final String NOTIFICATION_JOB_TAG = "medjour_notification_tag";
     private static boolean isInitialized;
     private static FirebaseJobDispatcher dispatcher;
     private static SettingsUtils utils;
-    private static Date lastNotificationSent;
 
     private static final String REMINDER_CHANNEL_STRING_ID = "reminder_notification_channel";
 
@@ -48,45 +52,65 @@ public class NotificationUtils {
     private static final int REMINDER_CHANNEL_ID = 123;
 
     public static final int SET_NOTIFICATION_FOR_TODAY = 0;
-    public static final int  SET_NOTIFICATION_FOR_TOMORROW = 1;
+    public static final int SET_NOTIFICATION_FOR_TOMORROW = 1;
+    private static String KEY_LATEST_NOT = "latestNotification";
 
-    //Schedule the notification job
-    public static synchronized void scheduleNotification(@NonNull final Context ctxt, int dayIndicator) {
+    /**
+     * Schedule the notification job
+     *
+     * @param ctxt the Context within which te notifivaiton is scheduled
+     */
+    public static synchronized void scheduleNotification(@NonNull final Context ctxt) {
         utils = new SettingsUtils(ctxt);
 
-        //get last notification sent and compare with todays date. Return if they are the same and set up for tomorrow.
+        // Only fire one notification per day, regardless of whether the user followed its prompt or
+        // not.
+        long timeSinceLastNotification = timeSinceLastNot(ctxt);
 
-        if (isInitialized) return;
+        boolean daySinceLastNot = false;
+
+        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
+            daySinceLastNot = true;
+        }
+        if (isInitialized || daySinceLastNot) return;
 
         Driver driver = new GooglePlayDriver(ctxt);
         dispatcher = new FirebaseJobDispatcher(driver);
-
         int trigger = utils.getNotificationTime(ctxt);
-
-        //add a day to the trigger-time so it activates the next day (if not canceled before hand)
-        if(dayIndicator == SET_NOTIFICATION_FOR_TOMORROW) {
-            trigger += (int) TimeUnit.DAYS.toSeconds(1);
-        }
-
-        //if the allotted time has already passed when activated, set to 0 so it immediately triggers.
-        if (trigger < 0){
-            trigger = 0;
-        }
 
         Job constraintNotificationJob = dispatcher.newJobBuilder()
                 .setService(NotificationJobService.class)
                 .setTag(NOTIFICATION_JOB_TAG)
                 .setRecurring(true)
-                .setTrigger(Trigger.executionWindow(trigger,trigger + NOTIFICATION_FLEX_TIME))
+                .setTrigger(Trigger.executionWindow(trigger, trigger + NOTIFICATION_FLEX_TIME))
                 .setReplaceCurrent(true)
                 .build();
 
         dispatcher.schedule(constraintNotificationJob);
 
         isInitialized = true;
+
+        //Save the last time a notification was fired.
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
+        SharedPreferences.Editor editor = sp.edit();
+        editor.putLong(KEY_LATEST_NOT, System.currentTimeMillis());
+        editor.apply();
     }
 
-    public static void cancelNotification() {
+    /**
+     * Calculate the elapsed time since the last notification was fired.
+     *
+     * @param ctxt Used to access SharedPreferences as well as use other utility methods
+     * @return Elapsed time in milliseconds since the last notification was shown
+     */
+    private static long timeSinceLastNot(Context ctxt) {
+        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+        long lastNotificationTimeMillis = sp.getLong(KEY_LATEST_NOT, 0);
+        return System.currentTimeMillis() - lastNotificationTimeMillis;
+    }
+
+    private static void cancelNotification() {
         dispatcher.cancel(NOTIFICATION_JOB_TAG);
 
     }
@@ -131,8 +155,7 @@ public class NotificationUtils {
         notMan.cancelAll();
         //TODO: added these two lines – now no more notification?
         cancelNotification();
-        scheduleNotification(ctxt, SET_NOTIFICATION_FOR_TOMORROW);
-
+        scheduleNotification(ctxt);
     }
 
     public static NotificationCompat.Action openApp(Context ctxt) {
@@ -161,7 +184,7 @@ public class NotificationUtils {
         PendingIntent ignoreReminderPend = PendingIntent.getService(ctxt, INTENT_IGNORE_REMINDER,
                 ignoreReminder, PendingIntent.FLAG_UPDATE_CURRENT);
 
-        return new NotificationCompat.Action(android.R.drawable.ic_notification_clear_all,
+        return new NotificationCompat.Action(R.drawable.ic_cancel,
                 ctxt.getString(R.string.ignore_action_title), ignoreReminderPend);
     }
 

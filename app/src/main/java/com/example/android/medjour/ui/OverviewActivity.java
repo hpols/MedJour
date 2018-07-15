@@ -119,7 +119,7 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
 
             //TODO: add logic that checks whether the user has already meditated/logged to day.
             // Also when returning to this activity
-            NotificationUtils.scheduleNotification(this, dayIndicator[0]);
+            NotificationUtils.scheduleNotification(this);
         }
     }
 

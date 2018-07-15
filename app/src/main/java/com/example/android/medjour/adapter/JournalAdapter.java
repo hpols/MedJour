@@ -2,7 +2,6 @@ package com.example.android.medjour.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -56,7 +55,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final JournalAdapter.JournalViewHolder holder, final int position) {
+    public void onBindViewHolder(@NonNull final JournalViewHolder holder, final int position) {
         final JournalEntry currentEntry = journalEntries.get(position);
 
         long prepTime = currentEntry.getPrepTime();
@@ -73,6 +72,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
         //present assessment for review or editing
         holder.setAssessment(currentEntry.getAssessment());
+
         if (holder.assessment.length() <= 100) {
             holder.assessmentTv.setText(holder.assessment);
         } else {
@@ -135,8 +135,9 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
         EditText assessmentEt;
         @BindView(R.id.rv_assessment_tv)
         TextView assessmentTv;
-        @BindView(R.id.rv_edit_fab)
-        FloatingActionButton editFab;
+
+        @BindView(R.id.focus_grabber)
+        TextView focusGrabber;
 
         boolean isCollapsed = true;
 
@@ -188,9 +189,13 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
         public void setEditToText() {
             assessmentTv.setVisibility(View.VISIBLE);
-            assessmentEt.setFocusableInTouchMode(false);
-            assessmentEt.setVisibility(View.INVISIBLE);
+            assessmentEt.setFocusable(false);
+            assessmentEt.setEnabled(false);
+            assessmentEt.setVisibility(View.GONE);
             assessmentTv.setText(assessment);
+            focusGrabber.requestFocus();
+            focusGrabber.setFocusable(true);
+            focusGrabber.setEnabled(true);
 
         }
     }

@@ -142,8 +142,8 @@ public class SettingsUtils {
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
         long timeInMils = 0;
         try {
-            Date timeOFDay = sdf.parse(chosenTime);
-            timeInMils = timeOFDay.getTime();
+            Date timeOfDay = sdf.parse(chosenTime);
+            timeInMils = timeOfDay.getTime();
         } catch (ParseException e) {
             e.printStackTrace();
         }

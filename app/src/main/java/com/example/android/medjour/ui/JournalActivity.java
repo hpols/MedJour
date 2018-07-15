@@ -88,9 +88,9 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         menu.setGroupVisible(R.id.pref_edit_del_group, showEditOptions);
         menu.findItem(R.id.pref_leave_menu).setVisible(showSave || showEditOptions);
         if(showSave || showEditOptions) {
-            journalBinder.journalFooter.setVisibility(View.VISIBLE);
-        } else {
             journalBinder.journalFooter.setVisibility(View.GONE);
+        } else {
+            journalBinder.journalFooter.setVisibility(View.VISIBLE);
         }
         return super.onPrepareOptionsMenu(menu);
     }
