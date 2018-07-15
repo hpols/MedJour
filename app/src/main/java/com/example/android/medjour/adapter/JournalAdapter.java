@@ -4,6 +4,8 @@ import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.RecyclerView;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.medjour.R;
-import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.utils.JournalUtils;
@@ -21,17 +22,26 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import timber.log.Timber;
 
 public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalViewHolder> {
 
     private Context ctxt;
     private List<JournalEntry> journalEntries;
     private JournalDb dB;
+    public boolean entryHasChanged = false; //flag whether there has been a change
+
+    private DialogClicks dialogClicks;
+
+    public interface DialogClicks {
+        void getEntryId(int entryId);
+    }
 
     //constructor
-    public JournalAdapter(Context ctxt, JournalDb dB) {
+    public JournalAdapter(Context ctxt, JournalDb dB, DialogClicks dialogClicks) {
         this.ctxt = ctxt;
         this.dB = dB;
+        this.dialogClicks = dialogClicks;
     }
 
     @NonNull
@@ -49,12 +59,6 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
     public void onBindViewHolder(@NonNull final JournalAdapter.JournalViewHolder holder, final int position) {
         final JournalEntry currentEntry = journalEntries.get(position);
 
-        //Keep track of the assessment view and corresponding fab button
-        final String COLLAPSED_ASSESSMENT = "collapsed";
-        final String EXPANDED_ASSESSMENT = "expanded";
-        final String EDIT_ASSESSMENT = "edit";
-        final String[] assessmentState = {COLLAPSED_ASSESSMENT}; //initial state is collapsed
-
         long prepTime = currentEntry.getPrepTime();
         long medTime = currentEntry.getMedTime();
         long reviewTime = currentEntry.getRevTime();
@@ -68,57 +72,29 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
         holder.dateTv.setText(DateFormat.getDateInstance().format(currentEntry.getDate()));
 
         //present assessment for review or editing
-        holder.assessmentTv.setText(currentEntry.getAssessment());
+        holder.setAssessment(currentEntry.getAssessment());
+        if (holder.assessment.length() <= 100) {
+            holder.assessmentTv.setText(holder.assessment);
+        } else {
+            holder.extract = holder.assessment.substring(0, 120) + " (…)";
+            holder.assessmentTv.setText(holder.extract);
+        }
 
-        //expanding, editing and saving the assessment
-        holder.editFab.setOnClickListener(new View.OnClickListener() {
+        //keep track of any changes made to the assessment text.
+        holder.assessmentEt.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View v) {
-                switch (assessmentState[0]) {
-                    case COLLAPSED_ASSESSMENT: //going to expanded state
-                        holder.editFab.setImageResource(android.R.drawable.ic_menu_edit);
-                        //TODO: expand to full text length
-                        assessmentState[0] = EXPANDED_ASSESSMENT;
-                        break;
-                    case EXPANDED_ASSESSMENT: // going to edit state
-                        holder.editFab.setImageResource(android.R.drawable.ic_menu_save);
-                        holder.assessmentTv.setEnabled(true);
-                        assessmentState[0] = EDIT_ASSESSMENT;
-                        break;
-                    case EDIT_ASSESSMENT: //saving and going back to collapsed state
-                        holder.editFab.setImageResource(R.drawable.ic_expand_more);
-                        String editedAssessment = holder.assessmentTv.getText().toString().trim();
-                        updateEntry(currentEntry, editedAssessment);
-                        holder.assessmentTv.setEnabled(false);
-                        //TODO: collapse to first 5 lines of text
-                        assessmentState[0] = COLLAPSED_ASSESSMENT;
-                }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // not needed
             }
-        });
 
-        holder.editFab.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public boolean onLongClick(View v) {
-                //TODO: dialog with option to delete entry
-                EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-                    @Override
-                    public void run() {
-                        dB.journalDao().deleteEntry(currentEntry);
-                    }
-                });
-                return false;
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // not needed
             }
-        });
-    }
 
-    //TODO: debug whether this works … add dialog to confirm saving before doing so.
-    private void updateEntry(final JournalEntry currentEntry, final String editedAssessment) {
-        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
-            public void run() {
-                currentEntry.setAssessment(editedAssessment);
-                dB.journalDao().updateEntry(currentEntry);
-
+            public void afterTextChanged(Editable s) {
+                entryHasChanged = true;
             }
         });
     }
@@ -132,7 +108,10 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
     public void setJournalEntries(List<JournalEntry> journalEntries) {
         this.journalEntries = journalEntries;
         notifyDataSetChanged();
+    }
 
+    public List<JournalEntry> getJournalEntries() {
+        return journalEntries;
     }
 
     public class JournalViewHolder extends RecyclerView.ViewHolder {
@@ -153,13 +132,66 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
         //right side
         @BindView(R.id.rv_assessment_et)
-        EditText assessmentTv;
+        EditText assessmentEt;
+        @BindView(R.id.rv_assessment_tv)
+        TextView assessmentTv;
         @BindView(R.id.rv_edit_fab)
         FloatingActionButton editFab;
 
-        public JournalViewHolder(View itemView) {
+        boolean isCollapsed = true;
+
+        public JournalViewHolder setAssessment(String assessment) {
+            this.assessment = assessment;
+            return this;
+        }
+
+        String assessment;
+        String extract;
+
+        JournalViewHolder(final View itemView) {
             super(itemView);
             ButterKnife.bind(this, itemView);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    Timber.v("Clicking so long!");
+                    dialogClicks.getEntryId(getAdapterPosition());
+                    return false;
+                }
+            });
+
+            assessmentTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Timber.v("Click!");
+                    if (isCollapsed) {
+                        assessmentTv.setText(assessment);
+                        isCollapsed = false;
+                    } else {
+                        assessmentTv.setText(extract);
+                        isCollapsed = true;
+                    }
+                }
+            });
+        }
+
+        public String getAssessmentUpdate() {
+            return assessmentEt.getText().toString().trim();
+        }
+
+        public void setTextToEdit() {
+            assessmentTv.setVisibility(View.INVISIBLE);
+            assessmentEt.setVisibility(View.VISIBLE);
+            assessmentEt.setText(assessment);
+        }
+
+        public void setEditToText() {
+            assessmentTv.setVisibility(View.VISIBLE);
+            assessmentEt.setFocusableInTouchMode(false);
+            assessmentEt.setVisibility(View.INVISIBLE);
+            assessmentTv.setText(assessment);
+
         }
     }
 }

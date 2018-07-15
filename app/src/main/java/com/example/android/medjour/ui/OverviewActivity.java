@@ -98,7 +98,6 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
                 }
 
                 overviewBinder.mainCumulativeTv.setText(cumulativeTv);
-                JournalActivity.setTotalTime();
             }
         });
     }

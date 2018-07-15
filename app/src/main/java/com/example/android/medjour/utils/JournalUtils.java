@@ -2,7 +2,6 @@ package com.example.android.medjour.utils;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
-import android.text.format.DateUtils;
 import android.view.View;
 
 import com.example.android.medjour.model.DateConverter;
@@ -35,10 +34,19 @@ public class JournalUtils {
     //convert the retrieved/stored milliseconds into readable time
     public static String toMinutes(long timeInMillis) {
 
-        long time = TimeUnit.MILLISECONDS.toSeconds(timeInMillis);
+        int seconds = (int) (timeInMillis / 1000) % 60;
+        int minutes = (int) ((timeInMillis / (1000 * 60)) % 60);
 
-        //TODO: add format and remove "min"
-        return DateUtils.formatElapsedTime(time) + " min";
+        //round seconds
+        if (seconds > 30) {
+            minutes += 1;
+        }
+        int hours = (int) ((timeInMillis / (1000 * 60 * 60)) % 24);
+        if (hours == 0) {
+            return minutes + "min";
+        } else {
+            return hours + ":" + minutes;
+        }
     }
 
     public static long getCumulativeTime(JournalDb dB) {

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+        <group android:id="@+id/pref_edit_del_group">
+            <item
+                android:id="@+id/pref_edit"
+                android:icon="@android:drawable/ic_menu_edit"
+                android:orderInCategory="1"
+                android:title="@string/pref_edit"
+                app:showAsAction="ifRoom" />
+
+            <item
+                android:id="@+id/pref_delete"
+                android:icon="@android:drawable/ic_menu_delete"
+                android:orderInCategory="2"
+                android:title="@string/pref_delete"
+                app:showAsAction="ifRoom" />
+        </group>
+
+        <group
+            android:id="@+id/pref_save_group"
+            android:visible="false">
+            <item
+                android:id="@+id/pref_save"
+                android:icon="@android:drawable/ic_menu_save"
+                android:orderInCategory="3"
+                android:title="@string/pref_save"
+                app:showAsAction="ifRoom" />
+        </group>
+        <item
+            android:id="@+id/pref_leave_menu"
+            android:icon="@android:drawable/ic_notification_clear_all"
+            android:orderInCategory="4"
+            android:title="@string/pref_leave_edit_options"
+            app:showAsAction="ifRoom" />
+</menu>

@@ -116,5 +116,15 @@
     <string name="ignore_action_title" translatable="true">Not now</string>
     <string name="open_action_title" translatable="true">Open Meditation Jounral</string>
     <string name="expand_and_collapse_text">button to expand or collapse the text</string>
-    <string name="menu_journal_expand_collapse">expand/collapse</string>
+    <string name="unsaved_alert">You have made changes to this entry. Do you want to discard them?</string>
+    <string name="discard_button">Discard</string>
+    <string name="keep_editing_button">Keep Editing</string>
+    <string name="delete_query">Delete this item? This action cannot be undone</string>
+    <string name="delete_button">Delete</string>
+    <string name="cancel_button">Cancel</string>
+    <string name="pref_save">save</string>
+    <string name="pref_edit">edit</string>
+    <string name="pref_delete">delete</string>
+    <string name="pref_leave_edit_options">leave edit options</string>
+
 </resources>

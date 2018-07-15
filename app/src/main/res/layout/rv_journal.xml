@@ -2,7 +2,6 @@
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:card_view="http://schemas.android.com/apk/res-auto"
-    xmlns:expandableTextView="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -13,16 +12,17 @@
 
     <android.support.constraint.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/rv_total_label"
             style="@style/label.accent"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/std_space"
-            android:layout_marginStart="@dimen/std_space"
-            android:layout_marginTop="@dimen/std_space"
+            android:layout_marginLeft="@dimen/half_space"
+            android:layout_marginStart="@dimen/half_space"
+            android:layout_marginTop="8dp"
+            android:labelFor="@+id/rv_total_tv"
             android:text="@string/journal_session_label"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -46,6 +46,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/std_space"
             android:layout_marginRight="@dimen/std_space"
+            android:labelFor="@+id/rv_date_tv"
             android:text="@string/journal_date_label"
             app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
             app:layout_constraintEnd_toStartOf="@+id/rv_date_tv"
@@ -66,11 +67,10 @@
         <TextView
             android:id="@+id/rv_prep_label"
             style="@style/label"
-            android:layout_marginLeft="@dimen/std_space"
-            android:layout_marginStart="@dimen/std_space"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="@dimen/half_space"
+            android:labelFor="@+id/rv_prep_tv"
             android:text="@string/journal_prep_label"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/rv_total_label"
             app:layout_constraintTop_toBottomOf="@+id/rv_total_label" />
 
         <TextView
@@ -78,8 +78,8 @@
             style="@style/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/std_space"
-            android:layout_marginStart="@dimen/std_space"
+            android:layout_marginLeft="@dimen/half_space"
+            android:layout_marginStart="@dimen/half_space"
             app:layout_constraintBottom_toBottomOf="@+id/rv_prep_label"
             app:layout_constraintStart_toEndOf="@+id/rv_prep_label"
             app:layout_constraintTop_toTopOf="@+id/rv_prep_label"
@@ -91,7 +91,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/std_space"
+            android:labelFor="@+id/rv_med_tv"
             android:text="@string/journal_med_label"
+            app:layout_constraintBottom_toTopOf="@+id/rv_review_label"
             app:layout_constraintStart_toStartOf="@+id/rv_prep_label"
             app:layout_constraintTop_toBottomOf="@+id/rv_prep_label" />
 
@@ -100,8 +102,8 @@
             style="@style/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/std_space"
-            android:layout_marginStart="@dimen/std_space"
+            android:layout_marginLeft="@dimen/half_space"
+            android:layout_marginStart="@dimen/half_space"
             app:layout_constraintBottom_toBottomOf="@+id/rv_med_label"
             app:layout_constraintStart_toEndOf="@+id/rv_med_label"
             app:layout_constraintTop_toTopOf="@+id/rv_med_label"
@@ -114,53 +116,56 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/std_space"
             android:layout_marginTop="@dimen/std_space"
+            android:labelFor="@+id/rv_review_tv"
             android:text="@string/journal_rev_label"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/rv_med_label"
             app:layout_constraintTop_toBottomOf="@+id/rv_med_label" />
-
 
         <TextView
             android:id="@+id/rv_review_tv"
             style="@style/text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="@dimen/std_space"
-            android:layout_marginStart="@dimen/std_space"
+            android:layout_marginLeft="@dimen/half_space"
+            android:layout_marginStart="@dimen/half_space"
             app:layout_constraintBottom_toBottomOf="@+id/rv_review_label"
             app:layout_constraintStart_toEndOf="@+id/rv_review_label"
             app:layout_constraintTop_toTopOf="@+id/rv_review_label"
             tools:text="10 min" />
 
-            <EditText
-                android:id="@+id/rv_assessment_et"
-                style="@style/entry"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/border_margin"
-                android:layout_marginEnd="@dimen/border_margin"
-                android:layout_marginLeft="@dimen/half_space"
-                android:layout_marginRight="@dimen/border_margin"
-                android:layout_marginStart="@dimen/half_space"
-                android:layout_marginTop="@dimen/half_space"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/rv_med_tv"
-                app:layout_constraintTop_toBottomOf="@+id/rv_date_tv"
-                android:inputType="textMultiLine"
-                android:maxLines="5"
-                android:enabled="false"
-                tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/rv_edit_fab"
-            android:layout_width="wrap_content"
+        <TextView
+            android:id="@+id/rv_assessment_tv"
+            style="@style/entry"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:clickable="true"
-            android:focusable="true"
-            app:fabCustomSize="30dp"
-            android:src="@drawable/ic_expand_more"
+            android:layout_marginBottom="@dimen/border_margin"
+            android:layout_marginEnd="@dimen/border_margin"
+            android:layout_marginLeft="@dimen/half_space"
+            android:layout_marginRight="@dimen/border_margin"
+            android:layout_marginStart="@dimen/half_space"
+            android:layout_marginTop="@dimen/half_space"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" />
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/rv_med_tv"
+            app:layout_constraintTop_toBottomOf="@+id/rv_date_tv"
+            tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
+
+        <EditText
+            android:id="@+id/rv_assessment_et"
+            style="@style/entry"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:cursorVisible="false"
+            android:inputType="textMultiLine"
+            android:scrollbars="vertical"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="@id/rv_assessment_tv"
+            app:layout_constraintEnd_toEndOf="@id/rv_assessment_tv"
+            app:layout_constraintStart_toStartOf="@id/rv_assessment_tv"
+            app:layout_constraintTop_toTopOf="@id/rv_assessment_tv"
+            tools:ignore="LabelFor"
+            tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." /> <!-- there is no label at all -->
+
     </android.support.constraint.ConstraintLayout>
 </android.support.v7.widget.CardView>
