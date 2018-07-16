@@ -126,5 +126,7 @@
     <string name="pref_edit">edit</string>
     <string name="pref_delete">delete</string>
     <string name="pref_leave_edit_options">leave edit options</string>
+    <string name="appwidget_text">EXAMPLE</string>
+    <string name="add_widget">Add widget</string>
 
 </resources>

@@ -194,8 +194,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
             assessmentEt.setVisibility(View.GONE);
             assessmentTv.setText(assessment);
             focusGrabber.requestFocus();
-            focusGrabber.setFocusable(true);
-            focusGrabber.setEnabled(true);
+            dialogClicks.getEntryId(-1);
 
         }
     }

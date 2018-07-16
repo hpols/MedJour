@@ -2,6 +2,7 @@ package com.example.android.medjour.ui;
 
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -87,7 +89,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         menu.setGroupVisible(R.id.pref_save_group, showSave);
         menu.setGroupVisible(R.id.pref_edit_del_group, showEditOptions);
         menu.findItem(R.id.pref_leave_menu).setVisible(showSave || showEditOptions);
-        if(showSave || showEditOptions) {
+        if (showSave || showEditOptions) {
             journalBinder.journalFooter.setVisibility(View.GONE);
         } else {
             journalBinder.journalFooter.setVisibility(View.VISIBLE);
@@ -217,9 +219,17 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
 
     @Override
     public void getEntryId(int entryId) {
-        selectedEntryId = entryId;
-        currentEntry = journalAdapter.getJournalEntries().get(entryId);
-        showEditOptions = true;
-        invalidateOptionsMenu();
+        if (entryId == -1) {
+            View view = this.getCurrentFocus();
+            if (view != null) {
+                InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+            }
+        } else {
+            selectedEntryId = entryId;
+            currentEntry = journalAdapter.getJournalEntries().get(entryId);
+            showEditOptions = true;
+            invalidateOptionsMenu();
+        }
     }
 }
