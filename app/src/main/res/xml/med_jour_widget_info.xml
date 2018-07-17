@@ -3,8 +3,8 @@
     android:initialKeyguardLayout="@layout/med_jour_widget"
     android:initialLayout="@layout/med_jour_widget"
     android:minHeight="40dp"
-    android:minWidth="40dp"
-    android:previewImage="@drawable/example_appwidget_preview"
+    android:minWidth="160dp"
+    android:previewImage="@mipmap/ic_launcher"
     android:resizeMode="horizontal|vertical"
     android:updatePeriodMillis="86400000"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen"/>

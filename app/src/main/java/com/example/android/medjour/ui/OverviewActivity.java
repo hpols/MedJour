@@ -92,7 +92,7 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
                     cumulativeTv = getString(R.string.overview_no_entries);
                     overviewBinder.mainJournalBt.setVisibility(View.GONE);
                 } else {
-                    cumulativeTv = "Cumulative Time: "
+                    cumulativeTv = getString(R.string.total_time_label)
                             + JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
                     overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
                 }

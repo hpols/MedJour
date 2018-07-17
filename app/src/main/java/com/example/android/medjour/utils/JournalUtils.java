@@ -56,4 +56,8 @@ public class JournalUtils {
 
         return prepTime + medTime + revTime;
     }
+
+    public static Date getLastEntry(JournalDb dB) {
+        return dB.journalDao().getLastEntryDate();
+    }
 }

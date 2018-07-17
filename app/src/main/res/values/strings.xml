@@ -1,9 +1,6 @@
 <resources>
     <string name="app_name">MeditationJournal</string>
 
-    <!-- TODO: remove -->
-    <string name="hello_blank_fragment">place holder</string>
-
     <!--Meditations to be replaced by C.MI. links when rolled out for student & non-student use-->
     <string name="meditation_test">kyWeRdcGzKA</string>
     <string name="meditation_5min">gJ5LtUsHXt4</string>
@@ -126,7 +123,13 @@
     <string name="pref_edit">edit</string>
     <string name="pref_delete">delete</string>
     <string name="pref_leave_edit_options">leave edit options</string>
+
+    <!-- widget-->
     <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
+    <string name="widget_add_entry">+ entry</string>
+    <string name="widget_icon">Journal Meditation Icon</string>
+    <string name="total_time_label">total time:</string>
+    <string name="widget_last_login">last login:</string>
 
 </resources>

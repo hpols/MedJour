@@ -1,21 +1,41 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#09C"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/rounded_bg_widget"
+    android:orientation="horizontal"
     android:padding="@dimen/widget_margin">
 
-    <TextView
-        android:id="@+id/appwidget_text"
+    <ImageView
+        android:id="@+id/widget_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
+        android:contentDescription="@string/widget_icon"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <ImageButton
+        android:id="@+id/main_entry_bt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@id/widget_icon"
+        android:layout_toLeftOf="@+id/widget_summary"
+        android:layout_toStartOf="@+id/widget_summary"
+        android:background="@drawable/shadow"
+        android:contentDescription="@string/widget_add_entry"
+        android:src="@android:drawable/ic_input_add"
+        android:tint="@color/colorLightAccent" />
+
+    <!-- rtl if ever needed will be handled in its own layout file -->
+    <TextView
+        android:id="@+id/widget_summary"
+        style="@style/text"
         android:layout_centerVertical="true"
-        android:layout_margin="8dp"
-        android:background="#09C"
-        android:contentDescription="@string/appwidget_text"
-        android:text="@string/appwidget_text"
-        android:textColor="#ffffff"
-        android:textSize="24sp"
-        android:textStyle="bold|italic" />
+        android:layout_margin="@dimen/half_space"
+        android:layout_toEndOf="@id/widget_icon"
+        android:layout_toRightOf="@id/widget_icon"
+        android:paddingEnd="@dimen/half_space"
+        android:paddingRight="@dimen/half_space"
+        tools:text="Last Entry: 01/01/2018"
+        tools:ignore="RtlSymmetry" />
 
 </RelativeLayout>
