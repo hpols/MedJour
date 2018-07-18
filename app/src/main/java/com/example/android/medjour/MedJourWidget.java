@@ -1,12 +1,15 @@
 package com.example.android.medjour;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
+import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
+import com.example.android.medjour.ui.NewEntryActivity;
 import com.example.android.medjour.utils.JournalUtils;
 
 import java.text.DateFormat;
@@ -20,28 +23,39 @@ import timber.log.Timber;
 public class MedJourWidget extends AppWidgetProvider {
 
     static JournalDb dB;
+    static String[] widgetSummary = new String[2];
 
     static void updateAppWidget(Context ctxt, AppWidgetManager widgetMan, int widgetId) {
         Timber.plant(new Timber.DebugTree());
 
         dB = JournalDb.getInstance(ctxt);
 
-        final String[] widgetSummary = new String[2];
+        RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.med_jour_widget);
+
+        boolean executorHasFinished = false;
+        //TODO: use handler
+
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
                 widgetSummary[0] = JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
                 Date lastEntry = dB.journalDao().getLastEntryDate();
                 widgetSummary[1] = DateFormat.getDateInstance().format(lastEntry);
-                Timber.v("cumulative: " + widgetSummary[0] +  "; date:" + widgetSummary[1]);
+                Timber.v("cumulative: " + widgetSummary[0] + "; date:" + widgetSummary[1]);
             }
         });
 
-        String widgetText = ctxt.getString(R.string.total_time_label) + widgetSummary[0] + "\n" +
-                ctxt.getString(R.string.widget_last_login) + widgetSummary[1];
+        String widgetText = ctxt.getString(R.string.total_time_label)
+                + String.valueOf(widgetSummary[0]) + "\n"
+                + ctxt.getString(R.string.widget_last_login) + String.valueOf(widgetSummary[1]);
         // Construct the RemoteViews object
-        RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.med_jour_widget);
         views.setTextViewText(R.id.widget_summary, widgetText);
+
+        //setup click to open journal-flow
+        Intent intent = new Intent(ctxt, NewEntryActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(ctxt, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT);
+        views.setOnClickPendingIntent(R.id.widget_entry_bt, pendingIntent);
 
         // Instruct the widget manager to update the widget
         widgetMan.updateAppWidget(widgetId, views);

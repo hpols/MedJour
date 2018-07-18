@@ -46,12 +46,12 @@
     <string name="activation_free_bt">Free use</string>
     <string name="activation_footnote">* Certified Meditation Instructor – a course by UHT campus. You can find out more here</string>
 
-    <!-- OvierView Activity -->
+    <!-- OverView Activity -->
     <string name="main_entry_bt">Add new Journal Entry</string>
     <string name="main_journal_bt">View Journal</string>
 
     <!-- new entry flow -->
-    <string name="preparation_instruction">Take your timeInMinutes to setup and prepare.\n\nOnce you are ready, click on \"start meditation\".</string>
+    <string name="preparation_instruction">Take your time to setup and prepare.\n\nOnce you are ready, click on \"start meditation\".</string>
     <string name="preparation_start_bt">Start Meditation</string>
     <string name="category_date">Date:</string>
     <string name="review_preparation_time">Preparation Time:</string>
@@ -125,11 +125,10 @@
     <string name="pref_leave_edit_options">leave edit options</string>
 
     <!-- widget-->
-    <string name="appwidget_text">EXAMPLE</string>
     <string name="add_widget">Add widget</string>
-    <string name="widget_add_entry">+ entry</string>
+    <string name="widget_add_entry">add entry</string>
     <string name="widget_icon">Journal Meditation Icon</string>
-    <string name="total_time_label">total time:</string>
-    <string name="widget_last_login">last login:</string>
+    <string name="total_time_label">Total time:</string>
+    <string name="widget_last_login">Last login:</string>
 
 </resources>

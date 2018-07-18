@@ -6,8 +6,6 @@ import android.arch.lifecycle.ViewModel;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 
-import java.util.Date;
-
 public class EntryViewModel extends ViewModel {
     private LiveData<JournalEntry> entry;
 
