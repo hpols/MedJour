@@ -41,6 +41,4 @@ public class WidgetService extends IntentService {
         //Now update all widgets
         MedJourWidget.updateMedJourWidgets(this, widgetMan, widgetIds);
     }
-
-    //TODO: "Problem loading widget"
 }
