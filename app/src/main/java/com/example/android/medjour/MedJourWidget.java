@@ -7,13 +7,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.ui.NewEntryActivity;
 import com.example.android.medjour.utils.JournalUtils;
-
-import java.text.DateFormat;
-import java.util.Date;
 
 import timber.log.Timber;
 
@@ -23,7 +19,6 @@ import timber.log.Timber;
 public class MedJourWidget extends AppWidgetProvider {
 
     static JournalDb dB;
-    static String[] widgetSummary = new String[2];
 
     static void updateAppWidget(Context ctxt, AppWidgetManager widgetMan, int widgetId) {
         Timber.plant(new Timber.DebugTree());
@@ -32,22 +27,10 @@ public class MedJourWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.med_jour_widget);
 
-        boolean executorHasFinished = false;
-        //TODO: use handler
-
-        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                widgetSummary[0] = JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
-                Date lastEntry = dB.journalDao().getLastEntryDate();
-                widgetSummary[1] = DateFormat.getDateInstance().format(lastEntry);
-                Timber.v("cumulative: " + widgetSummary[0] + "; date:" + widgetSummary[1]);
-            }
-        });
-
         String widgetText = ctxt.getString(R.string.total_time_label)
-                + String.valueOf(widgetSummary[0]) + "\n"
-                + ctxt.getString(R.string.widget_last_login) + String.valueOf(widgetSummary[1]);
+                + String.valueOf(JournalUtils.toMinutes(JournalUtils.retrieveCumulativeTime(ctxt)))
+                + "\n" + ctxt.getString(R.string.widget_last_login)
+                + JournalUtils.retireveLastDate(ctxt);
         // Construct the RemoteViews object
         views.setTextViewText(R.id.widget_summary, widgetText);
 

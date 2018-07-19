@@ -88,16 +88,20 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
             @Override
             public void run() {
                 String cumulativeTv;
+                long cumulativeTime;
                 if (JournalUtils.getCumulativeTime(dB) == 0) {
                     cumulativeTv = getString(R.string.overview_no_entries);
                     overviewBinder.mainJournalBt.setVisibility(View.GONE);
+                    cumulativeTime = JournalUtils.NO_TOT_TIME;
                 } else {
+                    cumulativeTime = JournalUtils.getCumulativeTime(dB);
                     cumulativeTv = getString(R.string.total_time_label)
-                            + JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
+                            + JournalUtils.toMinutes(cumulativeTime);
                     overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
                 }
 
                 overviewBinder.mainCumulativeTv.setText(cumulativeTv);
+                JournalUtils.saveCumulativeTime(OverviewActivity.this, cumulativeTime);
             }
         });
     }

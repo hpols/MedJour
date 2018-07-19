@@ -64,6 +64,7 @@ public class ReviewFragment extends Fragment {
 
         date = new Date();
         String dateDisplay= DateFormat.getDateInstance().format(date);
+        JournalUtils.saveLastDate(getActivity(), dateDisplay);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
         reviewBinding.reviewPrepTv.setText(JournalUtils.toMinutes(NewEntryActivity.getPreparationTime()));
@@ -92,8 +93,6 @@ public class ReviewFragment extends Fragment {
             public void run() {
                 //insert new entry
                 dB.journalDao().createEntry(journalEntry);
-
-                //TODO: add logic to update entry
             }
         });
 

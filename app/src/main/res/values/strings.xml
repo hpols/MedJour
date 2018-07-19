@@ -128,7 +128,7 @@
     <string name="add_widget">Add widget</string>
     <string name="widget_add_entry">add entry</string>
     <string name="widget_icon">Journal Meditation Icon</string>
-    <string name="total_time_label">Total time:</string>
-    <string name="widget_last_login">Last login:</string>
+    <string name="total_time_label">Total time:&#032;</string>
+    <string name="widget_last_login">Last login:&#032;</string>
 
 </resources>
