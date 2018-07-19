@@ -18,6 +18,7 @@ import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.ui.NewEntryActivity;
 import com.example.android.medjour.ui.OverviewActivity;
 import com.example.android.medjour.utils.JournalUtils;
+import com.example.android.medjour.widget.WidgetService;
 
 import java.text.DateFormat;
 import java.util.Date;
@@ -64,7 +65,6 @@ public class ReviewFragment extends Fragment {
 
         date = new Date();
         String dateDisplay= DateFormat.getDateInstance().format(date);
-        JournalUtils.saveLastDate(getActivity(), dateDisplay);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
         reviewBinding.reviewPrepTv.setText(JournalUtils.toMinutes(NewEntryActivity.getPreparationTime()));
@@ -78,6 +78,12 @@ public class ReviewFragment extends Fragment {
                 startActivity(returnToOverview);
             }
         });
+
+        JournalUtils.saveLastDate(getActivity(), dateDisplay);
+        JournalUtils.saveCumulativeTime(getActivity(),
+                NewEntryActivity.getPreparationTime()
+                        + NewEntryActivity.getMeditationTime() + reviewTime);
+        WidgetService.startHandleActionUpdateWidget(getActivity());
 
         return root;
     }

@@ -8,6 +8,7 @@ import android.preference.PreferenceManager;
 import android.view.View;
 
 import com.example.android.medjour.model.DateConverter;
+import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 
 import java.util.Date;
@@ -21,7 +22,7 @@ public class JournalUtils {
 
     private static String TOTAL_TIME = "total_time";
     public static final int NO_TOT_TIME = 0;
-    private static String LAST_DATE ="last_date";
+    private static String LAST_DATE = "last_date";
 
 
     public static boolean hasMeditatedToday(JournalDb dB) {
@@ -59,12 +60,19 @@ public class JournalUtils {
         }
     }
 
-    public static long getCumulativeTime(JournalDb dB) {
-        long prepTime = dB.journalDao().getTotalPrepTime();
-        long medTime = dB.journalDao().getTotalMedTime();
-        long revTime = dB.journalDao().getTotalRevTime();
-
-        return prepTime + medTime + revTime;
+    public static long getCumulativeTime(final JournalDb dB) {
+        final long[] prepTime = new long[1];
+        final long[] medTime = new long[1];
+        final long[] revTime = new long[1];
+        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
+            @Override
+            public void run() {
+                prepTime[0] = dB.journalDao().getTotalPrepTime();
+                medTime[0] = dB.journalDao().getTotalMedTime();
+                revTime[0] = dB.journalDao().getTotalRevTime();
+            }
+        });
+        return prepTime[0] + medTime[0] + revTime[0];
     }
 
     public static Date getLastEntry(JournalDb dB) {
@@ -77,10 +85,15 @@ public class JournalUtils {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong(TOTAL_TIME, cumulativeTime);
         editor.apply();
+
+        //reset date if cumulativeTime = 0 => no entries in the db.
+        if (cumulativeTime == 0) {
+            saveLastDate(ctxt, "");
+        }
     }
 
     public static long retrieveCumulativeTime(Context ctxt) {
-     sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
         return sharedPref.getLong(TOTAL_TIME, NO_TOT_TIME);
     }
@@ -93,9 +106,8 @@ public class JournalUtils {
         editor.apply();
     }
 
-    public static String retireveLastDate (Context ctxt) {
+    public static String retrieveLastDate(Context ctxt) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
         return sharedPref.getString(LAST_DATE, "");
     }
-
 }

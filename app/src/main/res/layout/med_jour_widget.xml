@@ -25,7 +25,7 @@
         android:src="@android:drawable/ic_input_add"
         android:tint="@color/colorLightAccent" />
 
-    <!-- rtl if ever needed will be handled in its own layout file -->
+    <!-- padding only needed on the right -->
     <TextView
         android:id="@+id/widget_summary"
         style="@style/text"
@@ -33,9 +33,9 @@
         android:layout_margin="@dimen/half_space"
         android:layout_toEndOf="@id/widget_icon"
         android:layout_toRightOf="@id/widget_icon"
+        android:lineSpacingMultiplier="1.2"
         android:paddingEnd="@dimen/half_space"
         android:paddingRight="@dimen/half_space"
-        tools:text="Last Entry: 01/01/2018"
-        tools:ignore="RtlSymmetry" />
-
+        tools:ignore="RtlSymmetry"
+        tools:text="Last Entry: 01/01/2018" />
 </RelativeLayout>

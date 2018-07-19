@@ -26,7 +26,10 @@ import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.model.viewModels.JournalViewModel;
 import com.example.android.medjour.utils.JournalUtils;
+import com.example.android.medjour.widget.WidgetService;
 
+import java.text.DateFormat;
+import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -41,7 +44,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     JournalEntry currentEntry;
     int selectedEntryId;
 
-    boolean showEditOptions, showSave;
+    boolean showEditOptions, showSave, entryDeleted;
 
 
     @Override
@@ -159,6 +162,17 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         super.onBackPressed();
         if (journalAdapter.entryHasChanged) {
             unsavedDialog();
+        }
+        if(entryDeleted) { //ensure the latest date is saved for the widget to retrieve
+            EntryExecutor.getInstance().diskIO().execute(new Runnable() {
+                @Override
+                public void run() {
+                    Date date = dB.journalDao().getLastEntryDate();
+                    String dateDisplay= DateFormat.getDateInstance().format(date);
+                    JournalUtils.saveLastDate(JournalActivity.this, dateDisplay);
+                    WidgetService.startHandleActionUpdateWidget(JournalActivity.this);
+                }
+            });
         }
     }
 

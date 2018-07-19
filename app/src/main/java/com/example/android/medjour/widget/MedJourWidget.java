@@ -1,4 +1,4 @@
-package com.example.android.medjour;
+package com.example.android.medjour.widget;
 
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
+import com.example.android.medjour.R;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.ui.NewEntryActivity;
 import com.example.android.medjour.utils.JournalUtils;
@@ -27,10 +28,14 @@ public class MedJourWidget extends AppWidgetProvider {
 
         RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.med_jour_widget);
 
-        String widgetText = ctxt.getString(R.string.total_time_label)
+        String widgetText;
+        if (JournalUtils.retrieveCumulativeTime(ctxt) == JournalUtils.NO_TOT_TIME) {
+            widgetText = ctxt.getString(R.string.overview_no_entries);
+        }
+        widgetText = ctxt.getString(R.string.total_time_label)
                 + String.valueOf(JournalUtils.toMinutes(JournalUtils.retrieveCumulativeTime(ctxt)))
                 + "\n" + ctxt.getString(R.string.widget_last_login)
-                + JournalUtils.retireveLastDate(ctxt);
+                + JournalUtils.retrieveLastDate(ctxt);
         // Construct the RemoteViews object
         views.setTextViewText(R.id.widget_summary, widgetText);
 
@@ -61,5 +66,17 @@ public class MedJourWidget extends AppWidgetProvider {
     public void onDisabled(Context ctxt) {
         // Enter relevant functionality for when the last widget is disabled
     }
-}
 
+    /**
+     * update the widget(s)
+     *
+     * @param ctxt      is the context for the widget
+     * @param widgetMan is the AppWidgetManager
+     * @param widgetIds is an Int_array of ids. Covering single or multiple widgets in use.
+     */
+    public static void updateMedJourWidgets(Context ctxt, AppWidgetManager widgetMan, int[] widgetIds) {
+        for (int widgetId : widgetIds) {
+            updateAppWidget(ctxt, widgetMan, widgetId);
+        }
+    }
+}

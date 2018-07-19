@@ -84,26 +84,19 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
     //setup the accumulative count fo the meditation as well as the (non-)activation of the journal
     // button.
     private void setupCountAndButtons() {
-        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                String cumulativeTv;
-                long cumulativeTime;
-                if (JournalUtils.getCumulativeTime(dB) == 0) {
-                    cumulativeTv = getString(R.string.overview_no_entries);
-                    overviewBinder.mainJournalBt.setVisibility(View.GONE);
-                    cumulativeTime = JournalUtils.NO_TOT_TIME;
-                } else {
-                    cumulativeTime = JournalUtils.getCumulativeTime(dB);
-                    cumulativeTv = getString(R.string.total_time_label)
-                            + JournalUtils.toMinutes(cumulativeTime);
-                    overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
-                }
+        String cumulativeTv;
+        long cumulativeTime = JournalUtils.retrieveCumulativeTime(this);
+        if (cumulativeTime == JournalUtils.NO_TOT_TIME) {
+            cumulativeTv = getString(R.string.widget_no_entries);
+            overviewBinder.mainJournalBt.setVisibility(View.GONE);
+        } else {
+            cumulativeTime = JournalUtils.getCumulativeTime(dB);
+            cumulativeTv = getString(R.string.total_time_label)
+                    + JournalUtils.toMinutes(cumulativeTime);
+            overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
+        }
 
-                overviewBinder.mainCumulativeTv.setText(cumulativeTv);
-                JournalUtils.saveCumulativeTime(OverviewActivity.this, cumulativeTime);
-            }
-        });
+        overviewBinder.mainCumulativeTv.setText(cumulativeTv);
     }
 
     private void setupNotification() {
