@@ -1,4 +1,4 @@
-package com.example.android.medjour.service;
+package com.example.android.medjour.notification;
 
 import android.content.Context;
 

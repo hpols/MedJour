@@ -27,14 +27,14 @@
             android:theme="@style/SettingsTheme" />
 
         <service
-            android:name=".service.NotificationJobService"
+            android:name=".notification.NotificationJobService"
             android:exported="false">
             <intent-filter>
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
         <service
-            android:name=".service.NotificationService"
+            android:name=".notification.NotificationService"
             android:exported="false"/>
         <service android:name=".widget.WidgetService"/>
 

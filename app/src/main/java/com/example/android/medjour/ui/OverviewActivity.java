@@ -84,19 +84,19 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
     //setup the accumulative count fo the meditation as well as the (non-)activation of the journal
     // button.
     private void setupCountAndButtons() {
-        String cumulativeTv;
-        long cumulativeTime = JournalUtils.retrieveCumulativeTime(this);
-        if (cumulativeTime == JournalUtils.NO_TOT_TIME) {
-            cumulativeTv = getString(R.string.widget_no_entries);
+        String totalTimeText;
+        long totalTime = JournalUtils.retrieveCumulativeTime(this);
+        if (totalTime == JournalUtils.NO_TOT_TIME) {
+            totalTimeText = getString(R.string.widget_no_entries);
             overviewBinder.mainJournalBt.setVisibility(View.GONE);
         } else {
-            cumulativeTime = JournalUtils.getCumulativeTime(dB);
-            cumulativeTv = getString(R.string.total_time_label)
-                    + JournalUtils.toMinutes(cumulativeTime);
+            totalTime = JournalUtils.getTotalTime(dB);
+            totalTimeText = getString(R.string.total_time_label)
+                    + JournalUtils.toMinutes(totalTime);
             overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
         }
 
-        overviewBinder.mainCumulativeTv.setText(cumulativeTv);
+        overviewBinder.mainCumulativeTv.setText(totalTimeText);
     }
 
     private void setupNotification() {

@@ -60,7 +60,7 @@ public class ReviewFragment extends Fragment {
             int endColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
 
             int startColor = ContextCompat.getColor(getActivity(), R.color.indigo);
-            JournalUtils.changeBackground(root, startColor, endColor);
+            JournalUtils.changeBackground(root, startColor, endColor, JournalUtils.REVIEW_FLAG);
         }
 
         date = new Date();
@@ -80,7 +80,7 @@ public class ReviewFragment extends Fragment {
         });
 
         JournalUtils.saveLastDate(getActivity(), dateDisplay);
-        JournalUtils.saveCumulativeTime(getActivity(),
+        JournalUtils.saveTotalTime(getActivity(),
                 NewEntryActivity.getPreparationTime()
                         + NewEntryActivity.getMeditationTime() + reviewTime);
         WidgetService.startHandleActionUpdateWidget(getActivity());

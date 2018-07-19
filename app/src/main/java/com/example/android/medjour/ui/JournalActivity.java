@@ -81,7 +81,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
-                String totalTime = JournalUtils.toMinutes(JournalUtils.getCumulativeTime(dB));
+                String totalTime = JournalUtils.toMinutes(JournalUtils.getTotalTime(dB));
                 journalBinder.journalAccTimeTv.setText(totalTime);
             }
         });

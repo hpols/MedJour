@@ -17,9 +17,9 @@ import android.support.v4.app.NotificationCompat;
 import android.text.format.DateUtils;
 
 import com.example.android.medjour.R;
-import com.example.android.medjour.service.NotificationJobService;
-import com.example.android.medjour.service.NotificationService;
-import com.example.android.medjour.service.NotificationTask;
+import com.example.android.medjour.notification.NotificationJobService;
+import com.example.android.medjour.notification.NotificationService;
+import com.example.android.medjour.notification.NotificationTask;
 import com.example.android.medjour.ui.OverviewActivity;
 import com.firebase.jobdispatcher.Driver;
 import com.firebase.jobdispatcher.FirebaseJobDispatcher;

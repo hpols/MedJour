@@ -58,7 +58,7 @@ public class PreparationFragment extends Fragment {
             int endColor = ContextCompat.getColor(getActivity(), R.color.indigo);
 
             int startColor = ContextCompat.getColor(getActivity(), R.color.colorPrimary);
-            JournalUtils.changeBackground(root, startColor, endColor);
+            JournalUtils.changeBackground(root, startColor, endColor, JournalUtils.PREP_FLAG);
         }
 
         prepBinder.preparationStartBt.setOnClickListener(new View.OnClickListener() {

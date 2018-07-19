@@ -15,14 +15,16 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class JournalUtils {
-    static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
-    static long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
+    private static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
+    private static long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
 
     private static SharedPreferences sharedPref;
 
     private static String TOTAL_TIME = "total_time";
     public static final int NO_TOT_TIME = 0;
     private static String LAST_DATE = "last_date";
+    public static String PREP_FLAG = "preparation_call";
+    public static String REVIEW_FLAG = "review_call";
 
 
     public static boolean hasMeditatedToday(JournalDb dB) {
@@ -34,11 +36,17 @@ public class JournalUtils {
     }
 
     //slowly change background colour according to the maximum time allowed
-    public static void changeBackground(View root, int startColor, int endColor) {
+    public static void changeBackground(View root, int startColor, int endColor, String prepFlag) {
+        long duration;
+        if(prepFlag.equals(PREP_FLAG)) {
+            duration = MAX_PREP_TIME;
+        } else {
+            duration = MAX_REVIEW_TIME;
+        }
 
         ObjectAnimator colorFade = ObjectAnimator.ofObject(root, "backgroundColor",
                 new ArgbEvaluator(), startColor, endColor);
-        colorFade.setDuration(MAX_PREP_TIME);
+        colorFade.setDuration(duration);
         colorFade.start();
     }
 
@@ -60,7 +68,7 @@ public class JournalUtils {
         }
     }
 
-    public static long getCumulativeTime(final JournalDb dB) {
+    public static long getTotalTime(final JournalDb dB) {
         final long[] prepTime = new long[1];
         final long[] medTime = new long[1];
         final long[] revTime = new long[1];
@@ -75,19 +83,15 @@ public class JournalUtils {
         return prepTime[0] + medTime[0] + revTime[0];
     }
 
-    public static Date getLastEntry(JournalDb dB) {
-        return dB.journalDao().getLastEntryDate();
-    }
-
-    public static void saveCumulativeTime(Context ctxt, long cumulativeTime) {
+    public static void saveTotalTime(Context ctxt, long totalTime) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
         SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putLong(TOTAL_TIME, cumulativeTime);
+        editor.putLong(TOTAL_TIME, totalTime);
         editor.apply();
 
         //reset date if cumulativeTime = 0 => no entries in the db.
-        if (cumulativeTime == 0) {
+        if (totalTime == 0) {
             saveLastDate(ctxt, "");
         }
     }
