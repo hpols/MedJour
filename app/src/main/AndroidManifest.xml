@@ -3,6 +3,8 @@
     package="com.example.android.medjour">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <!-- in case the user wants to add vibration function to the callback -->
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"

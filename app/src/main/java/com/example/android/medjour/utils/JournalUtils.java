@@ -2,8 +2,10 @@ package com.example.android.medjour.utils;
 
 import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.media.AudioManager;
 import android.preference.PreferenceManager;
 import android.view.View;
 
@@ -25,6 +27,7 @@ public class JournalUtils {
     private static String LAST_DATE = "last_date";
     public static String PREP_FLAG = "preparation_call";
     public static String REVIEW_FLAG = "review_call";
+    public static String WIDGET_CALL = "widget_actvity";
 
 
     public static boolean hasMeditatedToday(JournalDb dB) {
@@ -38,7 +41,7 @@ public class JournalUtils {
     //slowly change background colour according to the maximum time allowed
     public static void changeBackground(View root, int startColor, int endColor, String prepFlag) {
         long duration;
-        if(prepFlag.equals(PREP_FLAG)) {
+        if (prepFlag.equals(PREP_FLAG)) {
             duration = MAX_PREP_TIME;
         } else {
             duration = MAX_REVIEW_TIME;
@@ -53,16 +56,16 @@ public class JournalUtils {
     //convert the retrieved/stored milliseconds into readable time
     public static String toMinutes(long timeInMillis) {
 
-        int seconds = (int) (timeInMillis / 1000) % 60;
-        int minutes = (int) ((timeInMillis / (1000 * 60)) % 60);
+        int seconds = (int) TimeUnit.MILLISECONDS.toSeconds(timeInMillis);
+        int minutes = (int) TimeUnit.MILLISECONDS.toMinutes(timeInMillis);
 
         //round seconds
         if (seconds > 30) {
             minutes += 1;
         }
-        int hours = (int) ((timeInMillis / (1000 * 60 * 60)) % 24);
+        int hours = (int) TimeUnit.MILLISECONDS.toHours(timeInMillis);
         if (hours == 0) {
-            return minutes + "min";
+            return minutes + " min";
         } else {
             return hours + ":" + minutes;
         }
@@ -110,8 +113,30 @@ public class JournalUtils {
         editor.apply();
     }
 
-    public static String retrieveLastDate(Context ctxt) {
+    //TODO: work with long so we can retrieve dd/mm/yyyy pertaining to locale format.
+
+    public static String retrieveLastDate(Context ctxt, String widgetCall) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
         return sharedPref.getString(LAST_DATE, "");
+    }
+
+    /**
+     * Changes the ringer mode on the device to either silent or back to normal.
+     * See Shushme app from AND-udacity course
+     *
+     * @param ctxt      is the context for the audio service
+     * @param audioMode is the audio-notification setting (silent or normal) to be set
+     */
+    public static void setRingerMode(Context ctxt, int audioMode) {
+        NotificationManager notMan = (NotificationManager)
+                ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
+        // Check for DND permissions for API 24+
+        if (notMan != null && (android.os.Build.VERSION.SDK_INT < 24 ||
+                (android.os.Build.VERSION.SDK_INT >= 24 &&
+                        !notMan.isNotificationPolicyAccessGranted()))) {
+            AudioManager audioManager = (AudioManager) ctxt.getSystemService(Context.AUDIO_SERVICE);
+            assert audioManager != null;
+            audioManager.setRingerMode(audioMode);
+        }
     }
 }

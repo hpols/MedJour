@@ -158,4 +158,11 @@ public class SettingsUtils {
 
         return sharedPref.getBoolean(keyForReminder, defaultBoo);
     }
+
+    public boolean vibrateEnabled(Context ctxt) {
+        String keyForVibrate = ctxt.getString(R.string.pref_key_vibrate);
+        boolean defaultVibBoo = ctxt.getResources().getBoolean(R.bool.vibrate_default);
+
+        return sharedPref.getBoolean(keyForVibrate, defaultVibBoo);
+    }
 }

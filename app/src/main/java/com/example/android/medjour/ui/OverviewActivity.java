@@ -87,7 +87,7 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
         String totalTimeText;
         long totalTime = JournalUtils.retrieveCumulativeTime(this);
         if (totalTime == JournalUtils.NO_TOT_TIME) {
-            totalTimeText = getString(R.string.widget_no_entries);
+            totalTimeText = getString(R.string.overview_no_entries);
             overviewBinder.mainJournalBt.setVisibility(View.GONE);
         } else {
             totalTime = JournalUtils.getTotalTime(dB);
@@ -102,18 +102,6 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
     private void setupNotification() {
         utils = new SettingsUtils(this);
         if (utils.reminderIsEnabled(this)) {
-            final int[] dayIndicator = new int[1];
-            EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-                @Override
-                public void run() {
-                    if (JournalUtils.hasMeditatedToday(dB)) {
-                        dayIndicator[0] = NotificationUtils.SET_NOTIFICATION_FOR_TOMORROW;
-                    } else {
-                        dayIndicator[0] = NotificationUtils.SET_NOTIFICATION_FOR_TODAY;
-                    }
-                }
-            });
-
             //TODO: add logic that checks whether the user has already meditated/logged to day.
             // Also when returning to this activity
             NotificationUtils.scheduleNotification(this);

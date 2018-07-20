@@ -14,6 +14,8 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.CountDownTimer;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -186,7 +188,8 @@ public class MeditationFragment extends Fragment {
         timeRemaining = getTimeRemaining();
         countDownTimer.start();
 
-        //fade out the timer
+        //fade out the timer. The user does not need it and should be encouraged not to repeatedly
+        // look at the screen, but to sink into the meditation until the callback is provided.
         // TODO: add http://techdocs.zebra.com/emdk-for-android/3-1/tutorial/tutMxDisplayManager/
         counterTv.setVisibility(View.VISIBLE);
         counterTv.setAlpha(1);
@@ -253,7 +256,8 @@ public class MeditationFragment extends Fragment {
 
     private void updateTimeUi(long millisUntilFinished) {
 
-        String timeDisplay = String.format("%02d", TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
+        String timeDisplay = String.format("%02d",
+                TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
                 - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)))
                 + ":" + String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)
                 - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
@@ -301,7 +305,8 @@ public class MeditationFragment extends Fragment {
                             youTubePlayer = player;
 
                             //when video has finished automatically move forward to next fragment
-                            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer.PlayerStateChangeListener() {
+                            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer
+                                    .PlayerStateChangeListener() {
                                 @Override
                                 public void onLoading() {
 
@@ -353,11 +358,25 @@ public class MeditationFragment extends Fragment {
     private void GoToReview() {
         long medTime = System.currentTimeMillis() - medStartTime;
         reviewCallback.toReview(medTime);
+
+        //add vibration if the user has selected this option in the settings.
+        //based on: https://stackoverflow.com/a/13950364/7601437
+        if (utils.vibrateEnabled(getActivity())) {
+            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vib.vibrate(VibrationEffect.createOneShot(500,
+                        VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                vib.vibrate(500);
+            }
+        }
     }
 
-    /**{@link TimerExpiredReceiver} is a {@link BroadcastReceiver} providing the end of meditation
+    /**
+     * {@link TimerExpiredReceiver} is a {@link BroadcastReceiver} providing the end of meditation
      * signal if the device has gone to sleep.
-     *
      */
     public class TimerExpiredReceiver extends BroadcastReceiver {
         private String NOT_CALLBACK = "notification_callback";
@@ -367,7 +386,8 @@ public class MeditationFragment extends Fragment {
             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
 
             Intent callbackReceiver = new Intent(ctxt, MeditationFragment.class);
-            PendingIntent pIntent = PendingIntent.getActivity(ctxt, 0, callbackReceiver, 0);
+            PendingIntent pIntent = PendingIntent.getActivity(ctxt, 0, callbackReceiver,
+                    0);
 
             NotificationCompat.Builder notBuild = new NotificationCompat.Builder(ctxt, NOT_CALLBACK);
             Uri notTone = utils.playCallbackSound(getActivity());

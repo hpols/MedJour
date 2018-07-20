@@ -82,6 +82,7 @@
     <string name="pref_time_title">Time of Day</string>
     <string name="pref_tone_title">Audio from your device</string>
     <string name="pref_med_reminder_title">Meditation Reminder</string>
+    <string name="pref_title_vibrate">Add vibration to callback</string>
 
     <string name="pref_key_med_time">Meditation Time</string>
     <string name="pref_key_callback">callback type</string>
@@ -90,6 +91,7 @@
     <string name="pref_key_tone">audio from device</string>
     <string name="pref_med_reminder_key">meditation reminder</string>
     <string name="pref_key_reminder_time">timeInMinutes</string>
+    <string name="pref_key_vibrate">vibrate at callback</string>
 
     <string name="pref_default_med_time">@string/min_20</string>
     <string name="pref_default_callback">@string/sound_callback</string>
@@ -99,6 +101,8 @@
 
     <string name="pref_reminder_on">Reminder enabled</string>
     <string name="pref_reminder_off">Reminder disabled</string>
+    <string name="pref_sum_off_vibrate">don\'t vibrate</string>
+    <string name="pref_sum_on_vibrate">vibrate</string>
 
     <!-- sound preference -->
     <string name="ok">OK</string>
@@ -129,7 +133,7 @@
     <string name="widget_add_entry">add entry</string>
     <string name="widget_icon">Journal Meditation Icon</string>
     <string name="total_time_label">Total time: \u0020</string>
-    <string name="widget_last_login">Last Date: \u0020</string>
+    <string name="widget_last_login">Last entry: \u0020</string>
     <string name="widget_no_entries">Add your first entry</string>
 
 </resources>

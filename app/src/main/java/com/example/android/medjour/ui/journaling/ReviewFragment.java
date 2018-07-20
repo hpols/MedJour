@@ -2,6 +2,7 @@ package com.example.android.medjour.ui.journaling;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -64,7 +65,7 @@ public class ReviewFragment extends Fragment {
         }
 
         date = new Date();
-        String dateDisplay= DateFormat.getDateInstance().format(date);
+        final String dateDisplay= DateFormat.getDateInstance().format(date);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
         reviewBinding.reviewPrepTv.setText(JournalUtils.toMinutes(NewEntryActivity.getPreparationTime()));
@@ -73,24 +74,19 @@ public class ReviewFragment extends Fragment {
         reviewBinding.reviewSaveFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                writeToDb();
+                saveEntry(dateDisplay);
                 Intent returnToOverview = new Intent(getActivity(), OverviewActivity.class);
                 startActivity(returnToOverview);
             }
         });
 
-        JournalUtils.saveLastDate(getActivity(), dateDisplay);
-        JournalUtils.saveTotalTime(getActivity(),
-                NewEntryActivity.getPreparationTime()
-                        + NewEntryActivity.getMeditationTime() + reviewTime);
-        WidgetService.startHandleActionUpdateWidget(getActivity());
-
         return root;
     }
 
-    private void writeToDb() {
+    private void saveEntry(String dateDisplay) {
         String assessment = reviewBinding.reviewAssessmentEt.getText().toString().trim();
         reviewTime = System.currentTimeMillis() - startReviewTime;
+        //TODO: ensure reviewtime does not exceed max
         journalEntry = new JournalEntry(date, NewEntryActivity.getPreparationTime(),
                 NewEntryActivity.getMeditationTime(), reviewTime, assessment);
 
@@ -101,6 +97,15 @@ public class ReviewFragment extends Fragment {
                 dB.journalDao().createEntry(journalEntry);
             }
         });
+
+        JournalUtils.saveLastDate(getActivity(), dateDisplay);
+        JournalUtils.saveTotalTime(getActivity(),
+                NewEntryActivity.getPreparationTime()
+                        + NewEntryActivity.getMeditationTime() + reviewTime);
+        WidgetService.startHandleActionUpdateWidget(getActivity());
+
+        JournalUtils.setRingerMode(getActivity(), AudioManager.RINGER_MODE_NORMAL);
+
 
     }
 }

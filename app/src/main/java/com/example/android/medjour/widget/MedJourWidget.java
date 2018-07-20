@@ -35,7 +35,7 @@ public class MedJourWidget extends AppWidgetProvider {
         widgetText = ctxt.getString(R.string.total_time_label)
                 + String.valueOf(JournalUtils.toMinutes(JournalUtils.retrieveCumulativeTime(ctxt)))
                 + "\n" + ctxt.getString(R.string.widget_last_login)
-                + JournalUtils.retrieveLastDate(ctxt);
+                + JournalUtils.retrieveLastDate(ctxt, JournalUtils.WIDGET_CALL);
         // Construct the RemoteViews object
         views.setTextViewText(R.id.widget_summary, widgetText);
 
@@ -74,7 +74,8 @@ public class MedJourWidget extends AppWidgetProvider {
      * @param widgetMan is the AppWidgetManager
      * @param widgetIds is an Int_array of ids. Covering single or multiple widgets in use.
      */
-    public static void updateMedJourWidgets(Context ctxt, AppWidgetManager widgetMan, int[] widgetIds) {
+    public static void updateMedJourWidgets(Context ctxt, AppWidgetManager widgetMan,
+                                            int[] widgetIds) {
         for (int widgetId : widgetIds) {
             updateAppWidget(ctxt, widgetMan, widgetId);
         }

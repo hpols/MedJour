@@ -173,6 +173,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
                     WidgetService.startHandleActionUpdateWidget(JournalActivity.this);
                 }
             });
+            entryDeleted = false;
         }
     }
 
@@ -229,6 +230,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         journalBinder.journalRv.removeViewAt(selectedEntryId);
         journalAdapter.notifyItemRemoved(selectedEntryId);
         //journalAdapter.notifyItemRangeChanged(currentEntry.getId(), journalAdapter.getItemCount() - 1);
+        entryDeleted = true;
     }
 
     @Override

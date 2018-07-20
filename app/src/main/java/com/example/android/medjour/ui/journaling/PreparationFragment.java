@@ -2,6 +2,7 @@ package com.example.android.medjour.ui.journaling;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
+import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -65,9 +66,13 @@ public class PreparationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 long prepTime = System.currentTimeMillis() - prepStartTime;
+                //TODO: ensure preptime does not exceed max
                 meditationCallback.toMeditation(prepTime);
             }
         });
+
+
+        JournalUtils.setRingerMode(getActivity(), AudioManager.RINGER_MODE_SILENT);
         return root;
     }
 
