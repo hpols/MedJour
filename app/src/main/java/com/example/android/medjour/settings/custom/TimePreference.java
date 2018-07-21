@@ -10,7 +10,7 @@ import android.widget.TimePicker;
 
 /**
  * based on: https://stackoverflow.com/a/5533295/7601437
- * A TimePicker enabling the user to select a timeInMinutes of day
+ * A TimePicker enabling the user to select a time of day
  */
 public class TimePreference extends DialogPreference {
 
@@ -45,6 +45,12 @@ public class TimePreference extends DialogPreference {
 
         //check locale settings whether to use am/pm or 24 hour display
         picker.setIs24HourView(false);
+
+        //changing color of title textview
+//        int numberId = getDialog().getContext().getResources()
+//                .getIdentifier("android:id/???", null, null);
+//        TextView numbers = (TextView) getDialog().findViewById(numberId);
+//        numbers.setTextColor(getContext().getResources().getColor(R.color.colorPrimaryDark));
 
         return (picker);
     }

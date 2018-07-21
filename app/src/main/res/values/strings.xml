@@ -71,6 +71,9 @@
     <string name="journal_med_label">Med:</string>
     <string name="journal_rev_label">Rev:</string>
     <string name="overview_no_entries">You have not written any journal entries so far.\nStart by tapping \"Add new journal entry \".</string>
+    <string name="review_toast_part_I">As per the C.MI. regulations only a maximum of</string>
+    <string name="review_toast_part_II_prep">mins can be logged. Hence the preparation time has been adjusted accordingly.</string>
+    <string name="review_toast_part_II_review">mins can be logged. Hence the review time has been adjusted accordingly.</string>
 
     <!-- menu -->
     <string name="menu_title_settings">Settings</string>
@@ -135,5 +138,6 @@
     <string name="total_time_label">Total time: \u0020</string>
     <string name="widget_last_login">Last entry: \u0020</string>
     <string name="widget_no_entries">Add your first entry</string>
+    <string name="video_not_available">The video could not be loaded. Hence a sound callback has been implemented.</string>
 
 </resources>

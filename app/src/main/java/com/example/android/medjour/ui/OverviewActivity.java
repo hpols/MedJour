@@ -1,14 +1,18 @@
 package com.example.android.medjour.ui;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.EditText;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -23,11 +27,14 @@ import com.facebook.stetho.Stetho;
 
 import timber.log.Timber;
 
-public class OverviewActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
+public class OverviewActivity extends AppCompatActivity
+        implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     ActivityOverviewBinding overviewBinder;
     JournalDb dB;
     SettingsUtils utils;
+
+    boolean repeatAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,11 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
         }
 
         dB = JournalDb.getInstance(getApplicationContext());
+
+        if (repeatAccess) {
+            showActivationDialog();
+            repeatAccess = true;
+        }
 
         overviewBinder.mainJournalBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,6 +91,31 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
         });
 
         setupCountAndButtons();
+    }
+
+    private void showActivationDialog() {
+        AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,
+                R.style.DialogTheme);
+        alertBuilder.setMessage(R.string.activation_text);
+        // Create an input field to receive the activation code
+        final EditText codeField = new EditText(this);
+        codeField.setInputType(InputType.TYPE_CLASS_TEXT);
+        alertBuilder.setView(codeField);
+
+        alertBuilder.setPositiveButton(R.string.activation_student_bt,
+                new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        if(codeField.getText().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
+                            //TODO: reflow app to display student flavor
+                        }
+
+                    }
+                });
+        alertBuilder.setNegativeButton(R.string.activation_free_bt, null);
+        AlertDialog alertDialog = alertBuilder.create(); //create and show the dialog
+        alertDialog.show();
+
     }
 
     //setup the accumulative count fo the meditation as well as the (non-)activation of the journal
@@ -137,7 +174,7 @@ public class OverviewActivity extends AppCompatActivity implements SharedPrefere
                 startActivity(new Intent(this, SettingsActivity.class));
                 break;
             case R.id.menu_activation:
-                //TODO: create activation dialogue
+                showActivationDialog();
                 break;
             case R.id.menu_guidelines:
                 //TODO: go to guidelines

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Layout for the TimePreference Dialog -->
-<TimePicker
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/edit"
+<TimePicker xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/dialog_timepicker"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/std_space"
-    android:paddingTop="@dimen/std_space"/>
+    android:paddingTop="@dimen/std_space" />

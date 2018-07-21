@@ -11,7 +11,7 @@
             <!-- All available ringtone sounds. -->
             <flag name="all" value="7" />
         </attr>
-        <attr name="appOwnSounds" format="reference"/>
-        <attr name="appOwnSoundsTitles" format="reference"/>
+        <attr name="appOwnSounds" format="reference" />
+        <attr name="appOwnSoundsTitles" format="reference" />
     </declare-styleable>
 </resources>

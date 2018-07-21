@@ -42,5 +42,5 @@
         android:defaultValue="@string/pref_default_reminder_time"
         android:dependency="@string/pref_med_reminder_key"
         android:key="@string/pref_key_reminder_time"
-        android:title="@string/pref_time_title" />
+        android:title="@string/pref_time_title"/>
 </PreferenceScreen>

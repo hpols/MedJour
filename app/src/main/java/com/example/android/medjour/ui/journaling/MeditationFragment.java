@@ -27,6 +27,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -68,7 +69,7 @@ public class MeditationFragment extends Fragment {
 
     ToReviewCallback reviewCallback;
 
-    boolean isVideo;
+    boolean isVideo, videoError;
 
     public interface ToReviewCallback {
         void toReview(long meditationTime);
@@ -258,7 +259,7 @@ public class MeditationFragment extends Fragment {
 
         String timeDisplay = String.format("%02d",
                 TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)
-                - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)))
+                        - TimeUnit.HOURS.toMinutes(TimeUnit.MILLISECONDS.toHours(millisUntilFinished)))
                 + ":" + String.format("%02d", TimeUnit.MILLISECONDS.toSeconds(millisUntilFinished)
                 - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(millisUntilFinished)));
 
@@ -334,7 +335,17 @@ public class MeditationFragment extends Fragment {
 
                                 @Override
                                 public void onError(YouTubePlayer.ErrorReason errorReason) {
-
+                                    //for whatever reason … the video is not working today, but the
+                                    // meditator's eyes might well already be shut. So plan B: revert
+                                    // to sound-callback
+                                    if (!timerIsRunning) {
+                                        utils.setStartedTime(getNow());
+                                        startTimer();
+                                        timerIsRunning = true;
+                                    }
+                                    Toast.makeText(getActivity(), R.string.video_not_available,
+                                            Toast.LENGTH_SHORT).show();
+                                    videoError = true;
                                 }
                             });
 
@@ -371,6 +382,12 @@ public class MeditationFragment extends Fragment {
                 //deprecated in API 26
                 vib.vibrate(500);
             }
+        }
+        if (videoError) {//repeat message at meditation end to ensure the user is not puzzled
+            Toast.makeText(getActivity(), R.string.video_not_available,
+                    Toast.LENGTH_SHORT).show();
+            videoError = false;
+
         }
     }
 

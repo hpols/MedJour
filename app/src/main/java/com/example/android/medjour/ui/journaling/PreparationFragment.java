@@ -2,7 +2,6 @@ package com.example.android.medjour.ui.journaling;
 
 import android.content.Context;
 import android.databinding.DataBindingUtil;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
@@ -24,7 +23,7 @@ public class PreparationFragment extends Fragment {
     toMeditationCallback meditationCallback;
 
     public interface toMeditationCallback {
-        void toMeditation(long preparationTime);
+        void toMeditation(long preparationTime, boolean prepTimeLimitReached);
     }
 
     public PreparationFragment() {
@@ -66,13 +65,18 @@ public class PreparationFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 long prepTime = System.currentTimeMillis() - prepStartTime;
-                //TODO: ensure preptime does not exceed max
-                meditationCallback.toMeditation(prepTime);
+                boolean prepTimeLimitReached =false;
+                //we can only log a certain amount of minutes for review, as per the C.MI. regulations
+                if (prepTime > JournalUtils.MAX_PREP_TIME) {
+                    prepTime = JournalUtils.MAX_PREP_TIME;
+                    prepTimeLimitReached = true;
+                }
+                meditationCallback.toMeditation(prepTime, prepTimeLimitReached);
             }
         });
 
 
-        JournalUtils.setRingerMode(getActivity(), AudioManager.RINGER_MODE_SILENT);
+        JournalUtils.setRingerMode(getActivity(), JournalUtils.NOT_SILENCE);
         return root;
     }
 

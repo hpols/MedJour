@@ -17,8 +17,8 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class JournalUtils {
-    private static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
-    private static long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
+    public static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
+    public static long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
 
     private static SharedPreferences sharedPref;
 
@@ -29,6 +29,9 @@ public class JournalUtils {
     public static String REVIEW_FLAG = "review_call";
     public static String WIDGET_CALL = "widget_actvity";
 
+    public static final int NOT_SILENCE = 100;
+    public static final int NOT_NORMAL = 200;
+    private static final String KEY_NOT_MODE = "notification mode";
 
     public static boolean hasMeditatedToday(JournalDb dB) {
         Date lastDate = dB.journalDao().getLastEntryDate();
@@ -115,6 +118,13 @@ public class JournalUtils {
 
     //TODO: work with long so we can retrieve dd/mm/yyyy pertaining to locale format.
 
+    /**
+     * retrieve the date of the last date from the db
+     *
+     * @param ctxt       the context to call the sharedPreference from
+     * @param widgetCall identifies the calling activity
+     * @return the last date
+     */
     public static String retrieveLastDate(Context ctxt, String widgetCall) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
         return sharedPref.getString(LAST_DATE, "");
@@ -124,10 +134,11 @@ public class JournalUtils {
      * Changes the ringer mode on the device to either silent or back to normal.
      * See Shushme app from AND-udacity course
      *
-     * @param ctxt      is the context for the audio service
-     * @param audioMode is the audio-notification setting (silent or normal) to be set
+     * @param ctxt             is the context for the audio service
+     * @param notificationMode is the audio-notification setting (silent or normal) to be set
      */
-    public static void setRingerMode(Context ctxt, int audioMode) {
+    public static void setRingerMode(Context ctxt, int notificationMode) {
+        //handle audio
         NotificationManager notMan = (NotificationManager)
                 ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
         // Check for DND permissions for API 24+
@@ -136,7 +147,14 @@ public class JournalUtils {
                         !notMan.isNotificationPolicyAccessGranted()))) {
             AudioManager audioManager = (AudioManager) ctxt.getSystemService(Context.AUDIO_SERVICE);
             assert audioManager != null;
+            int audioMode;
+            if (notificationMode == NOT_SILENCE) {
+                audioMode = AudioManager.RINGER_MODE_SILENT;
+            } else {
+                audioMode = AudioManager.RINGER_MODE_NORMAL;
+            }
             audioManager.setRingerMode(audioMode);
         }
+
     }
 }

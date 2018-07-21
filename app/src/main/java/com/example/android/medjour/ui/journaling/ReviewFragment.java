@@ -2,18 +2,17 @@ package com.example.android.medjour.ui.journaling;
 
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
-import android.media.AudioManager;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.FragmentReviewBinding;
 import com.example.android.medjour.model.EntryExecutor;
-import com.example.android.medjour.model.data.JournalDao;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.ui.NewEntryActivity;
@@ -23,6 +22,7 @@ import com.example.android.medjour.widget.WidgetService;
 
 import java.text.DateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -32,11 +32,9 @@ public class ReviewFragment extends Fragment {
     FragmentReviewBinding reviewBinding;
     Date date;
     JournalEntry journalEntry;
-    JournalDao journalDao;
     JournalDb dB;
 
-    long startReviewTime;
-    long reviewTime;
+    long startReviewTime, reviewTime;
 
 
     public ReviewFragment() {
@@ -65,7 +63,7 @@ public class ReviewFragment extends Fragment {
         }
 
         date = new Date();
-        final String dateDisplay= DateFormat.getDateInstance().format(date);
+        final String dateDisplay = DateFormat.getDateInstance().format(date);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
         reviewBinding.reviewPrepTv.setText(JournalUtils.toMinutes(NewEntryActivity.getPreparationTime()));
@@ -80,13 +78,28 @@ public class ReviewFragment extends Fragment {
             }
         });
 
+        if (NewEntryActivity.prepTimeLimitedReached) {
+            Toast.makeText(getActivity(), getString(R.string.review_toast_part_I)
+                            + String.valueOf(NewEntryActivity.getPreparationTime())
+                            + getString(R.string.review_toast_part_II_prep),
+                    Toast.LENGTH_SHORT).show();
+            NewEntryActivity.prepTimeLimitedReached = false;
+        }
+
         return root;
     }
 
     private void saveEntry(String dateDisplay) {
         String assessment = reviewBinding.reviewAssessmentEt.getText().toString().trim();
         reviewTime = System.currentTimeMillis() - startReviewTime;
-        //TODO: ensure reviewtime does not exceed max
+
+        boolean reviewTimeLimitReached = false;
+
+        //we can only log a certain amount of minutes for review, as per the C.MI. regulations
+        if (reviewTime > JournalUtils.MAX_REVIEW_TIME) {
+            reviewTime = JournalUtils.MAX_REVIEW_TIME;
+            reviewTimeLimitReached = true;
+        }
         journalEntry = new JournalEntry(date, NewEntryActivity.getPreparationTime(),
                 NewEntryActivity.getMeditationTime(), reviewTime, assessment);
 
@@ -104,8 +117,15 @@ public class ReviewFragment extends Fragment {
                         + NewEntryActivity.getMeditationTime() + reviewTime);
         WidgetService.startHandleActionUpdateWidget(getActivity());
 
-        JournalUtils.setRingerMode(getActivity(), AudioManager.RINGER_MODE_NORMAL);
+        JournalUtils.setRingerMode(getActivity(), JournalUtils.NOT_NORMAL);
 
+        if (reviewTimeLimitReached) {
+            Toast.makeText(getActivity(), getString(R.string.review_toast_part_I)
+                            + String.valueOf(TimeUnit.MILLISECONDS.toMinutes(reviewTime))
+                            + getString(R.string.review_toast_part_II_review), Toast.LENGTH_SHORT).show();
+        }
 
+        Intent returnToOverview = new Intent(getActivity(), OverviewActivity.class);
+        startActivity(returnToOverview);
     }
 }

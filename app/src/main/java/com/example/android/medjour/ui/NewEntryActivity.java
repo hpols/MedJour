@@ -25,6 +25,9 @@ public class NewEntryActivity extends AppCompatActivity implements
     public static long preparationTime;
     public static long meditationTime;
 
+    public static boolean prepTimeLimitedReached;
+    public static boolean reviewTimeLimitedReached;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,8 +48,9 @@ public class NewEntryActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void toMeditation(long preparationTime) {
+    public void toMeditation(long preparationTime, boolean prepTimeLimitReached) {
         NewEntryActivity.preparationTime = preparationTime;
+        NewEntryActivity.prepTimeLimitedReached = prepTimeLimitReached;
         Timber.v("preparationTime recorded: " + preparationTime);
         fragMan.beginTransaction().replace(R.id.new_entry_fragment_container, medFrag).commit();
     }
