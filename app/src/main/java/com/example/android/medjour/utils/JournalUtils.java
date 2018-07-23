@@ -6,6 +6,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.AudioManager;
+import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.View;
 
@@ -138,13 +139,15 @@ public class JournalUtils {
      * @param notificationMode is the audio-notification setting (silent or normal) to be set
      */
     public static void setRingerMode(Context ctxt, int notificationMode) {
+
+
         //handle audio
         NotificationManager notMan = (NotificationManager)
                 ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
         // Check for DND permissions for API 24+
-        if (notMan != null && (android.os.Build.VERSION.SDK_INT < 24 ||
-                (android.os.Build.VERSION.SDK_INT >= 24 &&
-                        !notMan.isNotificationPolicyAccessGranted()))) {
+        if (notMan != null && (Build.VERSION.SDK_INT < 24 ||
+                (Build.VERSION.SDK_INT >= 24 &&
+                        notMan.isNotificationPolicyAccessGranted()))) {
             AudioManager audioManager = (AudioManager) ctxt.getSystemService(Context.AUDIO_SERVICE);
             assert audioManager != null;
             int audioMode;

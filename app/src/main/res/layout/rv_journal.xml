@@ -7,6 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_margin="@dimen/half_space"
     android:animateLayoutChanges="true"
+    android:id="@+id/rv_holder"
     card_view:cardBackgroundColor="@color/colorPrimaryDark"
     card_view:cardCornerRadius="@dimen/corner_radius">
 

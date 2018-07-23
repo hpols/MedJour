@@ -3,8 +3,11 @@
     package="com.example.android.medjour">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- in case the user wants to add vibration function to the callback -->
-    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -37,8 +40,8 @@
         </service>
         <service
             android:name=".notification.NotificationService"
-            android:exported="false"/>
-        <service android:name=".widget.WidgetService"/>
+            android:exported="false" />
+        <service android:name=".widget.WidgetService" />
 
         <receiver android:name=".widget.MedJourWidget">
             <intent-filter>

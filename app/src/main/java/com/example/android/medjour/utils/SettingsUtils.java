@@ -149,7 +149,12 @@ public class SettingsUtils {
         }
         long now = System.currentTimeMillis();
 
-        return Math.toIntExact(timeInMils - now / 1000);
+        long setTime = timeInMils - now;
+        if (setTime < 0) {
+            setTime = 0;
+        }
+
+        return (int) setTime;
     }
 
     public boolean reminderIsEnabled(Context ctxt) {

@@ -14,7 +14,6 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.v4.app.NotificationCompat;
-import android.text.format.DateUtils;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.notification.NotificationJobService;
@@ -58,21 +57,12 @@ public class NotificationUtils {
     /**
      * Schedule the notification job
      *
-     * @param ctxt the Context within which te notifivaiton is scheduled
+     * @param ctxt the Context within which te notificaiton is scheduled
      */
     public static synchronized void scheduleNotification(@NonNull final Context ctxt) {
+        if (isInitialized) return;
+
         utils = new SettingsUtils(ctxt);
-
-        // Only fire one notification per day, regardless of whether the user followed its prompt or
-        // not.
-        long timeSinceLastNotification = timeSinceLastNot(ctxt);
-
-        boolean daySinceLastNot = false;
-
-        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
-            daySinceLastNot = true;
-        }
-        if (isInitialized || daySinceLastNot) return;
 
         Driver driver = new GooglePlayDriver(ctxt);
         dispatcher = new FirebaseJobDispatcher(driver);
@@ -103,7 +93,7 @@ public class NotificationUtils {
      * @param ctxt Used to access SharedPreferences as well as use other utility methods
      * @return Elapsed time in milliseconds since the last notification was shown
      */
-    private static long timeSinceLastNot(Context ctxt) {
+    public static long timeSinceLastNot(Context ctxt) {
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
         long lastNotificationTimeMillis = sp.getLong(KEY_LATEST_NOT, 0);

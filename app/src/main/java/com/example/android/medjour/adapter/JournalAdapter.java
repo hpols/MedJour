@@ -2,6 +2,7 @@ package com.example.android.medjour.adapter;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -17,6 +18,7 @@ import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.utils.JournalUtils;
 
 import java.text.DateFormat;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -29,6 +31,17 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
     private List<JournalEntry> journalEntries;
     private JournalDb dB;
     public boolean entryHasChanged = false; //flag whether there has been a change
+
+    private static ArrayList<CardView> cardViewArrayList = new ArrayList<>();
+
+    public static ArrayList<CardView> getCardViewArrayList() {
+        return cardViewArrayList;
+    }
+
+    public static void setCardViewArrayList(ArrayList<CardView> cardViewArrayList) {
+        JournalAdapter.cardViewArrayList = cardViewArrayList;
+    }
+
 
     private DialogClicks dialogClicks;
 
@@ -97,6 +110,13 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
                 entryHasChanged = true;
             }
         });
+
+        addHolder(holder.rvHolder);
+    }
+
+    private static void addHolder(CardView rvHolder)
+    {
+        cardViewArrayList.add(rvHolder);
     }
 
     @Override
@@ -138,6 +158,11 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
         @BindView(R.id.focus_grabber)
         TextView focusGrabber;
+
+        //the recyclerviewHolder
+        @BindView(R.id.rv_holder)
+            CardView rvHolder;
+
 
         boolean isCollapsed = true;
 

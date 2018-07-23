@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -25,12 +26,15 @@ import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.model.viewModels.JournalViewModel;
+import com.example.android.medjour.utils.PdfUtils;
 import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.widget.WidgetService;
 
 import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import timber.log.Timber;
 
@@ -42,6 +46,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     JournalViewHolder journalViewHolder;
 
     JournalEntry currentEntry;
+    List<JournalEntry> journalEntries;
     int selectedEntryId;
 
     boolean showEditOptions, showSave, entryDeleted;
@@ -72,9 +77,29 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
             public void onChanged(@Nullable List<JournalEntry> journalEntries) {
                 Timber.d("Updating entries from LiveData in ViewModel");
                 journalAdapter.setJournalEntries(journalEntries);
+                JournalActivity.this.journalEntries = journalEntries;
             }
         });
         setTotalTime();
+
+        journalBinder.exportJournalBt.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Date today = new Date();
+                DateFormat df = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
+                final String filename = getString(R.string.app_name) + "_" + df.format(today) + ".pdf";
+                PdfUtils.writePdf(JournalActivity.this, journalEntries, filename);
+                Snackbar snackbar = Snackbar.make(journalBinder.journalFooter,
+                        "Pdf was successfully written", Snackbar.LENGTH_INDEFINITE);
+                snackbar.setAction("View", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        PdfUtils.readPdf(JournalActivity.this, filename);
+                    }
+                });
+                snackbar.show();
+            }
+        });
     }
 
     public void setTotalTime() {

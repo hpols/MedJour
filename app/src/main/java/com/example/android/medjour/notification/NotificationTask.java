@@ -7,7 +7,7 @@ import com.example.android.medjour.utils.NotificationUtils;
 import timber.log.Timber;
 
 public class NotificationTask {
-    static final String ACTION_NOTIFICATION = "notification_service";
+    public static final String ACTION_NOTIFICATION = "notification_service";
     public static final String ACTION_DISMISS_NOT = "dismiss_notification";
     public static final String ACTION_OPEN_APP = "open_app";
 

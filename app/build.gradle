@@ -12,7 +12,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.android.medjour"
-        minSdkVersion 15
+        minSdkVersion 19
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -51,7 +51,7 @@ dependencies {
     //Logging
     implementation 'com.jakewharton:butterknife:8.8.1'
 
-    //Butterknife
+    //ButterKnife
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
@@ -63,10 +63,10 @@ dependencies {
     implementation "com.android.support:recyclerview-v7:$androidSupportVersion"
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
 
-    //cardview
+    //cardView
     implementation 'com.android.support:design:27.1.1'
 
-    //room, livedata & viewmodel dependencies
+    //room, liveData & viewModel dependencies
     implementation "android.arch.persistence.room:runtime:$aac_version"
     implementation "android.arch.lifecycle:extensions:$aac_version"
     annotationProcessor "android.arch.lifecycle:compiler:$aac_version"
@@ -75,9 +75,13 @@ dependencies {
 
     // Test helpers
 
-    //jobscheduler
+    //jobScheduler
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
 
     //debug helper
     implementation 'com.facebook.stetho:stetho:1.5.0'
+
+    //pdfBox for creating pdfs
+    implementation 'com.itextpdf:itextg:5.5.10'
+
 }

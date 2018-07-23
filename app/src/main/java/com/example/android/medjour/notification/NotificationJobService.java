@@ -2,7 +2,9 @@ package com.example.android.medjour.notification;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.format.DateUtils;
 
+import com.example.android.medjour.utils.NotificationUtils;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
 
@@ -21,7 +23,7 @@ public class NotificationJobService extends JobService {
             @Override
             protected Object doInBackground(Object[] objects) {
                 Context ctxt = NotificationJobService.this;
-                NotificationTask.executeTask(ctxt, NotificationTask.ACTION_NOTIFICATION);
+                fireNotification(ctxt);
 
                 boolean reschedule = false;
                 jobFinished(job, reschedule);
@@ -44,5 +46,23 @@ public class NotificationJobService extends JobService {
 
         Timber.v("on Stop Job called");
         return false;
+    }
+
+    // Only fire one notification per day, regardless of whether the user followed its prompt or
+    // not.
+    public void fireNotification(Context ctxt) {
+        long timeSinceLastNotification = NotificationUtils.timeSinceLastNot(ctxt);
+
+        boolean dayPassedSinceLastNot = false;
+
+        if (timeSinceLastNotification >= DateUtils.DAY_IN_MILLIS) {
+            dayPassedSinceLastNot = true;
+        }
+
+        if (dayPassedSinceLastNot) {
+            NotificationTask.executeTask(ctxt, NotificationTask.ACTION_NOTIFICATION);
+        } else {
+            backgroundTask.cancel(true);
+        }
     }
 }
