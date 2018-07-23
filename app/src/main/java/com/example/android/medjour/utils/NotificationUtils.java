@@ -52,7 +52,7 @@ public class NotificationUtils {
 
     public static final int SET_NOTIFICATION_FOR_TODAY = 0;
     public static final int SET_NOTIFICATION_FOR_TOMORROW = 1;
-    private static String KEY_LATEST_NOT = "latestNotification";
+    public static String KEY_LATEST_NOT = "latestNotification";
 
     /**
      * Schedule the notification job
@@ -79,12 +79,6 @@ public class NotificationUtils {
         dispatcher.schedule(constraintNotificationJob);
 
         isInitialized = true;
-
-        //Save the last time a notification was fired.
-        SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
-        SharedPreferences.Editor editor = sp.edit();
-        editor.putLong(KEY_LATEST_NOT, System.currentTimeMillis());
-        editor.apply();
     }
 
     /**

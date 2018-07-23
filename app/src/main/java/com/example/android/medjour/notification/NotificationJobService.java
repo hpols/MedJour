@@ -1,9 +1,13 @@
 package com.example.android.medjour.notification;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
+import com.example.android.medjour.model.data.JournalDb;
+import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.utils.NotificationUtils;
 import com.firebase.jobdispatcher.JobParameters;
 import com.firebase.jobdispatcher.JobService;
@@ -23,7 +27,8 @@ public class NotificationJobService extends JobService {
             @Override
             protected Object doInBackground(Object[] objects) {
                 Context ctxt = NotificationJobService.this;
-                fireNotification(ctxt);
+                JournalDb dB = JournalDb.getInstance(ctxt);
+                fireNotification(ctxt, dB);
 
                 boolean reschedule = false;
                 jobFinished(job, reschedule);
@@ -50,7 +55,7 @@ public class NotificationJobService extends JobService {
 
     // Only fire one notification per day, regardless of whether the user followed its prompt or
     // not.
-    public void fireNotification(Context ctxt) {
+    public void fireNotification(Context ctxt, JournalDb dB) {
         long timeSinceLastNotification = NotificationUtils.timeSinceLastNot(ctxt);
 
         boolean dayPassedSinceLastNot = false;
@@ -59,8 +64,14 @@ public class NotificationJobService extends JobService {
             dayPassedSinceLastNot = true;
         }
 
-        if (dayPassedSinceLastNot) {
+        if (dayPassedSinceLastNot && !JournalUtils.hasMeditatedToday(dB)) {
             NotificationTask.executeTask(ctxt, NotificationTask.ACTION_NOTIFICATION);
+
+            //Save the last time a notification was fired.
+            SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(ctxt);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putLong(NotificationUtils.KEY_LATEST_NOT, System.currentTimeMillis());
+            editor.apply();
         } else {
             backgroundTask.cancel(true);
         }

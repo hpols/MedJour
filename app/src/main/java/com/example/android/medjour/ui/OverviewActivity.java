@@ -27,6 +27,11 @@ import com.facebook.stetho.Stetho;
 
 import timber.log.Timber;
 
+/**
+ * {@link OverviewActivity} is the central activity offering a quick overview of total meditation
+ * and providing buttons to add new entries to the journal or view the latter once at least one
+ * entry has been added.
+ */
 public class OverviewActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -106,7 +111,7 @@ public class OverviewActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if(codeField.getText().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
+                        if (codeField.getText().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
                             //TODO: reflow app to display student flavor
                         }
 
@@ -136,11 +141,13 @@ public class OverviewActivity extends AppCompatActivity
         overviewBinder.mainCumulativeTv.setText(totalTimeText);
     }
 
+    /**
+     * setup the notification to either fire as soon as the allotted time has passed or ready for
+     * future reminders
+     */
     private void setupNotification() {
         utils = new SettingsUtils(this);
         if (utils.reminderIsEnabled(this)) {
-            //TODO: add logic that checks whether the user has already meditated/logged to day.
-            // Also when returning to this activity
             NotificationUtils.scheduleNotification(this);
         }
     }
