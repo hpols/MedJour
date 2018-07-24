@@ -10,8 +10,8 @@ import android.os.Build;
 import android.preference.PreferenceManager;
 import android.view.View;
 
+import com.example.android.medjour.R;
 import com.example.android.medjour.model.DateConverter;
-import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 
 import java.util.Date;
@@ -24,7 +24,7 @@ public class JournalUtils {
     private static SharedPreferences sharedPref;
 
     private static String TOTAL_TIME = "total_time";
-    public static final int NO_TOT_TIME = 0;
+    public static final int NO_TOT_TIME = 0; //no time has been logged via the entries so far
     private static String LAST_DATE = "last_date";
     public static String PREP_FLAG = "preparation_call";
     public static String REVIEW_FLAG = "review_call";
@@ -32,8 +32,26 @@ public class JournalUtils {
 
     public static final int NOT_SILENCE = 100;
     public static final int NOT_NORMAL = 200;
-    private static final String KEY_NOT_MODE = "notification mode";
+    private static String REPEAT_ACCESS = "repeated app access";
+    public static final String DELETE = "deleting entry";
+    public static final String CREATE = "creating entry";
 
+    public static boolean isIsStudent() {
+        return isStudent;
+    }
+
+    public static void setIsStudent(boolean isStudent) {
+        JournalUtils.isStudent = isStudent;
+    }
+
+    public static boolean isStudent;
+
+    /**
+     * ensure the user only logs one meditation per day (as per the C.MI. regulations)
+     *
+     * @param dB the database to be queried for the last entry date
+     * @return the boolean confirming the last entry was today or not
+     */
     public static boolean hasMeditatedToday(JournalDb dB) {
         Date lastDate = dB.journalDao().getLastEntryDate();
 
@@ -42,7 +60,15 @@ public class JournalUtils {
         return lastDate == today;
     }
 
-    //slowly change background colour according to the maximum time allowed
+    /**
+     * slowly change background colour according to the maximum time allowed
+     *
+     * @param root       is the View being animated
+     * @param startColor is the starting color fr the animation
+     * @param endColor   is the resulting color for the animation
+     * @param prepFlag   is a flag identifying the calling activity so as to determine the length of
+     *                   the animations
+     */
     public static void changeBackground(View root, int startColor, int endColor, String prepFlag) {
         long duration;
         if (prepFlag.equals(PREP_FLAG)) {
@@ -57,7 +83,11 @@ public class JournalUtils {
         colorFade.start();
     }
 
-    //convert the retrieved/stored milliseconds into readable time
+    /** convert the retrieved/stored milliseconds into readable time
+     *
+     * @param timeInMillis a long in miliseconds
+     * @return a String to display the time
+     */
     public static String toMinutes(long timeInMillis) {
 
         int seconds = (int) TimeUnit.MILLISECONDS.toSeconds(timeInMillis);
@@ -75,45 +105,58 @@ public class JournalUtils {
         }
     }
 
-    public static long getTotalTime(final JournalDb dB) {
-        final long[] prepTime = new long[1];
-        final long[] medTime = new long[1];
-        final long[] revTime = new long[1];
-        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                prepTime[0] = dB.journalDao().getTotalPrepTime();
-                medTime[0] = dB.journalDao().getTotalMedTime();
-                revTime[0] = dB.journalDao().getTotalRevTime();
-            }
-        });
-        return prepTime[0] + medTime[0] + revTime[0];
-    }
-
-    public static void saveTotalTime(Context ctxt, long totalTime) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
-
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putLong(TOTAL_TIME, totalTime);
-        editor.apply();
-
-        //reset date if cumulativeTime = 0 => no entries in the db.
-        if (totalTime == 0) {
-            saveLastDate(ctxt, "");
-        }
-    }
-
-    public static long retrieveCumulativeTime(Context ctxt) {
+    /**
+     * get the total time stored in the sharedPreferences
+     *
+     * @param ctxt the context for the sharedPreferences
+     * @return the long of accumulated time
+     */
+    public static long retrieveTotalTimeFromPref(Context ctxt) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
         return sharedPref.getLong(TOTAL_TIME, NO_TOT_TIME);
     }
 
+    /**
+     * keep tabs on the latest date of entry
+     *
+     * @param ctxt the context for the sharedPreference
+     * @param date the date to be stored
+     */
     public static void saveLastDate(Context ctxt, String date) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(LAST_DATE, date);
+        editor.apply();
+    }
+
+    /**
+     * update the total time in sharedPreference for future use in Overview, Journal and Widget
+     *
+     * @param ctxt               the context for the sharedPreference
+     * @param totalTimeFromEntry the time to be added or subtracted from the entry in question
+     * @param crudAction         the database action that will take place. I.e. should we add or
+     *                           subtract totalTimeFromEntry
+     */
+    public static void updateTotalTimeFromPref(Context ctxt, long totalTimeFromEntry,
+                                               String crudAction) {
+
+        long storedTotalTime = retrieveTotalTimeFromPref(ctxt);
+        long updatedTotalTime = 0;
+        switch (crudAction) {
+            case CREATE:
+                updatedTotalTime = storedTotalTime + totalTimeFromEntry;
+                break;
+            case DELETE:
+                updatedTotalTime = storedTotalTime - totalTimeFromEntry;
+        }
+
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putLong(TOTAL_TIME, updatedTotalTime);
         editor.apply();
     }
 
@@ -139,8 +182,6 @@ public class JournalUtils {
      * @param notificationMode is the audio-notification setting (silent or normal) to be set
      */
     public static void setRingerMode(Context ctxt, int notificationMode) {
-
-
         //handle audio
         NotificationManager notMan = (NotificationManager)
                 ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -158,6 +199,32 @@ public class JournalUtils {
             }
             audioManager.setRingerMode(audioMode);
         }
+    }
 
+    /**
+     * keep track of whether this is the first time the user opens the app
+     *
+     * @param ctxt the context for the sharedPreference
+     * @return a boolean indicating whether this is a repeat
+     */
+    public static boolean isRepeatedAccess(Context ctxt) {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+        return sharedPref.getBoolean(REPEAT_ACCESS,
+                ctxt.getResources().getBoolean(R.bool.repeat_acess_default));
+    }
+
+    /**
+     * update the boolean to track whether the user has opened the app before
+     *
+     * @param repeatedAccess a boolean indicating whether the user has opened the app before
+     * @param ctxt           the context for hte sharedPreference
+     */
+    public static void setRepeatedAccess(boolean repeatedAccess, Context ctxt) {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(REPEAT_ACCESS, repeatedAccess);
+        editor.apply();
     }
 }

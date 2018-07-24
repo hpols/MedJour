@@ -85,7 +85,8 @@ public class SettingsFragment extends PreferenceFragment implements
         }
     }
 
-    /** Only enable the soundPreference if the user wants a callback sound. When video is selected
+    /**
+     * Only enable the soundPreference if the user wants a callback sound. When video is selected
      * we do not need to select anything further.
      *
      * @param value of the callback preference which acts as a flag to know whether the sound

@@ -47,7 +47,7 @@ import timber.log.Timber;
  */
 public class MeditationFragment extends Fragment {
 
-    //TODO: handle rotatio (crash)
+    //TODO: handle rotation (crash)
 
     public MeditationFragment() {
         // Required empty public constructor
@@ -129,7 +129,7 @@ public class MeditationFragment extends Fragment {
 
         medStartTime = getNow();
         medLength = utils.getMeditationLength(getActivity());
-        Timber.d("meditation imte is set to: " + medLength);
+        Timber.d("meditation time is set to: " + medLength);
         medLengthInMillis = TimeUnit.MINUTES.toMillis(medLength);
         timeRemaining = medLengthInMillis;
         isVideo = utils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;

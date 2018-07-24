@@ -2,4 +2,5 @@
 <resources>
     <bool name="notification_activated_default">false</bool>
     <bool name="vibrate_default">false</bool>
+    <bool name="repeat_acess_default">false</bool>
 </resources>

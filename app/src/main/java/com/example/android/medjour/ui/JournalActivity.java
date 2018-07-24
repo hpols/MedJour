@@ -1,15 +1,19 @@
 package com.example.android.medjour.ui;
 
+import android.Manifest;
 import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -18,6 +22,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -91,22 +96,66 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         journalBinder.exportJournalBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
-                Intent intent = new Intent(JournalActivity.this, FolderPicker.class);
-                startActivityForResult(intent, FOLDERPICKER_CODE);
+                if (isStoragePermissionGranted()) {
+                    Intent intent = new Intent(JournalActivity.this, FolderPicker.class);
+                    startActivityForResult(intent, FOLDERPICKER_CODE);
+                } else {
+                    Toast.makeText(JournalActivity.this,
+                            "Please give the app external storage permission and try again.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
+    }
+
+    /**
+     * ensure external sotrage permission is granted. See: https://stackoverflow.com/a/33162451/7601437
+     *
+     * @return boolean indicating whehter permission is granted or denied.
+     */
+    public boolean isStoragePermissionGranted() {
+        if (Build.VERSION.SDK_INT >= 23) {
+            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
+                    == PackageManager.PERMISSION_GRANTED) {
+                Timber.v("External storage permission is granted");
+                return true;
+            } else {
+
+                Timber.v("External storage permission is revoked");
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                return false;
+            }
+        } else { //permission is automatically granted on sdk<23 upon installation
+            Timber.v("External storage permission is granted");
+            return true;
+        }
+    }
+
+    /**
+     * In case of there being no external storage permission granted, make a request to the user.
+     *
+     * @param requestCode  is the code detailing the request
+     * @param permissions  is the permission being requested
+     * @param grantResults is the result of the request
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            Timber.v("Permission: " + permissions[0] + "was " + grantResults[0]);
+            //resume tasks needing this permission
+        }
     }
 
     protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
         if (requestCode == FOLDERPICKER_CODE && resultCode == Activity.RESULT_OK) {
 
             String folderLocation = intent.getExtras().getString("data");
-            Timber.i( "folderLocation: " + folderLocation );
+            Timber.i("folderLocation: " + folderLocation);
 
-            Date date = new Date() ;
+            Date date = new Date();
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
-            final File myFile = new File(folderLocation +"/" + timeStamp + ".pdf");
+            final File myFile = new File(folderLocation + "/" + timeStamp + ".pdf");
             try {
                 PdfUtils.writePdf(JournalActivity.this, journalEntries, myFile);
             } catch (FileNotFoundException | DocumentException e) {
@@ -125,13 +174,9 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     }
 
     public void setTotalTime() {
-        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                String totalTime = JournalUtils.toMinutes(JournalUtils.getTotalTime(dB));
-                journalBinder.journalAccTimeTv.setText(totalTime);
-            }
-        });
+        String totalTime = JournalUtils.toMinutes(JournalUtils.retrieveTotalTimeFromPref(this));
+        journalBinder.journalAccTimeTv.setText(totalTime);
+
     }
 
     @Override
@@ -210,12 +255,12 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         if (journalAdapter.entryHasChanged) {
             unsavedDialog();
         }
-        if(entryDeleted) { //ensure the latest date is saved for the widget to retrieve
+        if (entryDeleted) { //ensure the latest date is saved for the widget to retrieve
             EntryExecutor.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
                     Date date = dB.journalDao().getLastEntryDate();
-                    String dateDisplay= DateFormat.getDateInstance().format(date);
+                    String dateDisplay = DateFormat.getDateInstance().format(date);
                     JournalUtils.saveLastDate(JournalActivity.this, dateDisplay);
                     WidgetService.startHandleActionUpdateWidget(JournalActivity.this);
                 }
@@ -268,6 +313,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     }
 
     public void deleteEntry() {
+        long totalTime = currentEntry.getMedTime() + currentEntry.getMedTime() + currentEntry.getRevTime();
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -276,8 +322,8 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         });
         journalBinder.journalRv.removeViewAt(selectedEntryId);
         journalAdapter.notifyItemRemoved(selectedEntryId);
-        //journalAdapter.notifyItemRangeChanged(currentEntry.getId(), journalAdapter.getItemCount() - 1);
         entryDeleted = true;
+        JournalUtils.updateTotalTimeFromPref(this, totalTime, JournalUtils.DELETE);
     }
 
     @Override

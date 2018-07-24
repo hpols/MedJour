@@ -103,6 +103,9 @@ public class ReviewFragment extends Fragment {
         journalEntry = new JournalEntry(date, NewEntryActivity.getPreparationTime(),
                 NewEntryActivity.getMeditationTime(), reviewTime, assessment);
 
+        long totalTimeFromEntry =  NewEntryActivity.getPreparationTime() +
+                NewEntryActivity.getMeditationTime() + reviewTime;
+
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -112,9 +115,7 @@ public class ReviewFragment extends Fragment {
         });
 
         JournalUtils.saveLastDate(getActivity(), dateDisplay);
-        JournalUtils.saveTotalTime(getActivity(),
-                NewEntryActivity.getPreparationTime()
-                        + NewEntryActivity.getMeditationTime() + reviewTime);
+        JournalUtils.updateTotalTimeFromPref(getActivity(), totalTimeFromEntry, JournalUtils.CREATE);
         WidgetService.startHandleActionUpdateWidget(getActivity());
 
         JournalUtils.setRingerMode(getActivity(), JournalUtils.NOT_NORMAL);

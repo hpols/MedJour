@@ -35,14 +35,9 @@ import timber.log.Timber;
 public class OverviewActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    //TODO: opening on a new day previous entries do not show up until a new one is added
-    //TODO: displaying 0 mins even though there should be a couple
-
     ActivityOverviewBinding overviewBinder;
     JournalDb dB;
     SettingsUtils utils;
-
-    boolean repeatAccess;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,9 +57,9 @@ public class OverviewActivity extends AppCompatActivity
 
         dB = JournalDb.getInstance(getApplicationContext());
 
-        if (repeatAccess) {
+        if (!JournalUtils.isRepeatedAccess(this)) {
             showActivationDialog();
-            repeatAccess = true;
+            JournalUtils.setRepeatedAccess(false, this);
         }
 
         overviewBinder.mainJournalBt.setOnClickListener(new View.OnClickListener() {
@@ -75,6 +70,7 @@ public class OverviewActivity extends AppCompatActivity
                 startActivity(journalIntent);
             }
         });
+
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override
             public void run() {
@@ -101,6 +97,9 @@ public class OverviewActivity extends AppCompatActivity
         setupCountAndButtons();
     }
 
+    /**
+     * A dialog enabling the user to switch to student-use of the app
+     */
     private void showActivationDialog() {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,
                 R.style.DialogTheme);
@@ -116,6 +115,9 @@ public class OverviewActivity extends AppCompatActivity
                     public void onClick(DialogInterface dialog, int which) {
                         if (codeField.getText().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
                             //TODO: reflow app to display student flavor
+                            JournalUtils.setIsStudent(true);
+                        } else {
+                            JournalUtils.setIsStudent(false);
                         }
 
                     }
@@ -126,21 +128,19 @@ public class OverviewActivity extends AppCompatActivity
 
     }
 
-    //setup the accumulative count fo the meditation as well as the (non-)activation of the journal
-    // button.
+    /**
+     * setup the accumulative count fo the meditation as well as the (non-)activation of the
+     * journal button.
+     */
     private void setupCountAndButtons() {
-        String totalTimeText;
-        long totalTime = JournalUtils.retrieveCumulativeTime(this);
+        long totalTime = JournalUtils.retrieveTotalTimeFromPref(this);
+        String totalTimeText = null;
         if (totalTime == JournalUtils.NO_TOT_TIME) {
-            totalTimeText = getString(R.string.overview_no_entries);
-            overviewBinder.mainJournalBt.setVisibility(View.GONE);
+            overviewBinder.mainCumulativeTv.setText(R.string.overview_no_entries);
         } else {
-            totalTime = JournalUtils.getTotalTime(dB);
-            totalTimeText = getString(R.string.total_time_label)
-                    + JournalUtils.toMinutes(totalTime);
+            totalTimeText = getString(R.string.total_time_label) + JournalUtils.toMinutes(totalTime);
             overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
         }
-
         overviewBinder.mainCumulativeTv.setText(totalTimeText);
     }
 

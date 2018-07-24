@@ -153,8 +153,7 @@ public class SettingsUtils {
 
         long setTime = timeInMils - now;
         if (setTime < 0) {
-            //enable immediate firing if the user has just made a change to the reminder settings.
-            // Otherwise check every hour
+            //enable immediate firing if the user has just made a change to the reminder settings. Otherwise check every hour
             if (reminderIsUpdated) {
                 setTime = 0;
                 reminderIsUpdated = false;
