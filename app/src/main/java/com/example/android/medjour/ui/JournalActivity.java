@@ -101,7 +101,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
                 final PdfUtils pdfUtils = new PdfUtils(JournalActivity.this);
                 if (isStoragePermissionGranted(WRITE_PERMIT)) {
                     Date date = new Date();
-                    final String fileName = "MeditationJournal" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
+                    final String fileName = "MeditationJournal" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(date) + ".pdf";
 
                     try {
                         pdfUtils.writePdf(journalEntries, fileName);

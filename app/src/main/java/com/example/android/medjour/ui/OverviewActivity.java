@@ -24,6 +24,7 @@ import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.utils.NotificationUtils;
 import com.example.android.medjour.utils.SettingsUtils;
 import com.facebook.stetho.Stetho;
+import com.google.android.gms.ads.AdRequest;
 
 import timber.log.Timber;
 
@@ -95,6 +96,17 @@ public class OverviewActivity extends AppCompatActivity
         });
 
         setupCountAndButtons();
+
+        //show ad to non-student users
+        if(!JournalUtils.isStudent) {
+            AdRequest adRequest = new AdRequest.Builder()
+                    .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                    .build();
+            overviewBinder.mainAdView.setVisibility(View.VISIBLE);
+            overviewBinder.mainAdView.loadAd(adRequest);
+        } else {
+            overviewBinder.mainAdView.setVisibility(View.GONE);
+        }
     }
 
     /**

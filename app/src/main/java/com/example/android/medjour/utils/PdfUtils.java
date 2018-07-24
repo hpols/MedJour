@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Environment;
+import android.support.v4.content.FileProvider;
 import android.widget.Toast;
 
 import com.example.android.medjour.R;
@@ -26,8 +27,6 @@ import java.io.OutputStream;
 import java.util.List;
 
 import timber.log.Timber;
-
-import static android.support.v4.content.FileProvider.getUriForFile;
 
 public class PdfUtils {
 
@@ -57,7 +56,7 @@ public class PdfUtils {
             Timber.i("Pdf Directory created");
         }
 
-        File newPdf = new File(pdfFolder + fileName + ".pdf");
+        File newPdf = new File(pdfFolder + fileName);
 
         OutputStream output = new FileOutputStream(newPdf);
 
@@ -95,11 +94,13 @@ public class PdfUtils {
     public void readPdf(String fileName) {
         if (isExternalStorageAvailable()) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            File imagePath = new File(ctxt.getFilesDir(), ctxt.getString(R.string.medJour_directory_path));
-            File newFile = new File(imagePath, fileName);
-            Uri contentUri = getUriForFile(ctxt, ctxt.getApplicationInfo().packageName + ".provider", newFile);
 
-            intent.setDataAndType(contentUri, "application/pdf");
+            File file = new File(new File(Environment
+                    .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
+                    ctxt.getString(R.string.medJour_directory_path)), fileName);
+            Uri uri = FileProvider.getUriForFile(ctxt, "com.example.android.medjour.provider", file);
+
+            intent.setDataAndType(uri, "application/pdf");
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
             try {
