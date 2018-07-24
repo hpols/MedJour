@@ -59,7 +59,7 @@ public class OverviewActivity extends AppCompatActivity
 
         if (!JournalUtils.isRepeatedAccess(this)) {
             showActivationDialog();
-            JournalUtils.setRepeatedAccess(false, this);
+            JournalUtils.setRepeatedAccess(true, this);
         }
 
         overviewBinder.mainJournalBt.setOnClickListener(new View.OnClickListener() {

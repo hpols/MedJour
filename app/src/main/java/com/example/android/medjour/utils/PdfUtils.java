@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Environment;
 import android.widget.Toast;
 
+import com.example.android.medjour.R;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.itextpdf.text.Document;
 import com.itextpdf.text.DocumentException;
@@ -26,9 +27,17 @@ import java.util.List;
 
 import timber.log.Timber;
 
+import static android.support.v4.content.FileProvider.getUriForFile;
+
 public class PdfUtils {
 
     private static String RETURN = "\n";
+
+    private Context ctxt;
+
+    public PdfUtils(Context ctxt) {
+        this.ctxt = ctxt;
+    }
 
     /* Checks if external storage is available for read and write */
     private static boolean isExternalStorageAvailable() {
@@ -37,33 +46,24 @@ public class PdfUtils {
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
-    public static File getPublicAlbumStorageDir(String albumName) {
-        // Get the directory for the user's public pictures directory.
-        File file = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS), albumName);
-        if (!file.mkdirs()) {
-            Timber.e("Directory not created");
-        }
-        return file;
-    }
-
     //see: http://valokafor.com/android-itext-pdf-example/
-    public static void writePdf(Context ctxt, List<JournalEntry> journalEntries, File myFile)
+    public void writePdf(List<JournalEntry> journalEntries, String fileName)
             throws FileNotFoundException, DocumentException {
 
-//        File pdfFolder = new File(Environment.getExternalStoragePublicDirectory(
-//                Environment.DIRECTORY_DOCUMENTS), "pdfdemo");
-//        if (!pdfFolder.exists()) {
-//            pdfFolder.mkdir();
-//            Timber.i("Pdf Directory created");
-//        }
+        File pdfFolder = new File(Environment.getExternalStoragePublicDirectory(
+                Environment.DIRECTORY_DOCUMENTS), ctxt.getString(R.string.medJour_directory_path));
+        if (!pdfFolder.exists()) {
+            pdfFolder.mkdir();
+            Timber.i("Pdf Directory created");
+        }
 
-        OutputStream output = new FileOutputStream(myFile);
+        File newPdf = new File(pdfFolder + fileName + ".pdf");
+
+        OutputStream output = new FileOutputStream(newPdf);
 
         Document doc = new Document(PageSize.LETTER);
 
         PdfWriter.getInstance(doc, output);
-
 
         //open the document
         doc.open();
@@ -76,9 +76,9 @@ public class PdfUtils {
 
         for (int i = 0; i < journalEntries.size(); i++) {
             JournalEntry currentEntry = journalEntries.get(i);
-            String prep = "Preparation time: " + String.valueOf(currentEntry.getPrepTime());
-            String med = "Meditation time: " + String.valueOf(currentEntry.getMedTime());
-            String rev = "Review time: " + String.valueOf(currentEntry.getRevTime());
+            String prep = "Preparation time: " + JournalUtils.toMinutes(currentEntry.getPrepTime());
+            String med = "Meditation time: " + JournalUtils.toMinutes((currentEntry.getMedTime()));
+            String rev = "Review time: " + JournalUtils.toMinutes((currentEntry.getRevTime()));
             String date = "Date: " + String.valueOf(currentEntry.getDate());
             String assessment = currentEntry.getAssessment();
             String entry = date + RETURN + prep + RETURN + med + RETURN + rev + RETURN + assessment;
@@ -90,13 +90,16 @@ public class PdfUtils {
         }
         //close document
         doc.close();
-
     }
 
-    public static void readPdf(final Context ctxt, File myFile) {
+    public void readPdf(String fileName) {
         if (isExternalStorageAvailable()) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setDataAndType(Uri.fromFile(myFile), "application/pdf");
+            File imagePath = new File(ctxt.getFilesDir(), ctxt.getString(R.string.medJour_directory_path));
+            File newFile = new File(imagePath, fileName);
+            Uri contentUri = getUriForFile(ctxt, ctxt.getApplicationInfo().packageName + ".provider", newFile);
+
+            intent.setDataAndType(contentUri, "application/pdf");
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
 
             try {

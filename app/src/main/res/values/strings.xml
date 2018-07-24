@@ -140,4 +140,9 @@
     <string name="widget_no_entries">Add your first entry</string>
     <string name="video_not_available">The video could not be loaded. Hence a sound callback has been implemented.</string>
 
+
+    <string name="storage_permission_request">Please give the app external storage permission and try again.</string>
+    <string name="medJour_directory_path">meditationJournal</string>
+    <string name="medJour_directory_name">meditationJournal/</string>
+
 </resources>

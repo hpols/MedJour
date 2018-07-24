@@ -1,12 +1,10 @@
 package com.example.android.medjour.ui;
 
 import android.Manifest;
-import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
 import android.os.Build;
@@ -38,14 +36,12 @@ import com.example.android.medjour.utils.PdfUtils;
 import com.example.android.medjour.widget.WidgetService;
 import com.itextpdf.text.DocumentException;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import lib.folderpicker.FolderPicker;
 import timber.log.Timber;
 
 public class JournalActivity extends AppCompatActivity implements JournalAdapter.DialogClicks {
@@ -61,6 +57,8 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
 
     boolean showEditOptions, showSave, entryDeleted;
     private int FOLDERPICKER_CODE = 999;
+    private final String WRITE_PERMIT = "external writing permission";
+    private final String READ_PERMIT = "external reading permission";
 
 
     @Override
@@ -91,17 +89,37 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
                 JournalActivity.this.journalEntries = journalEntries;
             }
         });
+
+        //setup the total time Ui.
         setTotalTime();
 
+        //when clicked set the pdf-writing action in motion
         journalBinder.exportJournalBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (isStoragePermissionGranted()) {
-                    Intent intent = new Intent(JournalActivity.this, FolderPicker.class);
-                    startActivityForResult(intent, FOLDERPICKER_CODE);
+
+                final PdfUtils pdfUtils = new PdfUtils(JournalActivity.this);
+                if (isStoragePermissionGranted(WRITE_PERMIT)) {
+                    Date date = new Date();
+                    final String fileName = "MeditationJournal" + new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
+
+                    try {
+                        pdfUtils.writePdf(journalEntries, fileName);
+                    } catch (FileNotFoundException | DocumentException e) {
+                        e.printStackTrace();
+                    }
+                    Snackbar snackbar = Snackbar.make(journalBinder.journalFooter,
+                            "Pdf was successfully written", Snackbar.LENGTH_INDEFINITE);
+                    snackbar.setAction("View", new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            pdfUtils.readPdf(fileName);
+                        }
+                    });
+                    snackbar.show();
                 } else {
                     Toast.makeText(JournalActivity.this,
-                            "Please give the app external storage permission and try again.", Toast.LENGTH_SHORT).show();
+                            R.string.storage_permission_request, Toast.LENGTH_SHORT).show();
                 }
             }
         });
@@ -110,19 +128,29 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     /**
      * ensure external sotrage permission is granted. See: https://stackoverflow.com/a/33162451/7601437
      *
+     * @param permit what kind of permit are we looking for?
      * @return boolean indicating whehter permission is granted or denied.
      */
-    public boolean isStoragePermissionGranted() {
+    public boolean isStoragePermissionGranted(String permit) {
+
+        String androidPermission = null;
+        switch (permit) {
+            case READ_PERMIT:
+                androidPermission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+                break;
+            case WRITE_PERMIT:
+                androidPermission = Manifest.permission.READ_EXTERNAL_STORAGE;
+                break;
+        }
         if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    == PackageManager.PERMISSION_GRANTED) {
+            if (checkSelfPermission(androidPermission) == PackageManager.PERMISSION_GRANTED) {
                 Timber.v("External storage permission is granted");
                 return true;
             } else {
 
                 Timber.v("External storage permission is revoked");
                 ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                        new String[]{androidPermission}, 1);
                 return false;
             }
         } else { //permission is automatically granted on sdk<23 upon installation
@@ -147,32 +175,9 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         }
     }
 
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if (requestCode == FOLDERPICKER_CODE && resultCode == Activity.RESULT_OK) {
-
-            String folderLocation = intent.getExtras().getString("data");
-            Timber.i("folderLocation: " + folderLocation);
-
-            Date date = new Date();
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
-            final File myFile = new File(folderLocation + "/" + timeStamp + ".pdf");
-            try {
-                PdfUtils.writePdf(JournalActivity.this, journalEntries, myFile);
-            } catch (FileNotFoundException | DocumentException e) {
-                e.printStackTrace();
-            }
-            Snackbar snackbar = Snackbar.make(journalBinder.journalFooter,
-                    "Pdf was successfully written", Snackbar.LENGTH_INDEFINITE);
-            snackbar.setAction("View", new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    PdfUtils.readPdf(JournalActivity.this, myFile);
-                }
-            });
-            snackbar.show();
-        }
-    }
-
+    /**
+     * display the total time of logged meditation across all entries.
+     */
     public void setTotalTime() {
         String totalTime = JournalUtils.toMinutes(JournalUtils.retrieveTotalTimeFromPref(this));
         journalBinder.journalAccTimeTv.setText(totalTime);
