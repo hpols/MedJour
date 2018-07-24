@@ -47,6 +47,8 @@ import timber.log.Timber;
  */
 public class MeditationFragment extends Fragment {
 
+    //TODO: handle rotatio (crash)
+
     public MeditationFragment() {
         // Required empty public constructor
     }

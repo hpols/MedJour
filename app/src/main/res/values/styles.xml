@@ -60,6 +60,10 @@
         <item name="android:textColor">@color/colorAccent</item>
     </style>
 
+    <style name="label.print">
+        <item name="android:textColor">@android:color/black</item>
+    </style>
+
     <style name="entry">
         <item name="android:background">@drawable/corner_light</item>
         <item name="android:padding">@dimen/half_space</item>
@@ -67,6 +71,10 @@
 
     <style name="text.accent">
         <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
+    <style name="text.print">
+        <item name="android:textColor">@android:color/black</item>
     </style>
 
     <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
@@ -79,13 +87,4 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
     </style>
-
-   <style name="label.print">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
-    <style name="text.print">
-        <item name="android:textColor">@android:color/black</item>
-    </style>
-
 </resources>

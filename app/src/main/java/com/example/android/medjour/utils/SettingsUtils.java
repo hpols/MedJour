@@ -10,11 +10,13 @@ import com.example.android.medjour.R;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 import timber.log.Timber;
 
 public class SettingsUtils {
 
+    public static boolean reminderIsUpdated;
     private SharedPreferences sharedPref;
     private static final String STARTED_TIME = "started_time";
 
@@ -151,7 +153,14 @@ public class SettingsUtils {
 
         long setTime = timeInMils - now;
         if (setTime < 0) {
-            setTime = 0;
+            //enable immediate firing if the user has just made a change to the reminder settings.
+            // Otherwise check every hour
+            if (reminderIsUpdated) {
+                setTime = 0;
+                reminderIsUpdated = false;
+            } else {
+                setTime = TimeUnit.HOURS.toMillis(1);
+            }
         }
 
         return (int) setTime;

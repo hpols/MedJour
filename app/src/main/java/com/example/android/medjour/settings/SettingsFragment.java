@@ -23,6 +23,9 @@ public class SettingsFragment extends PreferenceFragment implements
     ListPreference callback;
     SoundPreference sound;
 
+    //TODO: defaultvalue for meditation-time is not being used. You have to set a time before the
+    // correct length is used.
+
     /**
      * create the Fragment, set the preference summaries and ensure the sound preference is only
      * active when the sound callback is selected

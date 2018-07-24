@@ -21,6 +21,7 @@ import com.itextpdf.text.pdf.PdfWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.List;
 
 import timber.log.Timber;
@@ -46,71 +47,60 @@ public class PdfUtils {
         return file;
     }
 
-    public static void writePdf(Context ctxt, List<JournalEntry> journalEntries, String fileName) {
-        if (isExternalStorageAvailable()) {
+    //see: http://valokafor.com/android-itext-pdf-example/
+    public static void writePdf(Context ctxt, List<JournalEntry> journalEntries, File myFile)
+            throws FileNotFoundException, DocumentException {
 
-            Document doc = new Document(PageSize.LETTER);
+//        File pdfFolder = new File(Environment.getExternalStoragePublicDirectory(
+//                Environment.DIRECTORY_DOCUMENTS), "pdfdemo");
+//        if (!pdfFolder.exists()) {
+//            pdfFolder.mkdir();
+//            Timber.i("Pdf Directory created");
+//        }
 
-            try {
-                File dir = getPublicAlbumStorageDir("MeditationJournal");
+        OutputStream output = new FileOutputStream(myFile);
+
+        Document doc = new Document(PageSize.LETTER);
+
+        PdfWriter.getInstance(doc, output);
 
 
-                if (!dir.exists()) {
-                    dir.mkdirs();
+        //open the document
+        doc.open();
+        doc.setMargins(1.0f, 1.0f, 1.0f, 1.0f);
 
-                    File file = new File(dir, fileName);
-                    FileOutputStream fOut = new FileOutputStream(file);
+        Font font = new Font(Font.FontFamily.TIMES_ROMAN, 12);
 
-                    PdfWriter.getInstance(doc, fOut);
+        Paragraph spacer = new Paragraph("\n~~~~\n", font);
+        spacer.setAlignment(Element.ALIGN_CENTER);
 
-                    //open the document
-                    doc.open();
-                    doc.setMargins(1.0f, 1.0f, 1.0f, 1.0f);
-                    doc.newPage();
+        for (int i = 0; i < journalEntries.size(); i++) {
+            JournalEntry currentEntry = journalEntries.get(i);
+            String prep = "Preparation time: " + String.valueOf(currentEntry.getPrepTime());
+            String med = "Meditation time: " + String.valueOf(currentEntry.getMedTime());
+            String rev = "Review time: " + String.valueOf(currentEntry.getRevTime());
+            String date = "Date: " + String.valueOf(currentEntry.getDate());
+            String assessment = currentEntry.getAssessment();
+            String entry = date + RETURN + prep + RETURN + med + RETURN + rev + RETURN + assessment;
 
-                    Font font = new Font(Font.FontFamily.TIMES_ROMAN, 12);
-
-                    Paragraph spacer = new Paragraph("\n~~~~\n", font);
-                    spacer.setAlignment(Element.ALIGN_CENTER);
-
-                    for (int i = 0; i < journalEntries.size(); i++) {
-                        JournalEntry currentEntry = journalEntries.get(i);
-                        String prep = "Preparation time: " + String.valueOf(currentEntry.getPrepTime());
-                        String med = "Meditation time: " + String.valueOf(currentEntry.getMedTime());
-                        String rev = "Review time: " + String.valueOf(currentEntry.getRevTime());
-                        String date = "Date: " + String.valueOf(currentEntry.getDate());
-                        String assessment = currentEntry.getAssessment();
-                        String entry = date + RETURN + prep + RETURN + med + RETURN + rev + RETURN + assessment;
-
-                        Paragraph p = new Paragraph(entry, font);
-                        p.setKeepTogether(true);
-                        doc.add(p);
-                        doc.add(spacer);
-                    }
-                    //close document
-                    file.getName();
-                    doc.close();
-                }
-
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (DocumentException e) {
-                e.printStackTrace();
-            }
-
-        } else {
-            Toast.makeText(ctxt, "The pdf could not be written, as there is no storage available.", Toast.LENGTH_SHORT).show();
+            Paragraph p = new Paragraph(entry, font);
+            p.setKeepTogether(true);
+            doc.add(p);
+            doc.add(spacer);
         }
+        //close document
+        doc.close();
+
     }
 
-    public static void readPdf(final Context ctxt, String filename) {
+    public static void readPdf(final Context ctxt, File myFile) {
         if (isExternalStorageAvailable()) {
-            Uri file = Uri.parse(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + filename);
-            Intent target = new Intent(Intent.ACTION_VIEW);
-            target.setDataAndType(file, "application/pdf");
-            target.setFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setDataAndType(Uri.fromFile(myFile), "application/pdf");
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+
             try {
-                ctxt.startActivity(target);
+                ctxt.startActivity(intent);
             } catch (ActivityNotFoundException e) {
                 AlertDialog.Builder pdfAlert = new AlertDialog.Builder(ctxt);
                 pdfAlert.setTitle("Missing Pdf Reader");
@@ -136,5 +126,4 @@ public class PdfUtils {
             Toast.makeText(ctxt, "the external storage could not be read", Toast.LENGTH_SHORT).show();
         }
     }
-
 }

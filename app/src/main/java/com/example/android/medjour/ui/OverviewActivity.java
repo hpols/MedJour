@@ -35,6 +35,9 @@ import timber.log.Timber;
 public class OverviewActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
+    //TODO: opening on a new day previous entries do not show up until a new one is added
+    //TODO: displaying 0 mins even though there should be a couple
+
     ActivityOverviewBinding overviewBinder;
     JournalDb dB;
     SettingsUtils utils;
@@ -192,6 +195,7 @@ public class OverviewActivity extends AppCompatActivity
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if (key.equals(getString(R.string.pref_med_reminder_key))) {
+            SettingsUtils.reminderIsUpdated = true;
             setupNotification();
         }
     }

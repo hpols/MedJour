@@ -1,9 +1,11 @@
 package com.example.android.medjour.ui;
 
+import android.app.Activity;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -26,16 +28,19 @@ import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.model.viewModels.JournalViewModel;
-import com.example.android.medjour.utils.PdfUtils;
 import com.example.android.medjour.utils.JournalUtils;
+import com.example.android.medjour.utils.PdfUtils;
 import com.example.android.medjour.widget.WidgetService;
+import com.itextpdf.text.DocumentException;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
+import lib.folderpicker.FolderPicker;
 import timber.log.Timber;
 
 public class JournalActivity extends AppCompatActivity implements JournalAdapter.DialogClicks {
@@ -50,6 +55,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     int selectedEntryId;
 
     boolean showEditOptions, showSave, entryDeleted;
+    private int FOLDERPICKER_CODE = 999;
 
 
     @Override
@@ -85,21 +91,37 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         journalBinder.exportJournalBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Date today = new Date();
-                DateFormat df = new SimpleDateFormat("dd/mm/yyyy", Locale.getDefault());
-                final String filename = getString(R.string.app_name) + "_" + df.format(today) + ".pdf";
-                PdfUtils.writePdf(JournalActivity.this, journalEntries, filename);
-                Snackbar snackbar = Snackbar.make(journalBinder.journalFooter,
-                        "Pdf was successfully written", Snackbar.LENGTH_INDEFINITE);
-                snackbar.setAction("View", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        PdfUtils.readPdf(JournalActivity.this, filename);
-                    }
-                });
-                snackbar.show();
+
+                Intent intent = new Intent(JournalActivity.this, FolderPicker.class);
+                startActivityForResult(intent, FOLDERPICKER_CODE);
             }
         });
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+        if (requestCode == FOLDERPICKER_CODE && resultCode == Activity.RESULT_OK) {
+
+            String folderLocation = intent.getExtras().getString("data");
+            Timber.i( "folderLocation: " + folderLocation );
+
+            Date date = new Date() ;
+            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(date);
+            final File myFile = new File(folderLocation +"/" + timeStamp + ".pdf");
+            try {
+                PdfUtils.writePdf(JournalActivity.this, journalEntries, myFile);
+            } catch (FileNotFoundException | DocumentException e) {
+                e.printStackTrace();
+            }
+            Snackbar snackbar = Snackbar.make(journalBinder.journalFooter,
+                    "Pdf was successfully written", Snackbar.LENGTH_INDEFINITE);
+            snackbar.setAction("View", new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    PdfUtils.readPdf(JournalActivity.this, myFile);
+                }
+            });
+            snackbar.show();
+        }
     }
 
     public void setTotalTime() {

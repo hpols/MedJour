@@ -81,7 +81,8 @@ dependencies {
     //debug helper
     implementation 'com.facebook.stetho:stetho:1.5.0'
 
-    //pdfBox for creating pdfs
+    //creating, storing and reading pdfs
     implementation 'com.itextpdf:itextg:5.5.10'
+    implementation 'lib.kashif:folderpicker:2.4'
 
 }
