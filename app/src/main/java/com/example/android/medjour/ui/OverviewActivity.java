@@ -83,9 +83,6 @@ public class OverviewActivity extends AppCompatActivity
             }
         });
 
-        //if the user has enabled notification schedule the next one
-        setupNotification();
-
         overviewBinder.mainEntryBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -95,10 +92,17 @@ public class OverviewActivity extends AppCompatActivity
             }
         });
 
+        //setup up Ui, notifications and adBanner.
+        setupNotification();
         setupCountAndButtons();
+        setupAdBanner();
+    }
 
-        //show ad to non-student users
-        if(!JournalUtils.isStudent) {
+    /**
+     * show ad to non-student users
+     */
+    private void setupAdBanner() {
+        if (!JournalUtils.isStudent) {
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .build();
@@ -125,19 +129,17 @@ public class OverviewActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (codeField.getText().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
-                            //TODO: reflow app to display student flavor
+                        if (codeField.getText().toString().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
                             JournalUtils.setIsStudent(true);
+                            setupAdBanner();
                         } else {
                             JournalUtils.setIsStudent(false);
                         }
-
                     }
                 });
         alertBuilder.setNegativeButton(R.string.activation_free_bt, null);
         AlertDialog alertDialog = alertBuilder.create(); //create and show the dialog
         alertDialog.show();
-
     }
 
     /**

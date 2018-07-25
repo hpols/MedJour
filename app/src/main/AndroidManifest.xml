@@ -52,7 +52,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/med_jour_widget_info" />
         </receiver>
-
+        <!-- enable reading of pdf files created -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.android.medjour.provider"
@@ -62,6 +62,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+        <!-- Enables the Google Pay API -->
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
 
 </manifest>

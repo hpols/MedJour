@@ -50,13 +50,13 @@ public class PdfUtils {
             throws FileNotFoundException, DocumentException {
 
         File pdfFolder = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS), ctxt.getString(R.string.medJour_directory_path));
+                Environment.DIRECTORY_DOCUMENTS), ctxt.getString(R.string.medJour_directory_name));
         if (!pdfFolder.exists()) {
             pdfFolder.mkdir();
             Timber.i("Pdf Directory created");
         }
 
-        File newPdf = new File(pdfFolder + fileName);
+        File newPdf = new File(pdfFolder + File.separator + fileName);
 
         OutputStream output = new FileOutputStream(newPdf);
 
@@ -97,7 +97,7 @@ public class PdfUtils {
 
             File file = new File(new File(Environment
                     .getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS),
-                    ctxt.getString(R.string.medJour_directory_path)), fileName);
+                    ctxt.getString(R.string.medJour_directory_name)), fileName);
             Uri uri = FileProvider.getUriForFile(ctxt, "com.example.android.medjour.provider", file);
 
             intent.setDataAndType(uri, "application/pdf");

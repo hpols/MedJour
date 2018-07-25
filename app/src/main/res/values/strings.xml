@@ -78,7 +78,7 @@
     <!-- menu -->
     <string name="menu_title_settings">Settings</string>
     <string name="menu_guidelines">Guidelines</string>
-    <string name="menu_activation">Enter Activation Code</string>
+    <string name="menu_activation">Enter Student Code</string>
 
     <!-- preferences -->
     <string name="pref_med_time_title">Meditation Time</string>
@@ -142,8 +142,7 @@
 
 
     <string name="storage_permission_request">Please give the app external storage permission and try again.</string>
-    <string name="medJour_directory_path">meditationJournal</string>
-    <string name="medJour_directory_name">meditationJournal/</string>
+    <string name="medJour_directory_name">meditationJournal</string>
 
     <!-- googleads-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>

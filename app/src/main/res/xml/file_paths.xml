@@ -5,5 +5,5 @@
         path="Android/data/com.example.android.medjour/" />
     <external-path
         name="@string/medJour_directory_name"
-        path="@string/medJour_directory_path" />
+        path="." />
 </paths>
