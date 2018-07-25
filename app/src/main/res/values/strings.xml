@@ -79,6 +79,7 @@
     <string name="menu_title_settings">Settings</string>
     <string name="menu_guidelines">Guidelines</string>
     <string name="menu_activation">Enter Student Code</string>
+    <string name="menu_upgrade">Upgrade $</string>
 
     <!-- preferences -->
     <string name="pref_med_time_title">Meditation Time</string>

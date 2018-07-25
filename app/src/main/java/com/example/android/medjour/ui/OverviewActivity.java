@@ -1,5 +1,6 @@
 package com.example.android.medjour.ui;
 
+import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -22,9 +23,16 @@ import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.settings.SettingsActivity;
 import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.utils.NotificationUtils;
+import com.example.android.medjour.utils.PayUtils;
 import com.example.android.medjour.utils.SettingsUtils;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.wallet.AutoResolveHelper;
+import com.google.android.gms.wallet.PaymentData;
+import com.google.android.gms.wallet.PaymentsClient;
+import com.google.android.gms.wallet.Wallet;
+import com.google.android.gms.wallet.WalletConstants;
 
 import timber.log.Timber;
 
@@ -39,6 +47,8 @@ public class OverviewActivity extends AppCompatActivity
     ActivityOverviewBinding overviewBinder;
     JournalDb dB;
     SettingsUtils utils;
+    private PaymentsClient paymentsClient;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -96,6 +106,14 @@ public class OverviewActivity extends AppCompatActivity
         setupNotification();
         setupCountAndButtons();
         setupAdBanner();
+
+        //ready payments incase the user wants to upgrade
+        //see : https://developers.google.com/pay/api/android/guides/tutorial
+        if (!JournalUtils.isStudent || !JournalUtils.isFullyUpgraded)
+        paymentsClient = Wallet.getPaymentsClient( this,  new Wallet.WalletOptions.Builder()
+                                .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
+                                .build());
+
     }
 
     /**
@@ -185,6 +203,11 @@ public class OverviewActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_overview, menu);
+        if(JournalUtils.isStudent) {
+            menu.findItem(R.id.menu_activation).setVisible(false);
+        } else {
+            menu.findItem(R.id.menu_activation).setVisible(true);
+        }
         return true;
     }
 
@@ -202,9 +225,61 @@ public class OverviewActivity extends AppCompatActivity
                 break;
             case R.id.menu_guidelines:
                 //TODO: go to guidelines
+                break;
+            case R.id.menu_upgrade:
+                //offerUpgrade();
         }
         return super.onOptionsItemSelected(item);
     }
+
+//    private void offerUpgrade() {
+//        //TODO: create dialog offering upgrade for payment
+//        findViewById(R.id.buy_button) //linked to dialog button
+//                .setOnClickListener(
+//                        new View.OnClickListener() {
+//                            @Override
+//                            public void onClick(View view) {
+//                                PaymentDataRequest request = PayUtils.createPaymentDataRequest();
+//                                if (request != null) {
+//                                    AutoResolveHelper.resolveTask(
+//                                            paymentsClient.loadPaymentData(request),
+//                                            this,
+//                                            // LOAD_PAYMENT_DATA_REQUEST_CODE is a constant value
+//                                            // you define.
+//                                            PayUtils.LOAD_PAYMENT_DATA_REQUEST_CODE);
+//                                }
+//                            }
+//                        });
+//    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case PayUtils.LOAD_PAYMENT_DATA_REQUEST_CODE:
+                switch (resultCode) {
+                    case Activity.RESULT_OK:
+                        PaymentData paymentData = PaymentData.getFromIntent(data);
+                        String token = paymentData.getPaymentMethodToken().getToken();
+                        break;
+                    case Activity.RESULT_CANCELED:
+                        break;
+                    case AutoResolveHelper.RESULT_ERROR:
+                        Status status = AutoResolveHelper.getStatusFromIntent(data);
+                        // Log the status for debugging.
+                        // Generally, there is no need to show an error to
+                        // the user as the Google Pay API will do that.
+                        break;
+                    default:
+                        // Do nothing.
+                }
+                break;
+            default:
+                // Do nothing.
+        }
+    }
+
+
+
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {

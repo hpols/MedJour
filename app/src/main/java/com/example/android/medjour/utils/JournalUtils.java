@@ -36,6 +36,16 @@ public class JournalUtils {
     public static final String DELETE = "deleting entry";
     public static final String CREATE = "creating entry";
 
+    public static boolean isIsFullyUpgraded() {
+        return isFullyUpgraded;
+    }
+
+    public static void setIsFullyUpgraded(boolean isFullyUpgraded) {
+        JournalUtils.isFullyUpgraded = isFullyUpgraded;
+    }
+
+    public static boolean isFullyUpgraded;
+
     public static boolean isIsStudent() {
         return isStudent;
     }

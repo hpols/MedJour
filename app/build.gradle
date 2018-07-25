@@ -64,7 +64,7 @@ dependencies {
     implementation "com.android.support:cardview-v7:$androidSupportVersion"
 
     //cardView
-    implementation 'com.android.support:design:27.1.1'
+    implementation "com.android.support:design:$androidSupportVersion"
 
     //room, liveData & viewModel dependencies
     implementation "android.arch.persistence.room:runtime:$aac_version"
@@ -72,8 +72,6 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:$aac_version"
     annotationProcessor "android.arch.persistence.room:compiler:$aac_version"
     testImplementation "android.arch.persistence.room:testing:$aac_version"
-
-    // Test helpers
 
     //jobScheduler
     implementation 'com.firebase:firebase-jobdispatcher:0.8.5'
@@ -85,12 +83,8 @@ dependencies {
     implementation 'com.itextpdf:itextg:5.5.10'
     implementation 'lib.kashif:folderpicker:2.4'
 
-    //google ads
+    //google ads & pay
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
-
-    //google pay
-    implementation 'com.google.android.gms:play-services-wallet:11.4.0'
-    implementation 'com.android.support:support-v4:24.1.1'
-    implementation 'com.android.support:appcompat-v7:24.1.1'
+    implementation 'com.google.android.gms:play-services-wallet:15.0.1'
 
 }

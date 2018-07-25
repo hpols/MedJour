@@ -19,4 +19,9 @@
         android:title="@string/menu_activation"
         android:orderInCategory="3"
         app:showAsAction="never" />
+
+    <item android:id="@+id/menu_upgrade"
+        android:title="@string/menu_upgrade"
+        android:orderInCategory="4"
+        app:showAsAction="never"/>
 </menu>
