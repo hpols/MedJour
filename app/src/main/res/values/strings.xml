@@ -147,5 +147,5 @@
 
     <!-- googleads-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-
+    <string name="payments_show_name" translatable="false">Successfully received payment data for %s!</string>
 </resources>

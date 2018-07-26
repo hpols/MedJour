@@ -56,7 +56,7 @@ public class PdfUtils {
             Timber.i("Pdf Directory created");
         }
 
-        File newPdf = new File(pdfFolder + File.separator + fileName);
+        File newPdf = new File(pdfFolder.getAbsoluteFile() + File.separator + fileName);
 
         OutputStream output = new FileOutputStream(newPdf);
 

@@ -79,7 +79,7 @@
 
     <style name="DialogTheme" parent="Theme.AppCompat.Dialog">
         <!-- Used for the title and text -->
-        <item name="android:textColorPrimary">@color/colorPrimaryDark</item>
+        <item name="android:textColorPrimary">@color/colorLightAccent</item>
         <!-- Used for the background -->
         <item name="android:background">@color/colorPrimary</item>
         <!-- Used for the buttons -->
