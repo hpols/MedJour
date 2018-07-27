@@ -14,7 +14,6 @@ import com.example.android.medjour.R;
 import com.example.android.medjour.model.DateConverter;
 import com.example.android.medjour.model.data.JournalDb;
 
-import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 public class JournalUtils {
@@ -63,9 +62,10 @@ public class JournalUtils {
      * @return the boolean confirming the last entry was today or not
      */
     public static boolean hasMeditatedToday(JournalDb dB) {
-        Date lastDate = dB.journalDao().getLastEntryDate();
+        String lastDate = dB.journalDao().getLastEntryDate();
 
-        Date today = DateConverter.toDate(System.currentTimeMillis());
+        String today = String.valueOf(DateConverter.toDate(System.currentTimeMillis()));
+
 
         return lastDate == today;
     }

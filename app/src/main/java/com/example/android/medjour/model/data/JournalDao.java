@@ -8,7 +8,6 @@ import android.arch.persistence.room.OnConflictStrategy;
 import android.arch.persistence.room.Query;
 import android.arch.persistence.room.Update;
 
-import java.util.Date;
 import java.util.List;
 
 @Dao
@@ -34,7 +33,7 @@ public interface JournalDao {
     long getTotalRevTime();
 
     @Query("SELECT date FROM journal ORDER BY date DESC LIMIT 1")
-    Date getLastEntryDate();
+    String getLastEntryDate();
 
     @Query("SELECT * FROM journal WHERE id = :entryId")
     LiveData<JournalEntry> getEntry(int entryId);

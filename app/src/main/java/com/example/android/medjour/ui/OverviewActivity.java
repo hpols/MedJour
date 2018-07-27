@@ -52,11 +52,20 @@ public class OverviewActivity extends AppCompatActivity
     SettingsUtils utils;
     private PaymentsClient paymentsClient;
 
+    String totalTimeText;
+    private String TOTAL_TIME = "total time key";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         overviewBinder = DataBindingUtil.setContentView(this, R.layout.activity_overview);
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(TOTAL_TIME)) {
+                totalTimeText = savedInstanceState.getString(TOTAL_TIME);
+            }
+        }
 
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
@@ -117,6 +126,12 @@ public class OverviewActivity extends AppCompatActivity
 
     }
 
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString(TOTAL_TIME, totalTimeText);
+    }
+
     /**
      * show ad to non-student users
      */
@@ -167,9 +182,9 @@ public class OverviewActivity extends AppCompatActivity
      */
     private void setupCountAndButtons() {
         long totalTime = JournalUtils.retrieveTotalTimeFromPref(this);
-        String totalTimeText = null;
         if (totalTime == JournalUtils.NO_TOT_TIME) {
-            overviewBinder.mainCumulativeTv.setText(R.string.overview_no_entries);
+            totalTimeText = getString(R.string.overview_no_entries);
+            overviewBinder.mainCumulativeTv.setText(totalTimeText);
         } else {
             totalTimeText = getString(R.string.total_time_label) + JournalUtils.toMinutes(totalTime);
             overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
@@ -208,7 +223,7 @@ public class OverviewActivity extends AppCompatActivity
         MenuItem activation = menu.findItem(R.id.menu_activation);
         MenuItem upgrade = menu.findItem(R.id.menu_activation);
 
-        if (JournalUtils.isStudent ||JournalUtils.isFullyUpgraded) {
+        if (JournalUtils.isStudent || JournalUtils.isFullyUpgraded) {
             activation.setVisible(false);
             upgrade.setVisible(false);
         } else {

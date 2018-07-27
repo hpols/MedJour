@@ -265,7 +265,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
             EntryExecutor.getInstance().diskIO().execute(new Runnable() {
                 @Override
                 public void run() {
-                    Date date = dB.journalDao().getLastEntryDate();
+                    String date = dB.journalDao().getLastEntryDate();
                     String dateDisplay = DateFormat.getDateInstance().format(date);
                     JournalUtils.saveLastDate(JournalActivity.this, dateDisplay);
                     WidgetService.startHandleActionUpdateWidget(JournalActivity.this);

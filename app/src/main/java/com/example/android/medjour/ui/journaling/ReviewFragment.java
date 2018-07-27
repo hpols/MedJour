@@ -3,6 +3,7 @@ package com.example.android.medjour.ui.journaling;
 import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -30,11 +31,17 @@ import java.util.concurrent.TimeUnit;
 public class ReviewFragment extends Fragment {
 
     FragmentReviewBinding reviewBinding;
-    Date date;
+
     JournalEntry journalEntry;
     JournalDb dB;
 
     long startReviewTime, reviewTime;
+
+    String currentAssessment;
+    String dateDisplay;
+    private String CURRENT_ASSESSMENT = "current assessment key";
+    private String REVIEW_TIME = "review time key";
+    private String DATE_KEY = "date key";
 
 
     public ReviewFragment() {
@@ -49,6 +56,18 @@ public class ReviewFragment extends Fragment {
                 false);
         View root = reviewBinding.getRoot();
 
+        if(savedInstanceState != null) {
+            if(savedInstanceState.containsKey(CURRENT_ASSESSMENT)) {
+                currentAssessment = savedInstanceState.getString(CURRENT_ASSESSMENT);
+            }
+            if (savedInstanceState.containsKey(REVIEW_TIME)) {
+                startReviewTime = savedInstanceState.getLong(REVIEW_TIME);
+            }
+            if (savedInstanceState.containsKey(DATE_KEY)) {
+                dateDisplay = savedInstanceState.getString(DATE_KEY);
+            }
+        }
+
         startReviewTime = System.currentTimeMillis();
 
         dB = JournalDb.getInstance(getActivity().getApplicationContext());
@@ -62,8 +81,8 @@ public class ReviewFragment extends Fragment {
             JournalUtils.changeBackground(root, startColor, endColor, JournalUtils.REVIEW_FLAG);
         }
 
-        date = new Date();
-        final String dateDisplay = DateFormat.getDateInstance().format(date);
+        Date date = new Date();
+        dateDisplay = DateFormat.getDateInstance().format(date);
         reviewBinding.reviewDateTv.setText(dateDisplay);
 
         reviewBinding.reviewPrepTv.setText(JournalUtils.toMinutes(NewEntryActivity.getPreparationTime()));
@@ -89,6 +108,15 @@ public class ReviewFragment extends Fragment {
         return root;
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        currentAssessment = reviewBinding.reviewAssessmentEt.getText().toString().trim();
+        outState.putString(CURRENT_ASSESSMENT, currentAssessment);
+        outState.putLong(REVIEW_TIME, startReviewTime);
+        outState.putString(DATE_KEY, dateDisplay);
+    }
+
     private void saveEntry(String dateDisplay) {
         String assessment = reviewBinding.reviewAssessmentEt.getText().toString().trim();
         reviewTime = System.currentTimeMillis() - startReviewTime;
@@ -100,7 +128,7 @@ public class ReviewFragment extends Fragment {
             reviewTime = JournalUtils.MAX_REVIEW_TIME;
             reviewTimeLimitReached = true;
         }
-        journalEntry = new JournalEntry(date, NewEntryActivity.getPreparationTime(),
+        journalEntry = new JournalEntry(dateDisplay, NewEntryActivity.getPreparationTime(),
                 NewEntryActivity.getMeditationTime(), reviewTime, assessment);
 
         long totalTimeFromEntry =  NewEntryActivity.getPreparationTime() +
