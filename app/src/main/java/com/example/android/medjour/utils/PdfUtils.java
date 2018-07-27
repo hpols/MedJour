@@ -49,14 +49,13 @@ public class PdfUtils {
     public void writePdf(List<JournalEntry> journalEntries, String fileName)
             throws FileNotFoundException, DocumentException {
 
-        File pdfFolder = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_DOCUMENTS), ctxt.getString(R.string.medJour_directory_name));
+        File pdfFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         if (!pdfFolder.exists()) {
             pdfFolder.mkdir();
             Timber.i("Pdf Directory created");
         }
 
-        File newPdf = new File(pdfFolder.getAbsoluteFile() + File.separator + fileName);
+        File newPdf = new File(pdfFolder, fileName);
 
         OutputStream output = new FileOutputStream(newPdf);
 

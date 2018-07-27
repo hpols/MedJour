@@ -34,8 +34,6 @@ import com.google.android.gms.wallet.PaymentData;
 import com.google.android.gms.wallet.PaymentDataRequest;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.TransactionInfo;
-import com.google.android.gms.wallet.Wallet;
-import com.google.android.gms.wallet.WalletConstants;
 
 import java.util.ArrayList;
 
@@ -112,12 +110,10 @@ public class OverviewActivity extends AppCompatActivity
         setupCountAndButtons();
         setupAdBanner();
 
-        //ready payments incase the user wants to upgrade
+        //ready payments in case the user wants to upgrade
         //see : https://developers.google.com/pay/api/android/guides/tutorial
         if (!JournalUtils.isStudent || !JournalUtils.isFullyUpgraded)
-            paymentsClient = Wallet.getPaymentsClient(this, new Wallet.WalletOptions.Builder()
-                    .setEnvironment(WalletConstants.ENVIRONMENT_TEST)
-                    .build());
+            paymentsClient = PayUtils.createPaymentsClient(this);
 
     }
 
@@ -208,10 +204,16 @@ public class OverviewActivity extends AppCompatActivity
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_overview, menu);
-        if (JournalUtils.isStudent) {
-            menu.findItem(R.id.menu_activation).setVisible(false);
+
+        MenuItem activation = menu.findItem(R.id.menu_activation);
+        MenuItem upgrade = menu.findItem(R.id.menu_activation);
+
+        if (JournalUtils.isStudent ||JournalUtils.isFullyUpgraded) {
+            activation.setVisible(false);
+            upgrade.setVisible(false);
         } else {
-            menu.findItem(R.id.menu_activation).setVisible(true);
+            activation.setVisible(true);
+            upgrade.setVisible(true);
         }
         return true;
     }
@@ -252,7 +254,7 @@ public class OverviewActivity extends AppCompatActivity
                             new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                    for (int i = 0; i < choices.length; i ++) {
+                                    for (int i = 0; i < choices.length; i++) {
                                         if (i == which) {
                                             selected.add(choices[i]);
                                         }
