@@ -1,8 +1,8 @@
 package com.example.android.medjour.ui;
 
+import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -26,7 +26,8 @@ public class NewEntryActivity extends AppCompatActivity implements
     public static long meditationTime;
 
     public static boolean prepTimeLimitedReached;
-    public static boolean reviewTimeLimitedReached;
+    private String PREP_TIME = "preparation time";
+    private String MED_TIME = "meditation time";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,16 +40,34 @@ public class NewEntryActivity extends AppCompatActivity implements
 
         fragMan = getSupportFragmentManager();
 
-        prepFrag = new PreparationFragment();
-        medFrag = new MeditationFragment();
-        revFrag = new ReviewFragment();
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(PREP_TIME)) {
+                preparationTime = savedInstanceState.getLong(PREP_TIME);
+            }
+            if (savedInstanceState.containsKey(MED_TIME)) {
+                preparationTime = savedInstanceState.getLong(MED_TIME);
+            }
 
-        //start off with the PreparationFragment
-        fragMan.beginTransaction().add(R.id.new_entry_fragment_container, prepFrag).commit();
+        } else {
+
+            prepFrag = new PreparationFragment();
+
+            //start off with the PreparationFragment
+            fragMan.beginTransaction().add(R.id.new_entry_fragment_container, prepFrag).commit();
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        //Save the fragment's instance
+        outState.putLong(PREP_TIME, preparationTime);
+        outState.putLong(MED_TIME, meditationTime);
     }
 
     @Override
     public void toMeditation(long preparationTime, boolean prepTimeLimitReached) {
+        medFrag = new MeditationFragment();
         NewEntryActivity.preparationTime = preparationTime;
         NewEntryActivity.prepTimeLimitedReached = prepTimeLimitReached;
         Timber.v("preparationTime recorded: " + preparationTime);
@@ -57,9 +76,10 @@ public class NewEntryActivity extends AppCompatActivity implements
 
     @Override
     public void toReview(long meditationTime) {
-       NewEntryActivity.meditationTime = meditationTime;
-       Timber.v("meditation time recorded: " + meditationTime);
-       fragMan.beginTransaction().replace(R.id.new_entry_fragment_container, revFrag).commit();
+        revFrag = new ReviewFragment();
+        NewEntryActivity.meditationTime = meditationTime;
+        Timber.v("meditation time recorded: " + meditationTime);
+        fragMan.beginTransaction().replace(R.id.new_entry_fragment_container, revFrag).commit();
     }
 
     public static long getPreparationTime() {

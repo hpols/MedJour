@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
@@ -49,12 +50,8 @@ public class ReviewFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        reviewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_review, container,
-                false);
-        View root = reviewBinding.getRoot();
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
 
         if(savedInstanceState != null) {
             if(savedInstanceState.containsKey(CURRENT_ASSESSMENT)) {
@@ -67,8 +64,19 @@ public class ReviewFragment extends Fragment {
                 dateDisplay = savedInstanceState.getString(DATE_KEY);
             }
         }
+    }
 
-        startReviewTime = System.currentTimeMillis();
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
+        reviewBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_review, container,
+                false);
+        View root = reviewBinding.getRoot();
+
+        if(savedInstanceState == null) {
+            startReviewTime = System.currentTimeMillis();
+        }
 
         dB = JournalDb.getInstance(getActivity().getApplicationContext());
 

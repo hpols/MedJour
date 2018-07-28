@@ -17,7 +17,6 @@ import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.utils.JournalUtils;
 
-import java.text.DateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -81,7 +80,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
         holder.reviewTv.setText(JournalUtils.toMinutes(reviewTime));
         holder.totalTv.setText(JournalUtils.toMinutes(prepTime + medTime
                 + reviewTime));
-        holder.dateTv.setText(DateFormat.getDateInstance().format(currentEntry.getDate()));
+        holder.dateTv.setText(currentEntry.getDate());
 
         //present assessment for review or editing
         holder.setAssessment(currentEntry.getAssessment());

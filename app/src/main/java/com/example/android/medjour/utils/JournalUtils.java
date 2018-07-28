@@ -56,6 +56,15 @@ public class JournalUtils {
     public static boolean isStudent;
 
     /**
+     * get the current time.
+     *
+     * @return the time in miliseconds as a long
+     */
+    public static long getNow() {
+        return System.currentTimeMillis();
+    }
+
+    /**
      * ensure the user only logs one meditation per day (as per the C.MI. regulations)
      *
      * @param dB the database to be queried for the last entry date
@@ -93,7 +102,8 @@ public class JournalUtils {
         colorFade.start();
     }
 
-    /** convert the retrieved/stored milliseconds into readable time
+    /**
+     * convert the retrieved/stored milliseconds into readable time
      *
      * @param timeInMillis a long in miliseconds
      * @return a String to display the time

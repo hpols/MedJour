@@ -51,8 +51,11 @@ public class PdfUtils {
 
         File pdfFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
         if (!pdfFolder.exists()) {
-            pdfFolder.mkdir();
-            Timber.i("Pdf Directory created");
+            if(pdfFolder.mkdirs()) {
+                Timber.i("Pdf Directory created");
+            } else {
+                Timber.i("Pdf Directory could not be created");
+            }
         }
 
         File newPdf = new File(pdfFolder, fileName);

@@ -31,6 +31,7 @@ import android.widget.Toast;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
+import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.utils.SettingsUtils;
 import com.google.android.youtube.player.YouTubeInitializationResult;
 import com.google.android.youtube.player.YouTubePlayer;
@@ -46,6 +47,7 @@ import timber.log.Timber;
  * A simple {@link MeditationFragment} subclass.
  */
 public class MeditationFragment extends Fragment {
+    private String MED_TIME = "meditation time";
 
     //TODO: handle rotation (crash)
 
@@ -61,11 +63,9 @@ public class MeditationFragment extends Fragment {
     @BindView(R.id.meditation_counter_tv)
     TextView counterTv;
 
-    long medStartTime;
-    long medLength;
+    //all sorts of time related info we want to keep track of …
+    long medStartTime, medLength,  medLengthInMillis,  timeRemaining;
 
-    long medLengthInMillis;
-    private long timeRemaining;
     private CountDownTimer countDownTimer;
     private boolean timerIsRunning = false;
 
@@ -118,24 +118,15 @@ public class MeditationFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-
-        // Inflate the layout for this fragment
-        View root = inflater.inflate(R.layout.fragment_meditation, container, false);
-        ButterKnife.bind(this, root);
-
-        utils = new SettingsUtils(getActivity());
-
-        medStartTime = getNow();
-        medLength = utils.getMeditationLength(getActivity());
-        Timber.d("meditation time is set to: " + medLength);
-        medLengthInMillis = TimeUnit.MINUTES.toMillis(medLength);
-        timeRemaining = medLengthInMillis;
-        isVideo = utils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;
-
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
+    public void onActivityCreated(@Nullable Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        if (savedInstanceState != null && savedInstanceState.containsKey(MED_TIME)) {
+            timeRemaining = savedInstanceState.getLong(MED_TIME);
+            if (!isVideo) {
+               utils.getStartedTime();
+               setupTimer(timeRemaining);
+               startTimer();
+            }
         }
 
         //for debugging/testing purposes:
@@ -150,25 +141,64 @@ public class MeditationFragment extends Fragment {
                 }
             });
         }
+    }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+
+        // Inflate the layout for this fragment
+        View root = inflater.inflate(R.layout.fragment_meditation, container, false);
+        ButterKnife.bind(this, root);
+
+        if (savedInstanceState == null) {
+            medStartTime = JournalUtils.getNow();
+        }
+
+        utils = new SettingsUtils(getActivity());
+
+        medLength = utils.getMeditationLength(getActivity());
+        Timber.d("meditation time is set to: " + medLength);
+        medLengthInMillis = TimeUnit.MINUTES.toMillis(medLength);
+        timeRemaining = medLengthInMillis;
+        isVideo = utils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
+        }
 
         //prepare countDownTimer when a soundCallback is needed.
         if (!isVideo) {
-            countDownTimer = new CountDownTimer(medLengthInMillis, 1000) {
-                @Override
-                public void onTick(long millisUntilFinished) {
-                    getTimeRemaining();
-                    updateTimeUi(millisUntilFinished);
-                }
-
-                @Override
-                public void onFinish() {
-                    timerIsRunning = false;
-                    onTimerFinish();
-                    updateTimeUi(0);
-                }
-            };
+            setupTimer(medLengthInMillis);
         }
         return root;
+    }
+
+    /** setup the countedown timer ready to use
+     *
+     * @param length the remaining time to be count down
+     */
+    private void setupTimer(long length) {
+        countDownTimer = new CountDownTimer(length, 1000) {
+            @Override
+            public void onTick(long millisUntilFinished) {
+                getTimeRemaining();
+                updateTimeUi(millisUntilFinished);
+            }
+
+            @Override
+            public void onFinish() {
+                timerIsRunning = false;
+                onTimerFinish();
+                updateTimeUi(0);
+            }
+        };
+    }
+
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(MED_TIME, getTimeRemaining());
     }
 
     @Override
@@ -180,7 +210,7 @@ public class MeditationFragment extends Fragment {
             playVideo();
         } else {
             if (!timerIsRunning) {
-                utils.setStartedTime(getNow());
+                utils.setStartedTime(JournalUtils.getNow());
                 startTimer();
                 timerIsRunning = true;
             }
@@ -188,7 +218,6 @@ public class MeditationFragment extends Fragment {
     }
 
     private void startTimer() {
-        timeRemaining = getTimeRemaining();
         countDownTimer.start();
 
         //fade out the timer. The user does not need it and should be encouraged not to repeatedly
@@ -216,10 +245,6 @@ public class MeditationFragment extends Fragment {
         });
     }
 
-    private long getNow() {
-        return System.currentTimeMillis();
-    }
-
     private void initTimer() {
         long startTime = utils.getStartedTime();
         if (startTime > 0) {
@@ -240,7 +265,7 @@ public class MeditationFragment extends Fragment {
     }
 
     private long getTimeRemaining() {
-        return medLengthInMillis - (getNow() - utils.getStartedTime());
+        return medLengthInMillis - (JournalUtils.getNow() - utils.getStartedTime());
     }
 
     private void onTimerFinish() {
@@ -341,7 +366,7 @@ public class MeditationFragment extends Fragment {
                                     // meditator's eyes might well already be shut. So plan B: revert
                                     // to sound-callback
                                     if (!timerIsRunning) {
-                                        utils.setStartedTime(getNow());
+                                        utils.setStartedTime(JournalUtils.getNow());
                                         startTimer();
                                         timerIsRunning = true;
                                     }
@@ -389,7 +414,6 @@ public class MeditationFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.video_not_available,
                     Toast.LENGTH_SHORT).show();
             videoError = false;
-
         }
     }
 
