@@ -145,6 +145,9 @@
     <string name="storage_permission_request">Please give the app external storage permission and try again.</string>
     <string name="medJour_directory_name">meditationJournal</string>
 
-    <!-- googleads-->
+    <!-- google ads & pay-->
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="googlepay_status_unavailable" translatable="false">Unfortunately, Google Pay is not available on this phone.</string>
+    <string name="google_pay_button_contDescrip">Google pay button</string>
+
 </resources>

@@ -7,13 +7,17 @@ import android.content.SharedPreferences;
 import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -27,11 +31,14 @@ import com.example.android.medjour.utils.PayUtils;
 import com.example.android.medjour.utils.SettingsUtils;
 import com.facebook.stetho.Stetho;
 import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.common.api.Status;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.android.gms.wallet.AutoResolveHelper;
 import com.google.android.gms.wallet.PaymentData;
 import com.google.android.gms.wallet.PaymentDataRequest;
+import com.google.android.gms.wallet.PaymentMethodToken;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.gms.wallet.TransactionInfo;
 
@@ -54,6 +61,13 @@ public class OverviewActivity extends AppCompatActivity
 
     String totalTimeText;
     private String TOTAL_TIME = "total time key";
+
+    private PayUtils.upgradeItem upgradeItem = new PayUtils.upgradeItem("get Video access", 5 * 1000000);
+    private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 666;
+
+    ImageButton googlepayBt;
+
+    boolean googlePayAvailable;
 
 
     @Override
@@ -121,9 +135,10 @@ public class OverviewActivity extends AppCompatActivity
 
         //ready payments in case the user wants to upgrade
         //see : https://developers.google.com/pay/api/android/guides/tutorial
-        if (!JournalUtils.isStudent || !JournalUtils.isFullyUpgraded)
+        if (!JournalUtils.isStudent || !JournalUtils.isFullyUpgraded) {
             paymentsClient = PayUtils.createPaymentsClient(this);
-
+            checkIsReadyToPay();
+        }
     }
 
     @Override
@@ -255,17 +270,24 @@ public class OverviewActivity extends AppCompatActivity
     }
 
     private void offerUpgrade() {
+
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,
                 R.style.DialogTheme);
         alertBuilder.setTitle("Purchase video access and/or remove ads");
 
-        PayUtils.checkIsReadyToPay(paymentsClient);
-        if (PayUtils.googlePayAvailable) {
-            final String[] choices = new String[]{"Buy video access", "Remove ads"};
-            final ArrayList<String> selected = new ArrayList<String>();
+        if (googlePayAvailable) {
 
-            alertBuilder.setMessage("The videos are part of the certification program. However, they can be unlocked for a charge of $5.\n\nThe ads help maintain this app. However a charge of $5 removes them, which goes direclty to future work on the app.")
-                    .setMultiChoiceItems(choices, null,
+            final String[] choices = new String[]{"The videos are part of the certification program. However, they can be unlocked for a charge of $5.", "The ads help maintain this app. However a charge of $5 removes them, which goes directly to future work on the app."};
+            final ArrayList<String> selected = new ArrayList<>();
+
+            googlepayBt.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    requestPayment(v);
+                }
+            });
+
+            alertBuilder.setMultiChoiceItems(choices, null,
                             new DialogInterface.OnMultiChoiceClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which, boolean isChecked) {
@@ -276,12 +298,7 @@ public class OverviewActivity extends AppCompatActivity
                                     }
                                 }
                             })
-                    .setPositiveButton("buy", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            requestPayment(selected);
-                        }
-                    })
+                    .setView(googlepayBt)
                     .setNegativeButton("cancel", null);
         } else {
             alertBuilder.setMessage("Unfortunately, Google Pay does not seem to be activated on this device.");
@@ -292,39 +309,50 @@ public class OverviewActivity extends AppCompatActivity
         alertDialog.show();
     }
 
-    // This method is called when the Pay with Google button is clicked.
-    public void requestPayment(ArrayList<String> selected) {
+    /**
+     * The call to isReadyToPay is asynchronous and returns a Task. We need to provide an
+     * OnCompleteListener to be triggered when the result of the call is known.
+     */
+    private void checkIsReadyToPay() {
+        PayUtils.isReadyToPay(paymentsClient).addOnCompleteListener(
+                new OnCompleteListener<Boolean>() {
+                    public void onComplete(@NonNull Task<Boolean> task) {
+                        try {
+                            boolean result = task.getResult(ApiException.class);
+                            setGooglePayAvailable(result);
+                        } catch (ApiException exception) {
+                            // Process error
+                            Log.w("isReadyToPay failed", exception);
+                        }
+                    }
+                });
+    }
 
-        // The price provided to the API should include taxes and shipping.
-        // This price is not displayed to the user.
-        //get price from selection. Currently this is simple … until the pricing gets complexer.
-        String price = "0.00";
-        switch (selected.size()) {
-            case 1:
-                price = "5.00";
-                break;
-            case 2:
-                price = "10.00";
-                break;
+    /**
+     * If isReadyToPay returned true, set up the button and set googlePayAvailable to true.
+     *
+     * @param available is a boolean detailing whether google pay is available or not
+     */
+    private void setGooglePayAvailable(boolean available) {
+
+        if (available) {
+            View googlePayBtHolder = LayoutInflater.from(this).inflate(R.layout.buttonholder_googlepay, null);
+            googlepayBt = googlePayBtHolder.findViewById(R.id.googlepay_bt);
+            googlePayAvailable = true;
+        } else {
+            googlePayAvailable = false;
         }
-        TransactionInfo transaction = PayUtils.createTransaction(price);
-        PaymentDataRequest request = PayUtils.createPaymentDataRequest(transaction);
-        Task<PaymentData> futurePaymentData = paymentsClient.loadPaymentData(request);
-
-        // Since loadPaymentData may show the UI asking the user to select a payment method, we use
-        // AutoResolveHelper to wait for the user interacting with it. Once completed,
-        // onActivityResult will be called with the result.
-        AutoResolveHelper.resolveTask(futurePaymentData, this, PayUtils.LOAD_PAYMENT_DATA_REQUEST_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
-            case PayUtils.LOAD_PAYMENT_DATA_REQUEST_CODE:
+            case LOAD_PAYMENT_DATA_REQUEST_CODE:
                 switch (resultCode) {
                     case Activity.RESULT_OK:
                         PaymentData paymentData = PaymentData.getFromIntent(data);
-                        PayUtils.handlePaymentSuccess(paymentData, this);
+                        assert paymentData != null;
+                        handlePaymentSuccess(paymentData);
                         break;
                     case Activity.RESULT_CANCELED:
                         // Nothing to here normally - the user simply cancelled without selecting a
@@ -332,11 +360,72 @@ public class OverviewActivity extends AppCompatActivity
                         break;
                     case AutoResolveHelper.RESULT_ERROR:
                         Status status = AutoResolveHelper.getStatusFromIntent(data);
-                        PayUtils.handleError(status.getStatusCode());
+                        assert status != null;
+                        handleError(status.getStatusCode());
                         break;
                 }
+
+                // Re-enables the Pay with Google button.
+                googlepayBt.setClickable(true);
                 break;
         }
+    }
+
+    private void handlePaymentSuccess(PaymentData paymentData) {
+        // PaymentMethodToken contains the payment information, as well as any additional
+        // requested information, such as billing and shipping address.
+        //
+        // Refer to your processor's documentation on how to proceed from here.
+        PaymentMethodToken token = paymentData.getPaymentMethodToken();
+
+        // getPaymentMethodToken will only return null if PaymentMethodTokenizationParameters was
+        // not set in the PaymentRequest.
+        if (token != null) {
+            // If the gateway is set to example, no payment information is returned - instead, the
+            // token will only consist of "examplePaymentMethodToken".
+            if (token.getToken().equals("examplePaymentMethodToken")) {
+                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this)
+                        .setTitle("Warning")
+                        .setMessage("This is but a test implementation of google pay.")
+                        .setPositiveButton("OK", null)
+                        .create();
+                alertDialog.show();
+            }
+
+            // Use token.getToken() to get the token string.
+            Log.d("PaymentData", "PaymentMethodToken received");
+        }
+    }
+
+    /**
+     * At this stage, the user has already seen a popup informing them an error occurred.
+     * Normally, only logging is required.
+     * statusCode will hold the value of any constant from CommonStatusCode or one of the
+     * WalletConstants.ERROR_CODE_* constants.
+     *
+     * @param statusCode is the error code  passed from the ActivityResult
+     */
+    private void handleError(int statusCode) {
+        Log.w("loadPaymentData failed", String.format("Error code: %d", statusCode));
+    }
+
+    /* This method is called when the Pay with Google button is clicked.*/
+    public void requestPayment(View view) {
+        // Disables the button to prevent multiple clicks.
+        googlepayBt.setClickable(false);
+
+        // The price provided to the API should include taxes and shipping.
+        // This price is not displayed to the user.
+        String price = PayUtils.microsToString(upgradeItem.getPriceMicros());
+
+        TransactionInfo transaction = PayUtils.createTransaction(price);
+        PaymentDataRequest request = PayUtils.createPaymentDataRequest(transaction);
+        Task<PaymentData> futurePaymentData = paymentsClient.loadPaymentData(request);
+
+        // Since loadPaymentData may show the UI asking the user to select a payment method, we use
+        // AutoResolveHelper to wait for the user interacting with it. Once completed,
+        // onActivityResult will be called with the result.
+        AutoResolveHelper.resolveTask(futurePaymentData, this, LOAD_PAYMENT_DATA_REQUEST_CODE);
     }
 
     @Override
