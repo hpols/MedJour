@@ -45,26 +45,35 @@ public class PdfUtils {
                 Environment.MEDIA_MOUNTED_READ_ONLY.equals(state);
     }
 
-    //see: http://valokafor.com/android-itext-pdf-example/
+    /**
+     * see: http://valokafor.com/android-itext-pdf-example/
+     *
+     * @param journalEntries are the entries to be written to the pdf file
+     * @param fileName       is the file name (including extension) for the pdf
+     * @throws FileNotFoundException when file cannot be found
+     * @throws DocumentException     when there is a document exception
+     */
     public void writePdf(List<JournalEntry> journalEntries, String fileName)
             throws FileNotFoundException, DocumentException {
 
+        //find the directory to store the pdf and ensure it exists.
         File pdfFolder = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
+        Timber.d("pdf Folder: " + pdfFolder);
         if (!pdfFolder.exists()) {
-            if(pdfFolder.mkdirs()) {
+            if (pdfFolder.mkdirs()) {
                 Timber.i("Pdf Directory created");
             } else {
                 Timber.i("Pdf Directory could not be created");
             }
         }
 
-        File newPdf = new File(pdfFolder, fileName);
+        File newPdf = new File(pdfFolder, fileName); //add the file name to the directory path
 
-        OutputStream output = new FileOutputStream(newPdf);
+        OutputStream output = new FileOutputStream(newPdf);//create the outputStream for the file
 
-        Document doc = new Document(PageSize.LETTER);
+        Document doc = new Document(PageSize.LETTER); //setup the document
 
-        PdfWriter.getInstance(doc, output);
+        PdfWriter.getInstance(doc, output); //setup the pdfWriter using the outputStream and document
 
         //open the document
         doc.open();
