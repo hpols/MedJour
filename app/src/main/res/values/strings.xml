@@ -149,5 +149,10 @@
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="googlepay_status_unavailable" translatable="false">Unfortunately, Google Pay is not available on this phone.</string>
     <string name="google_pay_button_contDescrip">Google pay button</string>
+    <string name="dialog_total_label">Total: \$</string>
+    <string name="upgradeItem_videos">Unlock meditation videos</string>
+    <string name="upgradeItem_ads">remove ads</string>
+    <string name="initial_price">0.00</string>
+    <string name="toast_no_upgrade_selected">Please select an item or click cancel.</string>
 
 </resources>

@@ -12,7 +12,6 @@ import android.view.View;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.model.DateConverter;
-import com.example.android.medjour.model.data.JournalDb;
 
 import java.util.concurrent.TimeUnit;
 
@@ -31,29 +30,21 @@ public class JournalUtils {
 
     public static final int NOT_SILENCE = 100;
     public static final int NOT_NORMAL = 200;
-    private static String REPEAT_ACCESS = "repeated app access";
     public static final String DELETE = "deleting entry";
     public static final String CREATE = "creating entry";
 
-    public static boolean isIsFullyUpgraded() {
-        return isFullyUpgraded;
-    }
+    //boolean keys and codes
+    private static final String REPEAT_ACCESS = "repeated app access";
+    private static final String STUDENT = "student";
+    private static final String VIDEO_UNLOCKED = "video unlocked";
+    private static final String FULLY_UPGRADED = "fully upgraded";
+    private static final String ADS_REMOVED = "ads removed";
 
-    public static void setIsFullyUpgraded(boolean isFullyUpgraded) {
-        JournalUtils.isFullyUpgraded = isFullyUpgraded;
-    }
-
-    public static boolean isFullyUpgraded;
-
-    public static boolean isIsStudent() {
-        return isStudent;
-    }
-
-    public static void setIsStudent(boolean isStudent) {
-        JournalUtils.isStudent = isStudent;
-    }
-
-    public static boolean isStudent;
+    public static final int BOO_REPEAT = 10;
+    public static final int BOO_STUDENT = 20;
+    public static final int BOO_FULLY_UPGRADED = 30;
+    public static final int BOO_ADS_REMOVED = 40;
+    public static final int BOO_VIDEOS_UNLOCKED = 50;
 
     /**
      * get the current time.
@@ -64,19 +55,97 @@ public class JournalUtils {
         return System.currentTimeMillis();
     }
 
+    // –––––– BOOLEANS –––––– //
+
     /**
      * ensure the user only logs one meditation per day (as per the C.MI. regulations)
      *
-     * @param dB the database to be queried for the last entry date
+     * @param ctxt is the Context used to retrieve the date from sharedPreferences by retrieveLastDate
      * @return the boolean confirming the last entry was today or not
      */
-    public static boolean hasMeditatedToday(JournalDb dB) {
-        String lastDate = dB.journalDao().getLastEntryDate();
+    public static boolean hasMeditatedToday(Context ctxt) {
+        String lastDate = retrieveLastDate(ctxt, null);
 
         String today = String.valueOf(DateConverter.toDate(System.currentTimeMillis()));
 
+        boolean meditatedToday = false;
+        if (lastDate.equals(today)) {
+            meditatedToday = true;
+        } else if (!lastDate.equals(today) || lastDate.isEmpty()) {
+            meditatedToday = false;
+        }
 
-        return lastDate == today;
+        return meditatedToday;
+    }
+
+    /**
+     * retrieve the needed boolean form sharedPreferences
+     *
+     * @param ctxt         is the Context for the PreferenceManager to work in
+     * @param BOOLEAN_CODE is a unique code identifying the boolean to be retrieved
+     * @return the boolean value
+     */
+    public static boolean getsharedPrefBoo(Context ctxt, int BOOLEAN_CODE) {
+        String BOOLEAN_KEY = null;
+        boolean defBoo = false;
+
+        switch (BOOLEAN_CODE) {
+            case BOO_REPEAT:
+                BOOLEAN_KEY = REPEAT_ACCESS;
+                defBoo = ctxt.getResources().getBoolean(R.bool.repeat_acess_default);
+                break;
+            case BOO_STUDENT:
+                BOOLEAN_KEY = STUDENT;
+                defBoo = ctxt.getResources().getBoolean(R.bool.student_default);
+                break;
+            case BOO_FULLY_UPGRADED:
+                BOOLEAN_KEY = FULLY_UPGRADED;
+                defBoo = ctxt.getResources().getBoolean(R.bool.upgraded_default);
+                break;
+            case BOO_ADS_REMOVED:
+                BOOLEAN_KEY = ADS_REMOVED;
+                defBoo = ctxt.getResources().getBoolean(R.bool.ads_removed_default);
+                break;
+            case BOO_VIDEOS_UNLOCKED:
+                BOOLEAN_KEY = VIDEO_UNLOCKED;
+                defBoo = ctxt.getResources().getBoolean(R.bool.video_unlocked_default);
+        }
+
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+        return sharedPref.getBoolean(BOOLEAN_KEY, defBoo);
+    }
+
+    /**
+     * update the stored boolean in sharedPreferences
+     *
+     * @param ctxt          is the Context for the PreferenceManager to work in
+     * @param booleanUpdate is the updated boolean information
+     * @param BOOLEAN_CODE  is a unique code identifying the boolean to be retrieved
+     */
+    public static void setSharedPrefBoo(Context ctxt, boolean booleanUpdate, int BOOLEAN_CODE) {
+        String BOOLEAN_KEY = null;
+
+        switch (BOOLEAN_CODE) {
+            case BOO_REPEAT:
+                BOOLEAN_KEY = REPEAT_ACCESS;
+                break;
+            case BOO_STUDENT:
+                BOOLEAN_KEY = STUDENT;
+                break;
+            case BOO_FULLY_UPGRADED:
+                BOOLEAN_KEY = FULLY_UPGRADED;
+                break;
+            case BOO_ADS_REMOVED:
+                BOOLEAN_KEY = ADS_REMOVED;
+                break;
+            case BOO_VIDEOS_UNLOCKED:
+                BOOLEAN_KEY = VIDEO_UNLOCKED;
+        }
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putBoolean(BOOLEAN_KEY, booleanUpdate);
+        editor.apply();
     }
 
     /**
@@ -219,32 +288,5 @@ public class JournalUtils {
             }
             audioManager.setRingerMode(audioMode);
         }
-    }
-
-    /**
-     * keep track of whether this is the first time the user opens the app
-     *
-     * @param ctxt the context for the sharedPreference
-     * @return a boolean indicating whether this is a repeat
-     */
-    public static boolean isRepeatedAccess(Context ctxt) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
-
-        return sharedPref.getBoolean(REPEAT_ACCESS,
-                ctxt.getResources().getBoolean(R.bool.repeat_acess_default));
-    }
-
-    /**
-     * update the boolean to track whether the user has opened the app before
-     *
-     * @param repeatedAccess a boolean indicating whether the user has opened the app before
-     * @param ctxt           the context for hte sharedPreference
-     */
-    public static void setRepeatedAccess(boolean repeatedAccess, Context ctxt) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
-
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putBoolean(REPEAT_ACCESS, repeatedAccess);
-        editor.apply();
     }
 }

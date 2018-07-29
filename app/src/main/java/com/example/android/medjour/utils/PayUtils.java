@@ -20,11 +20,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Contains helper static methods for dealing with the Payments API.
- * <p>
- * Many of the parameters used in the code are optional and are set here merely to call out their
- * existence. Please consult the documentation to learn more and feel free to remove ones not
- * relevant to your implementation.
+ * see: https://developers.google.com/pay/api/android/guides/tutorial
+ * and: https://github.com/google-pay/android-quickstart
+ * {@link PayUtils} enable google pay API funtionality in the app.
  */
 public class PayUtils {
 
@@ -144,28 +142,4 @@ public class PayUtils {
                 RoundingMode.HALF_EVEN).toString();
     }
 
-    /**
-     * Used for storing the (hard coded) info about the item we're selling.
-     * <p>
-     * This POJO class is used only for example purposes - you don't need need it in your code.
-     */
-    public static class upgradeItem {
-        private final String name;
-
-        // Micros are used for prices to avoid rounding errors when converting between currencies.
-        private final long priceMicros;
-
-        public upgradeItem(String name, long price) {
-            this.name = name;
-            this.priceMicros = price;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public long getPriceMicros() {
-            return priceMicros;
-        }
-    }
 }

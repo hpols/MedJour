@@ -64,7 +64,7 @@ public class NotificationJobService extends JobService {
             dayPassedSinceLastNot = true;
         }
 
-        if (dayPassedSinceLastNot && !JournalUtils.hasMeditatedToday(dB)) {
+        if (dayPassedSinceLastNot && !JournalUtils.hasMeditatedToday(ctxt)) {
             NotificationTask.executeTask(ctxt, NotificationTask.ACTION_NOTIFICATION);
 
             //Save the last time a notification was fired.

@@ -3,4 +3,8 @@
     <bool name="notification_activated_default">false</bool>
     <bool name="vibrate_default">false</bool>
     <bool name="repeat_acess_default">false</bool>
+    <bool name="student_default">false</bool>
+    <bool name="upgraded_default">false</bool>
+    <bool name="ads_removed_default">false</bool>
+    <bool name="video_unlocked_default">false</bool>
 </resources>

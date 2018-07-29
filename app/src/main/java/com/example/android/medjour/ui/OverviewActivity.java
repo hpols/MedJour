@@ -18,12 +18,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.ActivityOverviewBinding;
-import com.example.android.medjour.model.EntryExecutor;
 import com.example.android.medjour.model.data.JournalDb;
+import com.example.android.medjour.model.data.UpgradeItem;
 import com.example.android.medjour.settings.SettingsActivity;
 import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.utils.NotificationUtils;
@@ -62,12 +64,14 @@ public class OverviewActivity extends AppCompatActivity
     String totalTimeText;
     private String TOTAL_TIME = "total time key";
 
-    private PayUtils.upgradeItem upgradeItem = new PayUtils.upgradeItem("get Video access", 5 * 1000000);
     private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 666;
-
+    ArrayList<UpgradeItem> upgradeItemArrayList;
+    boolean[] upgradeChoice;
+    View dialogPay;
     ImageButton googlepayBt;
-
+    TextView googlepayTotal;
     boolean googlePayAvailable;
+    String priceString;
 
 
     @Override
@@ -94,9 +98,9 @@ public class OverviewActivity extends AppCompatActivity
 
         dB = JournalDb.getInstance(getApplicationContext());
 
-        if (!JournalUtils.isRepeatedAccess(this)) {
+        if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_REPEAT)) {
             showActivationDialog();
-            JournalUtils.setRepeatedAccess(true, this);
+            JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_REPEAT);
         }
 
         overviewBinder.mainJournalBt.setOnClickListener(new View.OnClickListener() {
@@ -108,16 +112,12 @@ public class OverviewActivity extends AppCompatActivity
             }
         });
 
-        EntryExecutor.getInstance().diskIO().execute(new Runnable() {
-            @Override
-            public void run() {
-                if (JournalUtils.hasMeditatedToday(dB)) {
-                    overviewBinder.mainEntryBt.setEnabled(false);
-                } else {
-                    overviewBinder.mainEntryBt.setEnabled(true);
-                }
-            }
-        });
+        if (JournalUtils.hasMeditatedToday(this)) {
+            overviewBinder.mainEntryBt.setEnabled(false);
+        } else {
+            overviewBinder.mainEntryBt.setEnabled(true);
+        }
+
 
         overviewBinder.mainEntryBt.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -135,7 +135,8 @@ public class OverviewActivity extends AppCompatActivity
 
         //ready payments in case the user wants to upgrade
         //see : https://developers.google.com/pay/api/android/guides/tutorial
-        if (!JournalUtils.isStudent || !JournalUtils.isFullyUpgraded) {
+        if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)
+                || !JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
             paymentsClient = PayUtils.createPaymentsClient(this);
             checkIsReadyToPay();
         }
@@ -151,7 +152,7 @@ public class OverviewActivity extends AppCompatActivity
      * show ad to non-student users
      */
     private void setupAdBanner() {
-        if (!JournalUtils.isStudent) {
+        if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .build();
@@ -179,10 +180,12 @@ public class OverviewActivity extends AppCompatActivity
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         if (codeField.getText().toString().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
-                            JournalUtils.setIsStudent(true);
+                            JournalUtils.setSharedPrefBoo(OverviewActivity.this,
+                                    true, JournalUtils.BOO_STUDENT);
                             setupAdBanner();
                         } else {
-                            JournalUtils.setIsStudent(false);
+                            JournalUtils.setSharedPrefBoo(OverviewActivity.this,
+                                    false, JournalUtils.BOO_STUDENT);
                         }
                     }
                 });
@@ -238,7 +241,8 @@ public class OverviewActivity extends AppCompatActivity
         MenuItem activation = menu.findItem(R.id.menu_activation);
         MenuItem upgrade = menu.findItem(R.id.menu_activation);
 
-        if (JournalUtils.isStudent || JournalUtils.isFullyUpgraded) {
+        if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)
+                || JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
             activation.setVisible(false);
             upgrade.setVisible(false);
         } else {
@@ -264,12 +268,16 @@ public class OverviewActivity extends AppCompatActivity
                 //TODO: go to guidelines
                 break;
             case R.id.menu_upgrade:
-                offerUpgrade();
+                showUpgradeDialog();
         }
         return super.onOptionsItemSelected(item);
     }
 
-    private void offerUpgrade() {
+    /**
+     * Display a dialog offering upgrade option which then takes the user on to pay via google pay.
+     */
+    private void showUpgradeDialog() {
+        priceString = getString(R.string.initial_price); //instantiate/reset from previous use
 
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this,
                 R.style.DialogTheme);
@@ -277,28 +285,40 @@ public class OverviewActivity extends AppCompatActivity
 
         if (googlePayAvailable) {
 
-            final String[] choices = new String[]{"The videos are part of the certification program. However, they can be unlocked for a charge of $5.", "The ads help maintain this app. However a charge of $5 removes them, which goes directly to future work on the app."};
-            final ArrayList<String> selected = new ArrayList<>();
+            final String[] choices = new String[upgradeItemArrayList.size()];
+            upgradeChoice = new boolean[upgradeItemArrayList.size()];
+            for (int i = 0; i < upgradeItemArrayList.size(); i++) {
+                UpgradeItem currentUpgradeItem = upgradeItemArrayList.get(i);
+                choices[i] = currentUpgradeItem.getName() + " ($"
+                        + PayUtils.microsToString(currentUpgradeItem.getPriceMicros()) + ")";
+            }
 
             googlepayBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    requestPayment(v);
+                    if (!priceString.equals(getString(R.string.initial_price))) {
+                        requestPayment(v, priceString);
+                    } else {
+                        Toast.makeText(OverviewActivity.this,
+                                R.string.toast_no_upgrade_selected, Toast.LENGTH_SHORT).show();
+                    }
                 }
             });
 
             alertBuilder.setMultiChoiceItems(choices, null,
-                            new DialogInterface.OnMultiChoiceClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which, boolean isChecked) {
-                                    for (int i = 0; i < choices.length; i++) {
-                                        if (i == which) {
-                                            selected.add(choices[i]);
-                                        }
-                                    }
+                    new DialogInterface.OnMultiChoiceClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which, boolean isChecked) {
+                            for (int i = 0; i < choices.length; i++) {
+                                if (i == which) {
+                                    upgradeChoice[i] = isChecked;
                                 }
-                            })
-                    .setView(googlepayBt)
+                            }
+                            priceString = getUpgradePrice(upgradeChoice);
+                            googlepayTotal.setText(priceString);
+                        }
+                    })
+                    .setView(dialogPay)
                     .setNegativeButton("cancel", null);
         } else {
             alertBuilder.setMessage("Unfortunately, Google Pay does not seem to be activated on this device.");
@@ -329,15 +349,23 @@ public class OverviewActivity extends AppCompatActivity
     }
 
     /**
-     * If isReadyToPay returned true, set up the button and set googlePayAvailable to true.
+     * If isReadyToPay returned true, set up the, upgradeItems array, button and set
+     * googlePayAvailable to true.
      *
      * @param available is a boolean detailing whether google pay is available or not
      */
     private void setGooglePayAvailable(boolean available) {
-
         if (available) {
-            View googlePayBtHolder = LayoutInflater.from(this).inflate(R.layout.buttonholder_googlepay, null);
-            googlepayBt = googlePayBtHolder.findViewById(R.id.googlepay_bt);
+            //the list of upgrade options
+            upgradeItemArrayList = new ArrayList<>();
+            upgradeItemArrayList.add(new UpgradeItem(getString(R.string.upgradeItem_videos), 5 * 1000000));
+            upgradeItemArrayList.add(new UpgradeItem(getString(R.string.upgradeItem_ads), 5 * 1000000));
+
+            dialogPay = LayoutInflater.from(this).inflate(R.layout.dialog_googlepay, null);
+            googlepayBt = dialogPay.findViewById(R.id.googlepay_bt);
+            googlepayTotal = dialogPay.findViewById(R.id.dialog_total_tv);
+            googlepayTotal.setText(getString(R.string.initial_price)
+            );
             googlePayAvailable = true;
         } else {
             googlePayAvailable = false;
@@ -390,11 +418,27 @@ public class OverviewActivity extends AppCompatActivity
                         .setPositiveButton("OK", null)
                         .create();
                 alertDialog.show();
+
+                for (int i = 0; i < upgradeChoice.length; i++) {
+                    if (upgradeChoice[i]) {
+                        String boughtUpgrade = upgradeItemArrayList.get(i).getName();
+                        if (boughtUpgrade.equals(R.string.upgradeItem_videos)) {
+                            JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_VIDEOS_UNLOCKED);
+                        }
+                        if (boughtUpgrade.equals(R.string.upgradeItem_ads)) {
+                            JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_ADS_REMOVED);
+
+                        }
+                        upgradeItemArrayList.remove(i);
+                    }
+                }
+
             }
 
             // Use token.getToken() to get the token string.
             Log.d("PaymentData", "PaymentMethodToken received");
         }
+
     }
 
     /**
@@ -410,22 +454,28 @@ public class OverviewActivity extends AppCompatActivity
     }
 
     /* This method is called when the Pay with Google button is clicked.*/
-    public void requestPayment(View view) {
+    public void requestPayment(View view, String price) {
         // Disables the button to prevent multiple clicks.
         googlepayBt.setClickable(false);
-
-        // The price provided to the API should include taxes and shipping.
-        // This price is not displayed to the user.
-        String price = PayUtils.microsToString(upgradeItem.getPriceMicros());
 
         TransactionInfo transaction = PayUtils.createTransaction(price);
         PaymentDataRequest request = PayUtils.createPaymentDataRequest(transaction);
         Task<PaymentData> futurePaymentData = paymentsClient.loadPaymentData(request);
 
-        // Since loadPaymentData may show the UI asking the user to select a payment method, we use
-        // AutoResolveHelper to wait for the user interacting with it. Once completed,
-        // onActivityResult will be called with the result.
+        // AutoResolveHelper awaits the user's chocie and then calls onActivityResult with the result.
         AutoResolveHelper.resolveTask(futurePaymentData, this, LOAD_PAYMENT_DATA_REQUEST_CODE);
+    }
+
+    private String getUpgradePrice(boolean[] upgradeItems) {
+        long totalPrice = 0;
+        for (int i = 0; i < upgradeItems.length; i++) {
+            if (upgradeItems[i]) { //get checked item(s) and from those the according price(s)
+                long itemPrice = upgradeItemArrayList.get(i).getPriceMicros();
+                totalPrice += itemPrice;
+            }
+        }
+        // calculate the total price
+        return PayUtils.microsToString(totalPrice);
     }
 
     @Override

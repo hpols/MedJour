@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageButton
+        android:id="@+id/googlepay_bt"
+        android:layout_width="152dp"
+        android:layout_height="48sp"
+        android:background="@drawable/googlepay_button_background"
+        android:contentDescription="@string/google_pay_button_contDescrip"
+        android:foreground="@drawable/googlepay_button_overlay"
+        android:padding="8dp"
+        android:src="@drawable/googlepay_button_content" />
+
+    <TextView
+        android:id="@+id/dialog_total_label_tv"
+        style="@style/label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:labelFor="@+id/dialog_total_tv"
+        android:text="@string/dialog_total_label"
+        app:layout_constraintBottom_toBottomOf="@+id/googlepay_bt"
+        app:layout_constraintEnd_toStartOf="@+id/dialog_total_tv"
+        app:layout_constraintHorizontal_chainStyle="packed"
+        app:layout_constraintStart_toEndOf="@+id/googlepay_bt"
+        app:layout_constraintTop_toTopOf="@+id/googlepay_bt" />
+
+    <TextView
+        android:id="@+id/dialog_total_tv"
+        style="@style/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/dialog_total_label_tv"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/dialog_total_label_tv"
+        app:layout_constraintTop_toTopOf="@+id/dialog_total_label_tv"
+        tools:text="$5.00" />
+
+</android.support.constraint.ConstraintLayout>
