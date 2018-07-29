@@ -11,6 +11,7 @@ import android.support.annotation.Nullable;
 
 import com.example.android.medjour.R;
 import com.example.android.medjour.settings.custom.SoundPreference;
+import com.example.android.medjour.utils.JournalUtils;
 
 import timber.log.Timber;
 
@@ -51,6 +52,15 @@ public class SettingsFragment extends PreferenceFragment implements
 
         callback = (ListPreference) findPreference(getString(R.string.pref_key_callback));
 
+        if(!JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_VIDEOS_UNLOCKED)
+                && ! JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_STUDENT)) {
+            callback.setEnabled(false);
+            callback.setSummary(getString(R.string.settings_callback_needs_upgrade));
+        } else {
+            callback.setEnabled(true);
+            setSoundPrefActivation(callback.getValue());
+        }
+
         sound = (SoundPreference) findPreference(getString(R.string.pref_key_sounds));
         if (sound.getValue() == null) {
             sharedPref.getString(getString(R.string.pref_key_tone),
@@ -59,7 +69,7 @@ public class SettingsFragment extends PreferenceFragment implements
         }
 
 
-        setSoundPrefActivation(callback.getValue());
+
     }
 
     /**

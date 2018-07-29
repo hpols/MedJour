@@ -8,6 +8,7 @@ import android.databinding.DataBindingUtil;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.InputType;
@@ -285,6 +286,14 @@ public class OverviewActivity extends AppCompatActivity
 
         if (googlePayAvailable) {
 
+            //remove items which have already been bought
+            if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_ADS_REMOVED)) {
+                upgradeItemArrayList.remove(1);
+            }
+            if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_VIDEOS_UNLOCKED)) {
+                upgradeItemArrayList.remove(0);
+            }
+
             final String[] choices = new String[upgradeItemArrayList.size()];
             upgradeChoice = new boolean[upgradeItemArrayList.size()];
             for (int i = 0; i < upgradeItemArrayList.size(); i++) {
@@ -412,24 +421,25 @@ public class OverviewActivity extends AppCompatActivity
             // If the gateway is set to example, no payment information is returned - instead, the
             // token will only consist of "examplePaymentMethodToken".
             if (token.getToken().equals("examplePaymentMethodToken")) {
-                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this)
-                        .setTitle("Warning")
-                        .setMessage("This is but a test implementation of google pay.")
-                        .setPositiveButton("OK", null)
-                        .create();
-                alertDialog.show();
+                Snackbar.make(null, "This is but a test implementation of google pay.",
+                        Snackbar.LENGTH_LONG);
+//                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this)
+//                        .setMessage("This is but a test implementation of google pay.")
+//                        .setPositiveButton(getString(R.string.ok), null)
+//                        .create();
+//                alertDialog.show();
 
                 for (int i = 0; i < upgradeChoice.length; i++) {
                     if (upgradeChoice[i]) {
                         String boughtUpgrade = upgradeItemArrayList.get(i).getName();
-                        if (boughtUpgrade.equals(R.string.upgradeItem_videos)) {
-                            JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_VIDEOS_UNLOCKED);
+                        if (boughtUpgrade.equals(getString(R.string.upgradeItem_videos))) {
+                            JournalUtils.setSharedPrefBoo(this, true,
+                                    JournalUtils.BOO_VIDEOS_UNLOCKED);
                         }
-                        if (boughtUpgrade.equals(R.string.upgradeItem_ads)) {
-                            JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_ADS_REMOVED);
-
+                        if (boughtUpgrade.equals(getString(R.string.upgradeItem_ads))) {
+                            JournalUtils.setSharedPrefBoo(this, true,
+                                    JournalUtils.BOO_ADS_REMOVED);
                         }
-                        upgradeItemArrayList.remove(i);
                     }
                 }
 

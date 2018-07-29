@@ -82,6 +82,8 @@
     <string name="menu_upgrade">Upgrade $</string>
 
     <!-- preferences -->
+    <string name="settings_callback_needs_upgrade">Callback by sound. To switch to the video option, please select \"Upgrade\" from the menu when viewing your overview, or become a student</string>
+
     <string name="pref_med_time_title">Meditation Time</string>
     <string name="pref_time_title">Time of Day</string>
     <string name="pref_tone_title">Audio from your device</string>
@@ -154,5 +156,4 @@
     <string name="upgradeItem_ads">remove ads</string>
     <string name="initial_price">0.00</string>
     <string name="toast_no_upgrade_selected">Please select an item or click cancel.</string>
-
 </resources>
