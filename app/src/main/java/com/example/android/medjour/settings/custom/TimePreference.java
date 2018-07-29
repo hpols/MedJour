@@ -18,21 +18,7 @@ public class TimePreference extends DialogPreference {
 
     private int lastHour = 0;
     private int lastMinute = 0;
-    private boolean isAm;
     private TimePicker picker = null;
-
-
-    private static int getHour(String time) {
-        String[] pieces = time.split(":");
-
-        return (Integer.parseInt(pieces[0]));
-    }
-
-    private static int getMinute(String time) {
-        String[] pieces = time.split(":");
-
-        return (Integer.parseInt(pieces[1]));
-    }
 
     public TimePreference(Context ctxt, AttributeSet attrs) {
         super(ctxt, attrs);
@@ -73,7 +59,10 @@ public class TimePreference extends DialogPreference {
             lastHour = picker.getCurrentHour();
             lastMinute = picker.getCurrentMinute();
 
-            String time = getTime();
+            NumberFormat formatter = new DecimalFormat("00");
+            String minuteString = formatter.format(lastMinute);
+
+            String time=String.valueOf(lastHour)+":"+String.valueOf(minuteString);
 
             if (callChangeListener(time)) {
                 persistString(time);
@@ -94,21 +83,4 @@ public class TimePreference extends DialogPreference {
                 getPersistedString((String)defaultValue) : (String)defaultValue);
     }
 
-    public String getTime() {
-        String meridianId;
-        if (isAm) {
-            if (lastHour > 12) {
-                meridianId = " pm";
-            } else {
-                meridianId = " am";
-            }
-        } else {
-            meridianId = "";
-        }
-
-        NumberFormat formatter = new DecimalFormat("00");
-        String minuteString = formatter.format(lastMinute);
-
-        return lastHour + ":" + minuteString + meridianId;
-    }
 }
