@@ -3,21 +3,21 @@
     xmlns:auto="http://schemas.android.com/apk/res-auto">
 
     <ListPreference
-        android:defaultValue="@string/pref_default_med_time"
+        android:defaultValue="@string/min_20_value"
         android:entries="@array/pref_entries_duration"
         android:entryValues="@array/pref_entries_duration_values"
         android:key="@string/pref_key_med_time"
         android:title="@string/pref_med_time_title" />
 
     <ListPreference
-        android:defaultValue="@string/pref_default_callback"
+        android:defaultValue="@string/sound_callback"
         android:entries="@array/pref_entries_callback"
         android:entryValues="@array/pref_entryvalues_callback"
         android:key="@string/pref_key_callback"
-        android:title="Callback Type" />
+        android:title="@string/pref_title_callback" />
 
     <com.example.android.medjour.settings.custom.SoundPreference
-        android:defaultValue="@string/pref_default_sound"
+        android:defaultValue="@string/temple_bell_value"
         android:key="@string/pref_key_sounds"
         android:title="Choose Callback Sound"
         auto:appOwnSounds="@array/extraRingtones"

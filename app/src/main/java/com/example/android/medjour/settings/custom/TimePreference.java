@@ -1,12 +1,14 @@
 package com.example.android.medjour.settings.custom;
 
-import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.View;
 import android.widget.TimePicker;
+
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 
 /**
  * based on: https://stackoverflow.com/a/5533295/7601437
@@ -71,7 +73,7 @@ public class TimePreference extends DialogPreference {
             lastHour = picker.getCurrentHour();
             lastMinute = picker.getCurrentMinute();
 
-            String time = String.valueOf(lastHour) + ":" + String.valueOf(lastMinute);
+            String time = getTime();
 
             if (callChangeListener(time)) {
                 persistString(time);
@@ -84,28 +86,12 @@ public class TimePreference extends DialogPreference {
         return (a.getString(index));
     }
 
+    // ensure the defaultValue is shown until changed by the user
+    // see: https://stackoverflow.com/a/11875422/7601437
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
-        String time;
-        if (restoreValue) {
-            if (defaultValue == null) {
-                time = getPersistedString("12:00 pm");
-            } else {
-                time = getPersistedString(defaultValue.toString());
-            }
-        } else {
-            time = defaultValue.toString();
-        }
-
-        lastHour = getHour(time);
-        lastMinute = getMinute(time);
-
-        new TimePickerDialog.OnTimeSetListener() {
-
-            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                isAm = hourOfDay < 12;
-            }
-        };
+        persistString(restoreValue ?
+                getPersistedString((String)defaultValue) : (String)defaultValue);
     }
 
     public String getTime() {
@@ -119,6 +105,10 @@ public class TimePreference extends DialogPreference {
         } else {
             meridianId = "";
         }
-        return lastHour + ":" + lastMinute + meridianId;
+
+        NumberFormat formatter = new DecimalFormat("00");
+        String minuteString = formatter.format(lastMinute);
+
+        return lastHour + ":" + minuteString + meridianId;
     }
 }

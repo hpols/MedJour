@@ -64,12 +64,9 @@ public class SettingsFragment extends PreferenceFragment implements
         sound = (SoundPreference) findPreference(getString(R.string.pref_key_sounds));
         if (sound.getValue() == null) {
             sharedPref.getString(getString(R.string.pref_key_tone),
-                    getString(R.string.pref_default_sound));
+                    getString(R.string.temple_bell_value));
             sound.getSummary();
         }
-
-
-
     }
 
     /**

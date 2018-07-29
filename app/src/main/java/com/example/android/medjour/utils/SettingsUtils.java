@@ -72,7 +72,7 @@ public class SettingsUtils {
     public Uri playCallbackSound(Context ctxt) {
 
         String keyForSounds = ctxt.getString(R.string.pref_key_tone);
-        String defaultSound = ctxt.getString(R.string.pref_default_val_sound);
+        String defaultSound = ctxt.getString(R.string.temple_bell_value);
 
         String chosenSound = PreferenceManager.getDefaultSharedPreferences(ctxt)
                 .getString(keyForSounds, defaultSound);

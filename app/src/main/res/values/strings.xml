@@ -99,11 +99,7 @@
     <string name="pref_key_reminder_time">timeInMinutes</string>
     <string name="pref_key_vibrate">vibrate at callback</string>
 
-    <string name="pref_default_med_time">@string/min_20</string>
-    <string name="pref_default_callback">@string/sound_callback</string>
     <string name="pref_default_reminder_time">12:00</string>
-    <string name="pref_default_sound">@string/temple_bell</string>
-    <string name="pref_default_val_sound">@string/temple_bell_value</string>
 
     <string name="pref_reminder_on">Reminder enabled</string>
     <string name="pref_reminder_off">Reminder disabled</string>
@@ -156,4 +152,5 @@
     <string name="upgradeItem_ads">remove ads</string>
     <string name="initial_price">0.00</string>
     <string name="toast_no_upgrade_selected">Please select an item or click cancel.</string>
+    <string name="pref_title_callback">Callback type</string>
 </resources>
