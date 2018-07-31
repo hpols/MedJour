@@ -141,7 +141,7 @@ public class SettingsUtils {
         String chosenTime = PreferenceManager.getDefaultSharedPreferences(ctxt)
                 .getString(keyforReminderTime, defaultReminderTime);
 
-        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm");
+        SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         long timeInMils = 0;
         try {
             Date timeOfDay = sdf.parse(chosenTime);

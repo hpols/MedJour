@@ -2,6 +2,7 @@ package com.example.android.medjour.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -13,8 +14,6 @@ import com.example.android.medjour.R;
 import com.example.android.medjour.settings.custom.SoundPreference;
 import com.example.android.medjour.utils.JournalUtils;
 
-import timber.log.Timber;
-
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
@@ -23,9 +22,7 @@ public class SettingsFragment extends PreferenceFragment implements
     //preferences that need further setup beyond what the xml provides
     ListPreference callback;
     SoundPreference sound;
-
-    //TODO: defaultvalue for meditation-time is not being used. You have to set a time before the
-    // correct length is used.
+    EditTextPreference timeSetter;
 
     /**
      * create the Fragment, set the preference summaries and ensure the sound preference is only
@@ -52,8 +49,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         callback = (ListPreference) findPreference(getString(R.string.pref_key_callback));
 
-        if(!JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_VIDEOS_UNLOCKED)
-                && ! JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_STUDENT)) {
+        if (!JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_VIDEOS_UNLOCKED)
+                && !JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_STUDENT)) {
             callback.setEnabled(false);
             callback.setSummary(getString(R.string.settings_callback_needs_upgrade));
         } else {
@@ -67,6 +64,24 @@ public class SettingsFragment extends PreferenceFragment implements
                     getString(R.string.temple_bell_value));
             sound.getSummary();
         }
+
+//        timeSetter = (EditTextPreference) findPreference(getString(R.string.pref_key_reminder_time));
+//        timeSetter.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+//            @Override
+//            public boolean onPreferenceChange(Preference preference, Object newValue) {
+//                String value = newValue.toString();
+//                boolean success;
+//
+//                // ensure the input value format is correct
+//                //based on: https://examples.javacodegeeks.com/core-java/util/regex/matcher/validate-time-in-24-hours-format-with-java-regular-expression-example/
+//                String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
+//                Pattern timePattern = Pattern.compile(TIME24HOURS_PATTERN);
+//                Matcher matcher = timePattern.matcher(value);
+//                success = matcher.matches();
+//
+//                return success;
+//            }
+//        });
     }
 
     /**
@@ -129,13 +144,8 @@ public class SettingsFragment extends PreferenceFragment implements
             sound.setSummary(sharedPref.getString(key,
                     getString(R.string.pref_key_sounds)));
 
-            String soundValue = sound.getValue();
-            Timber.v("soundValue : " + soundValue);
         }
 
-        if (key.equals(getString(R.string.pref_key_med_time))) {
-            Timber.d("time set to: " + sharedPref.getString(key, getString(R.string.pref_key_med_time)));
-        }
     }
 
     @Override
