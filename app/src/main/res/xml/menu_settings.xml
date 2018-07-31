@@ -38,14 +38,6 @@
         android:summaryOn="@string/pref_reminder_on"
         android:title="@string/pref_med_reminder_title" />
 
-    <!--<EditTextPreference-->
-        <!--android:defaultValue="@string/pref_default_reminder_time"-->
-        <!--android:dependency="@string/pref_med_reminder_key"-->
-        <!--android:key="@string/pref_key_reminder_time"-->
-        <!--android:title="@string/pref_time_title"-->
-        <!--android:maxLength="5"-->
-        <!--android:inputType="time"/>-->
-
     <com.example.android.medjour.settings.custom.TimePreference
         android:defaultValue="@string/pref_default_reminder_time"
         android:dependency="@string/pref_med_reminder_key"

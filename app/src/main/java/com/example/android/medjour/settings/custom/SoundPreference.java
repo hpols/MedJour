@@ -191,19 +191,22 @@ public class SoundPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
-        if (restoreValue)
-            value = getPersistedString("");
-        else {
-            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
+        persistString(restoreValue ?
+                getPersistedString((String)defaultValue) : (String)defaultValue);
 
-                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
-                if (index >= 0)
-                    value = uriFromRaw(defaultValue.toString()).toString();
-                else value = (String) defaultValue;
-
-            } else value = (String) defaultValue;
-
-            persistString(value);
-        }
+//        if (restoreValue)
+//            value = getPersistedString("");
+//        else {
+//            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
+//
+//                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
+//                if (index >= 0)
+//                    value = uriFromRaw(defaultValue.toString()).toString();
+//                else value = (String) defaultValue;
+//
+//            } else value = (String) defaultValue;
+//
+//            persistString(value);
+//        }
     }
 }

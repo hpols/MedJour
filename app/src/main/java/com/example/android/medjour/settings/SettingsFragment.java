@@ -2,7 +2,6 @@ package com.example.android.medjour.settings;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceFragment;
@@ -22,7 +21,6 @@ public class SettingsFragment extends PreferenceFragment implements
     //preferences that need further setup beyond what the xml provides
     ListPreference callback;
     SoundPreference sound;
-    EditTextPreference timeSetter;
 
     /**
      * create the Fragment, set the preference summaries and ensure the sound preference is only
@@ -42,7 +40,7 @@ public class SettingsFragment extends PreferenceFragment implements
         int count = prefScreen.getPreferenceCount();
         for (int i = 0; i < count; i++) {
             Preference pref = prefScreen.getPreference(i);
-            if (!(pref instanceof SwitchPreference || pref instanceof SoundPreference)) {
+            if (!(pref instanceof SwitchPreference)) {
                 setPrefSummary(pref, sharedPref.getString(pref.getKey(), ""));
             }
         }
@@ -58,12 +56,7 @@ public class SettingsFragment extends PreferenceFragment implements
             setSoundPrefActivation(callback.getValue());
         }
 
-        sound = (SoundPreference) findPreference(getString(R.string.pref_key_sounds));
-        if (sound.getValue() == null) {
-            sharedPref.getString(getString(R.string.pref_key_tone),
-                    getString(R.string.temple_bell_value));
-            sound.getSummary();
-        }
+        setupSoundPreference();
 
 //        timeSetter = (EditTextPreference) findPreference(getString(R.string.pref_key_reminder_time));
 //        timeSetter.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
@@ -82,6 +75,15 @@ public class SettingsFragment extends PreferenceFragment implements
 //                return success;
 //            }
 //        });
+    }
+
+    private void setupSoundPreference() {
+        sound = (SoundPreference) findPreference(getString(R.string.pref_key_sounds));
+        if (sound.getValue() == null) {
+            sharedPref.getString(getString(R.string.pref_key_tone),
+                    getString(R.string.temple_bell_value));
+            sound.getSummary();
+        }
     }
 
     /**
@@ -115,6 +117,9 @@ public class SettingsFragment extends PreferenceFragment implements
      *              preference option should be enabled
      */
     private void setSoundPrefActivation(String value) {
+        if (sound == null) { //after student activation or upgrade this might not yet be set up
+            setupSoundPreference();
+        }
         if (value.equals(getString(R.string.video_value_callback))) {
             sound.setEnabled(false);
             sound.setSummary("");
@@ -124,7 +129,7 @@ public class SettingsFragment extends PreferenceFragment implements
     }
 
     /**
-     * Update summaries and activitation of the sound preference
+     * Update summaries and activation of the sound preference
      *
      * @param sharedPref holds the information of the preference just changed
      * @param key        is the key of the preference just changed
@@ -143,7 +148,16 @@ public class SettingsFragment extends PreferenceFragment implements
         if (key.equals(getString(R.string.pref_key_sounds))) {
             sound.setSummary(sharedPref.getString(key,
                     getString(R.string.pref_key_sounds)));
+        }
 
+        //if Callback is changed (back to) sound, ensure the summary is displayed for the latter.
+        if (key.equals(getString(R.string.pref_key_callback))) {
+           String callBackSelected = sharedPref.getString(getString(R.string.pref_key_callback),
+                   getString(R.string.sound_callback));
+           if (callBackSelected.equals(getString(R.string.sound_callback))) {
+               sound.setSummary(sharedPref.getString(key,
+                       getString(R.string.pref_key_sounds)));
+           }
         }
 
     }

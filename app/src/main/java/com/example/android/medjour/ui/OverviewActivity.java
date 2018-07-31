@@ -180,13 +180,21 @@ public class OverviewActivity extends AppCompatActivity
                 new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        if (codeField.getText().toString().equals(BuildConfig.STUDENT_ACTIVATION_KEY)) {
+                        if (codeField.getText().toString().equals
+                                (BuildConfig.STUDENT_ACTIVATION_KEY)) {
                             JournalUtils.setSharedPrefBoo(OverviewActivity.this,
                                     true, JournalUtils.BOO_STUDENT);
                             setupAdBanner();
+                            Toast.makeText(OverviewActivity.this,
+                                    R.string.toast_successful_student_activation,
+                                    Toast.LENGTH_SHORT).show();
+                            invalidateOptionsMenu();//reflow the menu, so as to remove the student activation option
                         } else {
                             JournalUtils.setSharedPrefBoo(OverviewActivity.this,
                                     false, JournalUtils.BOO_STUDENT);
+                            Toast.makeText(OverviewActivity.this,
+                                    R.string.toast_faulty_student_authentification,
+                                    Toast.LENGTH_SHORT).show();
                         }
                     }
                 });
@@ -241,6 +249,7 @@ public class OverviewActivity extends AppCompatActivity
 
         MenuItem activation = menu.findItem(R.id.menu_activation);
         MenuItem upgrade = menu.findItem(R.id.menu_activation);
+        MenuItem info = menu.findItem(R.id.menu_guidelines);
 
         if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)
                 || JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
@@ -249,6 +258,12 @@ public class OverviewActivity extends AppCompatActivity
         } else {
             activation.setVisible(true);
             upgrade.setVisible(true);
+        }
+
+        if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
+            info.setTitle(R.string.menu_guidelines);
+        } else {
+            info.setTitle(R.string.menu_information);
         }
         return true;
     }
@@ -266,7 +281,7 @@ public class OverviewActivity extends AppCompatActivity
                 showActivationDialog();
                 break;
             case R.id.menu_guidelines:
-                //TODO: go to guidelines
+                startActivity(new Intent(this, InfoActivity.class));
                 break;
             case R.id.menu_upgrade:
                 showUpgradeDialog();
@@ -306,7 +321,7 @@ public class OverviewActivity extends AppCompatActivity
                 @Override
                 public void onClick(View v) {
                     if (!priceString.equals(getString(R.string.initial_price))) {
-                        requestPayment(v, priceString);
+                        requestPayment(priceString);
                     } else {
                         Toast.makeText(OverviewActivity.this,
                                 R.string.toast_no_upgrade_selected, Toast.LENGTH_SHORT).show();
@@ -464,7 +479,7 @@ public class OverviewActivity extends AppCompatActivity
     }
 
     /* This method is called when the Pay with Google button is clicked.*/
-    public void requestPayment(View view, String price) {
+    public void requestPayment(String price) {
         // Disables the button to prevent multiple clicks.
         googlepayBt.setClickable(false);
 
