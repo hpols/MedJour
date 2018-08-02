@@ -48,8 +48,9 @@ import timber.log.Timber;
  */
 public class MeditationFragment extends Fragment {
     private String MED_TIME = "meditation time";
+    private String VIDEO_POS = "current video position";
 
-    //TODO: handle rotation (crash)
+    String videoId;
 
     public MeditationFragment() {
         // Required empty public constructor
@@ -64,7 +65,8 @@ public class MeditationFragment extends Fragment {
     TextView counterTv;
 
     //all sorts of time related info we want to keep track of …
-    long medStartTime, medLength,  medLengthInMillis,  timeRemaining;
+    long medStartTime, medLength, medLengthInMillis, timeRemaining;
+    int currentVidPos; //holds video position when activity is recreated
 
     private CountDownTimer countDownTimer;
     private boolean timerIsRunning = false;
@@ -120,12 +122,19 @@ public class MeditationFragment extends Fragment {
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        if (savedInstanceState != null && savedInstanceState.containsKey(MED_TIME)) {
-            timeRemaining = savedInstanceState.getLong(MED_TIME);
-            if (!isVideo) {
-               utils.getStartedTime();
-               setupTimer(timeRemaining);
-               startTimer();
+
+        //retrieve remaining time if the activity is recreated
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(MED_TIME)) {
+                timeRemaining = savedInstanceState.getLong(MED_TIME);
+                if (!isVideo) {
+                    utils.getStartedTime();
+                    setupTimer(timeRemaining);
+                    startTimer();
+                }
+            }
+            if (savedInstanceState.containsKey(VIDEO_POS)) {
+                currentVidPos = savedInstanceState.getInt(VIDEO_POS);
             }
         }
 
@@ -174,7 +183,8 @@ public class MeditationFragment extends Fragment {
         return root;
     }
 
-    /** setup the countedown timer ready to use
+    /**
+     * setup the countedown timer ready to use
      *
      * @param length the remaining time to be count down
      */
@@ -199,6 +209,10 @@ public class MeditationFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(MED_TIME, getTimeRemaining());
+        if (isVideo) {
+            outState.putLong(VIDEO_POS, youTubePlayer.getCurrentTimeMillis());
+            Timber.d("current pos: " + youTubePlayer.getCurrentTimeMillis());
+        }
     }
 
     @Override
@@ -207,6 +221,12 @@ public class MeditationFragment extends Fragment {
 
         if (isVideo) {
             counterTv.setVisibility(View.GONE); // no need for the counterTv when video is playing
+            //ready the youtube fragment if this is the initial create
+            youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
+
             playVideo();
         } else {
             if (!timerIsRunning) {
@@ -319,10 +339,6 @@ public class MeditationFragment extends Fragment {
 
     //setup and play the chosen video
     private void playVideo() {
-        youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-
-        FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-        transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
 
         youTubePlayerFragment.initialize(BuildConfig.API_KEY,
                 new YouTubePlayer.OnInitializedListener() {
@@ -376,11 +392,13 @@ public class MeditationFragment extends Fragment {
                                 }
                             });
 
-                            //whenever the user interacts with the playback, this equals the end of
+                            //TODO: whenever the user interacts with the playback, this equals the end of
                             //their meditation as they are no longer in focus.
 
                             youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
+
                         }
+                        youTubePlayer.seekToMillis(currentVidPos);
                     }
 
                     @Override
@@ -388,6 +406,17 @@ public class MeditationFragment extends Fragment {
                                                         YouTubeInitializationResult
                                                                 youTubeInitializationResult) {
                         Timber.e("Youtube Player could not be initialized.");
+                        //for whatever reason … the video is not working today, but the
+                        // meditator's eyes might well already be shut. So plan B: revert
+                        // to sound-callback
+                        if (!timerIsRunning) {
+                            utils.setStartedTime(JournalUtils.getNow());
+                            startTimer();
+                            timerIsRunning = true;
+                        }
+                        Toast.makeText(getActivity(), R.string.video_not_available,
+                                Toast.LENGTH_SHORT).show();
+                        videoError = true;
                     }
                 });
     }

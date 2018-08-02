@@ -57,33 +57,15 @@ public class SettingsFragment extends PreferenceFragment implements
         }
 
         setupSoundPreference();
-
-//        timeSetter = (EditTextPreference) findPreference(getString(R.string.pref_key_reminder_time));
-//        timeSetter.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
-//            @Override
-//            public boolean onPreferenceChange(Preference preference, Object newValue) {
-//                String value = newValue.toString();
-//                boolean success;
-//
-//                // ensure the input value format is correct
-//                //based on: https://examples.javacodegeeks.com/core-java/util/regex/matcher/validate-time-in-24-hours-format-with-java-regular-expression-example/
-//                String TIME24HOURS_PATTERN = "([01]?[0-9]|2[0-3]):[0-5][0-9]";
-//                Pattern timePattern = Pattern.compile(TIME24HOURS_PATTERN);
-//                Matcher matcher = timePattern.matcher(value);
-//                success = matcher.matches();
-//
-//                return success;
-//            }
-//        });
     }
 
     private void setupSoundPreference() {
         sound = (SoundPreference) findPreference(getString(R.string.pref_key_sounds));
-        if (sound.getValue() == null) {
-            sharedPref.getString(getString(R.string.pref_key_tone),
-                    getString(R.string.temple_bell_value));
-            sound.getSummary();
-        }
+//        if (sound.getValue() == null) {
+//            sharedPref.getString(getString(R.string.pref_key_tone),
+//                    getString(R.string.temple_bell_value));
+//            sound.getSummary();
+//        }
     }
 
     /**

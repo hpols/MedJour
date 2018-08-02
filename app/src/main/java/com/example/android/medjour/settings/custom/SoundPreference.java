@@ -29,8 +29,13 @@ public class SoundPreference extends DialogPreference {
     private CharSequence[] appOwnSounds;
     private CharSequence[] appOwnSoundsTitles;
 
+    /**
+     * constructor
+     *
+     * @param ctxt  is the context within which the preference works
+     * @param attrs are the attributes for the preference
+     */
     public SoundPreference(Context ctxt, AttributeSet attrs) {
-
         super(ctxt, attrs);
 
         this.ctxt = ctxt;
@@ -44,24 +49,35 @@ public class SoundPreference extends DialogPreference {
         a.recycle();
     }
 
-    public SoundPreference(Context context) {
-        this(context, null);
+    /**
+     * simple constructor
+     *
+     * @param ctxt is the context within which the preference works
+     */
+    public SoundPreference(Context ctxt) {
+        this(ctxt, null);
     }
 
     public String getValue() {
         return value;
     }
 
+    /**
+     * retrieve the sound
+     *
+     * @param type indicates the type of tone
+     * @return a list of sounds
+     */
     private Map<String, Uri> getSounds(int type) {
 
         RingtoneManager ringMan = new RingtoneManager(ctxt);
         ringMan.setType(type);
         Cursor csr = ringMan.getCursor();
 
-        Map<String, Uri> list = new TreeMap<String, Uri>();
+        Map<String, Uri> list = new TreeMap<>();
         while (csr.moveToNext()) {
             String ringTitle = csr.getString(RingtoneManager.TITLE_COLUMN_INDEX);
-            Uri ringUri =  ringMan.getRingtoneUri(csr.getPosition());
+            Uri ringUri = ringMan.getRingtoneUri(csr.getPosition());
 
             list.put(ringTitle, ringUri);
         }
@@ -69,20 +85,37 @@ public class SoundPreference extends DialogPreference {
         return list;
     }
 
+    /**
+     * generate the uri from the name
+     *
+     * @param name is the sound name
+     * @return the generated uri
+     */
     private Uri uriFromRaw(String name) {
         int audioId = ctxt.getResources().getIdentifier(name, "raw", ctxt.getPackageName());
         return Uri.parse("android.resource://" + ctxt.getPackageName() + "/" + audioId);
     }
 
+
+    /**
+     * get titles from the sounds provided by the app
+     *
+     * @param name is the name of the app own sound
+     * @return the app own sound title or nothing
+     */
     private String appOwnSoundsTitle(CharSequence name) {
         if (appOwnSounds != null && appOwnSoundsTitles != null) {
             int index = Arrays.asList(appOwnSounds).indexOf(name);
             return appOwnSoundsTitles[index].toString();
         }
-
         return null;
     }
 
+    /**
+     * get the summary to display in the preference screen
+     *
+     * @return the summary
+     */
     @Override
     public CharSequence getSummary() {
 
@@ -121,10 +154,15 @@ public class SoundPreference extends DialogPreference {
         } else return summary;
     }
 
+    /**
+     * set up the dialog
+     *
+     * @param builder is the alertdialog.builder to create the dialog
+     */
     @Override
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {
 
-        final Map<String, Uri> sounds = new LinkedHashMap<String, Uri>();
+        final Map<String, Uri> sounds = new LinkedHashMap<>();
 
         if (appOwnSounds != null) {
             for (CharSequence appOwnSound : appOwnSounds) {
@@ -136,7 +174,6 @@ public class SoundPreference extends DialogPreference {
         }
 
         sounds.putAll(getSounds(RingtoneManager.TYPE_NOTIFICATION));
-
 
         final String[] titleArray = sounds.keySet().toArray(new String[0]);
         final Uri[] uriArray = sounds.values().toArray(new Uri[0]);
@@ -168,6 +205,11 @@ public class SoundPreference extends DialogPreference {
 
     }
 
+    /**
+     * get the selection when the dialog is closed
+     *
+     * @param positiveResult checks whether an input is to be retrieved
+     */
     @Override
     protected void onDialogClosed(boolean positiveResult) {
 
@@ -183,16 +225,28 @@ public class SoundPreference extends DialogPreference {
 
     }
 
+    /**
+     * Retrieve the defaulValue
+     *
+     * @param a     as the typeArray
+     * @param index is the index of the value
+     * @return the default value
+     */
     @Override
     protected Object onGetDefaultValue(TypedArray a, int index) {
         return a.getString(index);
     }
 
+    /** Display the initial value
+     *
+     * @param restoreValue is a boolean indicating whether the value is restored
+     * @param defaultValue is the default value set for the preference
+     */
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
         persistString(restoreValue ?
-                getPersistedString((String)defaultValue) : (String)defaultValue);
+                getPersistedString((String) defaultValue) : (String) defaultValue);
 
 //        if (restoreValue)
 //            value = getPersistedString("");
