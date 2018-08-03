@@ -48,9 +48,6 @@ import timber.log.Timber;
  */
 public class MeditationFragment extends Fragment {
     private String MED_TIME = "meditation time";
-    private String VIDEO_POS = "current video position";
-
-    String videoId;
 
     public MeditationFragment() {
         // Required empty public constructor
@@ -66,7 +63,6 @@ public class MeditationFragment extends Fragment {
 
     //all sorts of time related info we want to keep track of …
     long medStartTime, medLength, medLengthInMillis, timeRemaining;
-    int currentVidPos; //holds video position when activity is recreated
 
     private CountDownTimer countDownTimer;
     private boolean timerIsRunning = false;
@@ -132,9 +128,6 @@ public class MeditationFragment extends Fragment {
                     setupTimer(timeRemaining);
                     startTimer();
                 }
-            }
-            if (savedInstanceState.containsKey(VIDEO_POS)) {
-                currentVidPos = savedInstanceState.getInt(VIDEO_POS);
             }
         }
 
@@ -209,10 +202,6 @@ public class MeditationFragment extends Fragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putLong(MED_TIME, getTimeRemaining());
-        if (isVideo) {
-            outState.putLong(VIDEO_POS, youTubePlayer.getCurrentTimeMillis());
-            Timber.d("current pos: " + youTubePlayer.getCurrentTimeMillis());
-        }
     }
 
     @Override
@@ -397,8 +386,15 @@ public class MeditationFragment extends Fragment {
 
                             youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
 
+                        } else {
+                            //seek to remainder of time, so as to stay close to the users chosen
+                            // meditation time.
+                            while (youTubePlayer.getCurrentTimeMillis() < timeRemaining) {
+                                youTubePlayer.pause();
+                            }
+                            youTubePlayer.seekToMillis((int) timeRemaining);
+                            youTubePlayer.play();
                         }
-                        youTubePlayer.seekToMillis(currentVidPos);
                     }
 
                     @Override

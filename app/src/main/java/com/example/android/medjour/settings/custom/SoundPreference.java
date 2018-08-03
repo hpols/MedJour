@@ -195,7 +195,8 @@ public class SoundPreference extends DialogPreference {
                         ringtone = RingtoneManager.getRingtone(ctxt, uri);
                         ringtone.play();
                     }
-                    value = uri.toString();
+                    //value = uri.toString();
+                    value = title;
                 } else value = null;
             }
         });
@@ -245,22 +246,19 @@ public class SoundPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
-        persistString(restoreValue ?
-                getPersistedString((String) defaultValue) : (String) defaultValue);
+        if (restoreValue)
+            value = getPersistedString("");
+        else {
+            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
 
-//        if (restoreValue)
-//            value = getPersistedString("");
-//        else {
-//            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
-//
-//                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
-//                if (index >= 0)
-//                    value = uriFromRaw(defaultValue.toString()).toString();
-//                else value = (String) defaultValue;
-//
-//            } else value = (String) defaultValue;
-//
-//            persistString(value);
-//        }
+                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
+                if (index >= 0)
+                    value = String.valueOf(getSummary());
+                else value = (String) defaultValue;
+
+            } else value = (String) defaultValue;
+
+            persistString(value);
+        }
     }
 }
