@@ -15,19 +15,19 @@ import timber.log.Timber;
 public class NewEntryActivity extends AppCompatActivity implements
         PreparationFragment.toMeditationCallback, MeditationFragment.ToReviewCallback {
 
-    FragmentManager fragMan;
+    private FragmentManager fragMan;
 
-    PreparationFragment prepFrag;
-    MeditationFragment medFrag;
-    ReviewFragment revFrag;
+    private PreparationFragment prepFrag;
+    private MeditationFragment medFrag;
+    private ReviewFragment revFrag;
 
     //info gathered for DB
-    public static long preparationTime;
-    public static long meditationTime;
+    private static long preparationTime;
+    private static long meditationTime;
 
     public static boolean prepTimeLimitedReached;
-    private String PREP_TIME = "preparation time";
-    private String MED_TIME = "meditation time";
+    private final String PREP_TIME = "preparation time";
+    private final String MED_TIME = "meditation time";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

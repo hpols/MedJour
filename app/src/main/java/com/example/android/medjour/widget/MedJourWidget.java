@@ -8,7 +8,6 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 import com.example.android.medjour.R;
-import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.ui.NewEntryActivity;
 import com.example.android.medjour.utils.JournalUtils;
 
@@ -19,12 +18,8 @@ import timber.log.Timber;
  */
 public class MedJourWidget extends AppWidgetProvider {
 
-    static JournalDb dB;
-
-    static void updateAppWidget(Context ctxt, AppWidgetManager widgetMan, int widgetId) {
+    private static void updateAppWidget(Context ctxt, AppWidgetManager widgetMan, int widgetId) {
         Timber.plant(new Timber.DebugTree());
-
-        dB = JournalDb.getInstance(ctxt);
 
         RemoteViews views = new RemoteViews(ctxt.getPackageName(), R.layout.med_jour_widget);
 
@@ -35,7 +30,7 @@ public class MedJourWidget extends AppWidgetProvider {
         widgetText = ctxt.getString(R.string.total_time_label)
                 + String.valueOf(JournalUtils.toMinutes(JournalUtils.retrieveTotalTimeFromPref(ctxt)))
                 + "\n" + ctxt.getString(R.string.widget_last_login)
-                + JournalUtils.retrieveLastDate(ctxt, JournalUtils.WIDGET_CALL);
+                + JournalUtils.retrieveLastDate(ctxt);
         // Construct the RemoteViews object
         views.setTextViewText(R.id.widget_summary, widgetText);
 

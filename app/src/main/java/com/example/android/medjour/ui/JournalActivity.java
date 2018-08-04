@@ -46,19 +46,20 @@ import timber.log.Timber;
 
 public class JournalActivity extends AppCompatActivity implements JournalAdapter.DialogClicks {
 
-    ActivityJournalBinding journalBinder;
-    static JournalDb dB;
-    JournalAdapter journalAdapter;
-    JournalViewHolder journalViewHolder;
+    private ActivityJournalBinding journalBinder;
+    private static JournalDb dB;
+    private JournalAdapter journalAdapter;
+    private JournalViewHolder journalViewHolder;
 
-    JournalEntry currentEntry;
-    List<JournalEntry> journalEntries;
-    int selectedEntryId;
+    private JournalEntry currentEntry;
+    private List<JournalEntry> journalEntries;
+    private int selectedEntryId;
 
-    boolean showEditOptions, showSave, entryDeleted;
-    private int FOLDERPICKER_CODE = 999;
-    private final String WRITE_PERMIT = "external writing permission";
-    private final String READ_PERMIT = "external reading permission";
+    private boolean showEditOptions;
+    private boolean showSave;
+    private boolean entryDeleted;
+    private static final String WRITE_PERMIT = "external writing permission";
+    private static final String READ_PERMIT = "external reading permission";
 
 
     @Override
@@ -75,7 +76,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
 
         //setup adapter and recyclerView
         journalBinder.journalRv.setLayoutManager(new LinearLayoutManager(this));
-        journalAdapter = new JournalAdapter(this, dB, this);
+        journalAdapter = new JournalAdapter(this, this);
         journalBinder.journalRv.setAdapter(journalAdapter);
         Timber.v("adapter and recyclerview setup");
 
@@ -132,7 +133,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
      * @param permit what kind of permit are we looking for?
      * @return boolean indicating whehter permission is granted or denied.
      */
-    public boolean isStoragePermissionGranted(String permit) {
+    private boolean isStoragePermissionGranted(String permit) {
 
         String androidPermission = null;
         switch (permit) {
@@ -179,7 +180,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     /**
      * display the total time of logged meditation across all entries.
      */
-    public void setTotalTime() {
+    private void setTotalTime() {
         String totalTime = JournalUtils.toMinutes(JournalUtils.retrieveTotalTimeFromPref(this));
         journalBinder.journalAccTimeTv.setText(totalTime);
 
@@ -242,7 +243,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     }
 
     //if any changes were made save these to the db. Otherwise just leave the edit mode.
-    public void updateEntry(final String updatedAssessment) {
+    private void updateEntry(final String updatedAssessment) {
         if (journalAdapter.entryHasChanged) {
             EntryExecutor.getInstance().diskIO().execute(new Runnable() {
                 @Override
@@ -275,7 +276,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         }
     }
 
-    public void unsavedDialog() {
+    private void unsavedDialog() {
         DialogInterface.OnClickListener discardClick = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -300,7 +301,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         alertDialog.show();
     }
 
-    public void confirmDeleteAction() {
+    private void confirmDeleteAction() {
         AlertDialog.Builder alertBuilder = new AlertDialog.Builder(JournalActivity.this,
                 R.style.DialogTheme);
         alertBuilder.setMessage(R.string.delete_query);
@@ -318,7 +319,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         setTotalTime(); //update display of accumulative time
     }
 
-    public void deleteEntry() {
+    private void deleteEntry() {
         long totalTime = currentEntry.getMedTime() + currentEntry.getMedTime() + currentEntry.getRevTime();
         EntryExecutor.getInstance().diskIO().execute(new Runnable() {
             @Override

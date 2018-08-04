@@ -5,7 +5,7 @@ import android.arch.lifecycle.ViewModelProvider;
 
 import com.example.android.medjour.model.data.JournalDb;
 
-public class EntryModelFactory extends ViewModelProvider.NewInstanceFactory {
+class EntryModelFactory extends ViewModelProvider.NewInstanceFactory {
 
     private final JournalDb Db;
     private final int entryId;

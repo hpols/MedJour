@@ -10,9 +10,4 @@ public class DateConverter {
         return timeStamp == null ? null : new Date(timeStamp);
     }
 
-    @TypeConverter
-    public Long toTimeStamp(Date date) {
-        return date == null ? null : date.getTime();
-    }
-
 }

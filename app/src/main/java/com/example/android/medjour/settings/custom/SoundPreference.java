@@ -25,11 +25,11 @@ import java.util.TreeMap;
  */
 public class SoundPreference extends DialogPreference {
 
-    private Context ctxt;
+    private final Context ctxt;
     private String summaryValue;
     private Ringtone ringtone;
-    private CharSequence[] appOwnSounds;
-    private CharSequence[] appOwnSoundsTitles;
+    private final CharSequence[] appOwnSounds;
+    private final CharSequence[] appOwnSoundsTitles; //app own sounds and their titles
 
     /**
      * constructor
@@ -60,22 +60,22 @@ public class SoundPreference extends DialogPreference {
         this(ctxt, null);
     }
 
-    private String getValue(Context ctxt) {
+    private String getSummaryValue(Context ctxt) {
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
 
-        return sharedPref.getString(ctxt.getString(R.string.pref_key_tone), ctxt.getString(R.string.temple_bell_value));
+        return sharedPref.getString(ctxt.getString(R.string.pref_key_tone),
+                ctxt.getString(R.string.temple_bell_value));
     }
 
     /**
      * retrieve the sound
      *
-     * @param type indicates the type of tone
      * @return a list of sounds
      */
-    private Map<String, Uri> getSounds(int type) {
+    private Map<String, Uri> getSounds() {
 
         RingtoneManager ringMan = new RingtoneManager(ctxt);
-        ringMan.setType(type);
+        ringMan.setType(RingtoneManager.TYPE_NOTIFICATION);
         Cursor csr = ringMan.getCursor();
 
         Map<String, Uri> list = new TreeMap<>();
@@ -124,16 +124,16 @@ public class SoundPreference extends DialogPreference {
     public CharSequence getSummary() {
 
         String ringTitle = null;
-        summaryValue = getValue(getContext());
+        summaryValue = getSummaryValue(getContext());
 
         if (summaryValue != null) {
 
             if (appOwnSounds != null && appOwnSoundsTitles != null) {
 
+                //compare the retrieved summary value to the app own sounds for a match.
+                Uri uriValue = uriFromRaw(summaryValue);
                 for (int i = 0; i < appOwnSounds.length; i++) {
-
                     Uri uriAppOwn = uriFromRaw(appOwnSounds[i].toString());
-                    Uri uriValue = uriFromRaw(summaryValue);
 
                     if (uriAppOwn.equals(uriValue)) {
                         ringTitle = appOwnSoundsTitles[i].toString();
@@ -142,6 +142,7 @@ public class SoundPreference extends DialogPreference {
                 }
             }
 
+            //if no app own sounds were a match, the user will have chosen a ringtone
             if (ringTitle == null) {
                 Ringtone ringtone = RingtoneManager.getRingtone(ctxt, Uri.parse(summaryValue));
                 String title = ringtone.getTitle(ctxt);
@@ -150,6 +151,7 @@ public class SoundPreference extends DialogPreference {
             }
         }
 
+        //catch the exception that nothing matches (ringtone might have been removed since setting)
         CharSequence summary = super.getSummary();
 
         if (ringTitle != null) {
@@ -179,12 +181,13 @@ public class SoundPreference extends DialogPreference {
             }
         }
 
-        sounds.putAll(getSounds(RingtoneManager.TYPE_NOTIFICATION));
+        sounds.putAll(getSounds());
 
         final String[] titleArray = sounds.keySet().toArray(new String[0]);
         final Uri[] uriArray = sounds.values().toArray(new Uri[0]);
 
-        int index = summaryValue != null ? Arrays.asList(uriArray).indexOf(Uri.parse(summaryValue)) : -1;
+        int index = summaryValue != null ? Arrays.asList(uriArray).indexOf(Uri.parse(summaryValue))
+                : -1;
 
         builder.setSingleChoiceItems(titleArray, index, new DialogInterface.OnClickListener() {
 
@@ -201,7 +204,6 @@ public class SoundPreference extends DialogPreference {
                         ringtone = RingtoneManager.getRingtone(ctxt, uri);
                         ringtone.play();
                     }
-                    //value = uri.toString();
                     summaryValue = title;
                 } else summaryValue = null;
             }
@@ -229,7 +231,6 @@ public class SoundPreference extends DialogPreference {
             persistString(summaryValue);
             notifyChanged();
         }
-
     }
 
     /**
@@ -254,11 +255,11 @@ public class SoundPreference extends DialogPreference {
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
         if (restoreValue)
-            summaryValue = getPersistedString(getValue(getContext()));
+            summaryValue = getPersistedString(getSummaryValue(getContext()));
         else {
             if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
 
-                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
+                int index = Arrays.asList(appOwnSounds).indexOf(defaultValue);
                 if (index >= 0)
                     summaryValue = String.valueOf(getSummary());
                 else summaryValue = (String) defaultValue;

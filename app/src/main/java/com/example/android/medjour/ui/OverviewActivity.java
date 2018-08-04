@@ -25,7 +25,6 @@ import android.widget.Toast;
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
 import com.example.android.medjour.databinding.ActivityOverviewBinding;
-import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.UpgradeItem;
 import com.example.android.medjour.settings.SettingsActivity;
 import com.example.android.medjour.utils.JournalUtils;
@@ -57,22 +56,21 @@ import timber.log.Timber;
 public class OverviewActivity extends AppCompatActivity
         implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-    ActivityOverviewBinding overviewBinder;
-    JournalDb dB;
-    SettingsUtils utils;
+    private ActivityOverviewBinding overviewBinder;
+    private SettingsUtils utils;
     private PaymentsClient paymentsClient;
 
-    String totalTimeText;
-    private String TOTAL_TIME = "total time key";
+    private String totalTimeText;
+    private final String TOTAL_TIME = "total time key";
 
     private static final int LOAD_PAYMENT_DATA_REQUEST_CODE = 666;
-    ArrayList<UpgradeItem> upgradeItemArrayList;
-    boolean[] upgradeChoice;
-    View dialogPay;
-    ImageButton googlepayBt;
-    TextView googlepayTotal;
-    boolean googlePayAvailable;
-    String priceString;
+    private ArrayList<UpgradeItem> upgradeItemArrayList;
+    private boolean[] upgradeChoice;
+    private View dialogPay;
+    private ImageButton googlepayBt;
+    private TextView googlepayTotal;
+    private boolean googlePayAvailable;
+    private String priceString;
 
 
     @Override
@@ -96,8 +94,6 @@ public class OverviewActivity extends AppCompatActivity
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
         }
-
-        dB = JournalDb.getInstance(getApplicationContext());
 
         if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_REPEAT)) {
             showActivationDialog();
@@ -479,7 +475,7 @@ public class OverviewActivity extends AppCompatActivity
     }
 
     /* This method is called when the Pay with Google button is clicked.*/
-    public void requestPayment(String price) {
+    private void requestPayment(String price) {
         // Disables the button to prevent multiple clicks.
         googlepayBt.setClickable(false);
 

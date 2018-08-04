@@ -47,18 +47,18 @@ import timber.log.Timber;
 
 /**
  * {@link MeditationFragment} is the core of the journal flow. No input is expected from the user,
- * who is expected to be meditating throughout the time of this fragment being active. There for the
- * fragment has an inbuilt backup system incase the user has chosen to use the video callback, in
- * case the vide does not load or there is no internet.
+ * who is expected to be meditating throughout the time of this fragment being active. Therefor the
+ * fragment has an inbuilt backup system in case the user has chosen to use the video callback, but
+ * the video does not load or there is no internet.
  */
 public class MeditationFragment extends Fragment {
-    private String MED_TIME = "meditation time";
+    private final String MED_TIME = "meditation time";
 
     public MeditationFragment() {
         // Required empty public constructor
     }
 
-    SettingsUtils utils;
+    private SettingsUtils utils;
 
     @BindView(R.id.meditation_next_test_bt)
     FloatingActionButton TestFb; //for testing purposes only
@@ -67,15 +67,16 @@ public class MeditationFragment extends Fragment {
     TextView counterTv;
 
     //all sorts of time related info we want to keep track of …
-    long medStartTime, medLength, medLengthInMillis, timeRemaining;
+    private long medStartTime, medLength, medLengthInMillis, timeRemaining;
 
     // Counter implementation: http://fedepaol.github.io/blog/2016/06/20/how-to-a-timer/
     private CountDownTimer countDownTimer;
     private boolean timerIsRunning = false;
 
-    boolean isVideo, videoError;
+    //track whether the user wants a video callback and if there is an error in its use
+    private boolean isVideo, videoError;
 
-    ToReviewCallback reviewCallback;
+    private ToReviewCallback reviewCallback;
 
     public interface ToReviewCallback {
         void toReview(long meditationTime);
@@ -98,8 +99,7 @@ public class MeditationFragment extends Fragment {
         try {
             reviewCallback = (MeditationFragment.ToReviewCallback) ctxt;
         } catch (ClassCastException e) {
-            throw new ClassCastException(ctxt.toString()
-                    + " must implement toReviewCallback");
+            throw new ClassCastException(ctxt.toString() + " must implement toReviewCallback");
         }
     }
 
@@ -149,10 +149,8 @@ public class MeditationFragment extends Fragment {
             }
         }
 
-        /**for debugging/testing purposes: this button goes direct to the next fragment of the
-         * new-entry flow. Keep it hidden when not debugging
-         *
-         */
+        //for debugging/testing purposes: this button goes direct to the next fragment of the
+        // new-entry flow. Keep it hidden when not debugging
         if (BuildConfig.DEBUG) {
             TestFb.setVisibility(View.VISIBLE);
             TestFb.setOnClickListener(new View.OnClickListener() {
@@ -207,7 +205,7 @@ public class MeditationFragment extends Fragment {
     /**
      * save the remaining time before the activity gets destroyed
      *
-     * @param outState
+     * @param outState is the bundle to which data is stored before the activity is destroyed
      */
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
@@ -229,19 +227,12 @@ public class MeditationFragment extends Fragment {
         if (isVideo) {
             counterTv.setVisibility(View.GONE); // no need for the counterTv when video is playing
             //ready the youtube fragment if this is the initial create
-            if (savedInstanceState == null) {
-                youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-                youTubePlayerFragment.setRetainInstance(true);
+            youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
 
-                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-                transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
-            }
+            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+            transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
+            playVideo();
 
-            if (youTubePlayerFragment.getRetainInstance()) {
-                playVideo();
-            } else {
-                revertToTimer();
-            }
         } else {
             if (!timerIsRunning) {
                 utils.setStartedTime(JournalUtils.getNow());
@@ -331,17 +322,17 @@ public class MeditationFragment extends Fragment {
     }
 
     /**
-     * get the remaining time based by comparing the first time the fragemnt was entered to the
+     * get the remaining time based by comparing the first time the fragment was entered to the
      * current time
      *
-     * @return
+     * @return the remaining time in miliseconds as a long
      */
     private long getTimeRemaining() {
         return medLengthInMillis - (JournalUtils.getNow() - utils.getStartedTime());
     }
 
-    /** When the timer has hit 0 play selected sound and move onto the next view.
-     *
+    /**
+     * When the timer has hit 0 play selected sound and move onto the next view.
      */
     private void onTimerFinish() {
         utils.setStartedTime(0);
@@ -357,7 +348,8 @@ public class MeditationFragment extends Fragment {
         GoToReview();
     }
 
-    /** keep the timer Ui updated whilst it is displayed
+    /**
+     * keep the timer Ui updated whilst it is displayed
      *
      * @param millisUntilFinished is the time still left on the clock
      */
@@ -375,7 +367,7 @@ public class MeditationFragment extends Fragment {
     /**
      * ensure the device wakes up so as to play the notification to end the meditation time
      */
-    public void setAlarm() {
+    private void setAlarm() {
         long wakeUpTime = utils.getStartedTime() + medLengthInMillis;
         AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
@@ -392,7 +384,7 @@ public class MeditationFragment extends Fragment {
     /**
      * cancel the device-wake-up when no longer needed
      */
-    public void removeAlarm() {
+    private void removeAlarm() {
         Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, intent,
                 PendingIntent.FLAG_CANCEL_CURRENT);
@@ -405,7 +397,7 @@ public class MeditationFragment extends Fragment {
      * signal if the device has gone to sleep (which it most probably will have).
      */
     public class TimerExpiredReceiver extends BroadcastReceiver {
-        private String NOT_CALLBACK = "notification_callback";
+        private final String NOT_CALLBACK = "notification_callback";
 
         @Override
         public void onReceive(Context ctxt, Intent intent) {
@@ -483,7 +475,7 @@ public class MeditationFragment extends Fragment {
 
                                     @Override
                                     public void onError(YouTubePlayer.ErrorReason errorReason) {
-                                       revertToTimer();
+                                        revertToTimer();
                                     }
                                 });
 
@@ -491,10 +483,6 @@ public class MeditationFragment extends Fragment {
                                 //their meditation as they are no longer in focus.
 
                                 youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
-
-                            } else {
-                                int restRunTime = youTubePlayer.getDurationMillis() - (int) timeRemaining;
-                                youTubePlayer.seekToMillis(restRunTime);
                             }
                         }
 

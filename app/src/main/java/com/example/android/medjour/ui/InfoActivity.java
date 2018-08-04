@@ -10,7 +10,7 @@ import com.example.android.medjour.utils.JournalUtils;
 
 public class InfoActivity extends AppCompatActivity {
 
-    ActivityInfoBinding infoBinding;
+    private ActivityInfoBinding infoBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

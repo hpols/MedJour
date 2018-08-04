@@ -7,7 +7,6 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- in case the user wants to add vibration function to the callback -->
     <uses-permission android:name="android.permission.VIBRATE" />
-    <uses-permission android:name="android.permission.ACCESS_NOTIFICATION_POLICY" />
 
     <application
         android:allowBackup="true"
@@ -16,6 +15,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".ui.OverviewActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -29,7 +29,8 @@
             android:theme="@style/EntryTheme" />
         <activity
             android:name=".settings.SettingsActivity"
-            android:theme="@style/SettingsTheme" />
+            android:theme="@style/SettingsTheme"/>
+        <activity android:name=".ui.InfoActivity" />
 
         <service
             android:name=".notification.NotificationJobService"
@@ -52,6 +53,7 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/med_jour_widget_info" />
         </receiver>
+
         <!-- enable reading of pdf files created -->
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -62,12 +64,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
         <!-- Enables the Google Pay API -->
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />
-
-        <activity android:name=".ui.InfoActivity"></activity>
     </application>
-
 </manifest>

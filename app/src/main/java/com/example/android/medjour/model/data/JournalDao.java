@@ -23,15 +23,6 @@ public interface JournalDao {
     @Query("SELECT * FROM journal")
     LiveData<List<JournalEntry>> getAllEntries();
 
-    @Query("SELECT SUM(prepTime) FROM journal")
-    long getTotalPrepTime();
-
-    @Query("SELECT SUM(medTime) FROM journal")
-    long getTotalMedTime();
-
-    @Query("SELECT SUM(revTime) FROM journal")
-    long getTotalRevTime();
-
     @Query("SELECT date FROM journal ORDER BY date DESC LIMIT 1")
     String getLastEntryDate();
 

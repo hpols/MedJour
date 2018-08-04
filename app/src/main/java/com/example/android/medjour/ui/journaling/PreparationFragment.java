@@ -20,10 +20,10 @@ import com.example.android.medjour.utils.JournalUtils;
  */
 public class PreparationFragment extends Fragment {
 
-    long prepStartTime;
-    FragmentPreparationBinding prepBinder;
-    toMeditationCallback meditationCallback;
-    private String PREP_START_TIME = "preparation start time key";
+    private long prepStartTime;
+    private FragmentPreparationBinding prepBinder;
+    private toMeditationCallback meditationCallback;
+    private final String PREP_START_TIME = "preparation start time key";
 
     public interface toMeditationCallback {
         void toMeditation(long preparationTime, boolean prepTimeLimitReached);

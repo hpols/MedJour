@@ -14,7 +14,7 @@ import timber.log.Timber;
 
 public class JournalViewModel extends AndroidViewModel {
 
-    private LiveData<List<JournalEntry>> journalEntries;
+    private final LiveData<List<JournalEntry>> journalEntries;
 
     public JournalViewModel(@NonNull Application application) {
         super(application);

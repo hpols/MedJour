@@ -16,17 +16,17 @@ import com.example.android.medjour.model.DateConverter;
 import java.util.concurrent.TimeUnit;
 
 public class JournalUtils {
-    public static long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
-    public static long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
+    public static final long MAX_PREP_TIME = TimeUnit.MINUTES.toMillis(5); //5 minutes
+    public static final long MAX_REVIEW_TIME = TimeUnit.MINUTES.toMillis(10); //10 minutes
 
     private static SharedPreferences sharedPref;
 
-    private static String TOTAL_TIME = "total_time";
+    private static final String TOTAL_TIME = "total_time";
     public static final int NO_TOT_TIME = 0; //no time has been logged via the entries so far
-    private static String LAST_DATE = "last_date";
-    public static String PREP_FLAG = "preparation_call";
-    public static String REVIEW_FLAG = "review_call";
-    public static String WIDGET_CALL = "widget_actvity";
+    private static final String LAST_DATE = "last_date";
+    public static final String PREP_FLAG = "preparation_call";
+    public static final String REVIEW_FLAG = "review_call";
+    public static final String WIDGET_CALL = "widget_actvity";
 
     public static final int NOT_SILENCE = 100;
     public static final int NOT_NORMAL = 200;
@@ -64,7 +64,7 @@ public class JournalUtils {
      * @return the boolean confirming the last entry was today or not
      */
     public static boolean hasMeditatedToday(Context ctxt) {
-        String lastDate = retrieveLastDate(ctxt, null);
+        String lastDate = retrieveLastDate(ctxt);
 
         String today = String.valueOf(DateConverter.toDate(System.currentTimeMillis()));
 
@@ -255,10 +255,9 @@ public class JournalUtils {
      * retrieve the date of the last date from the db
      *
      * @param ctxt       the context to call the sharedPreference from
-     * @param widgetCall identifies the calling activity
      * @return the last date
      */
-    public static String retrieveLastDate(Context ctxt, String widgetCall) {
+    public static String retrieveLastDate(Context ctxt) {
         sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
         return sharedPref.getString(LAST_DATE, "");
     }

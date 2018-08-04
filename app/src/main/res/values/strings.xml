@@ -1,165 +1,177 @@
 <resources>
     <string name="app_name">MeditationJournal</string>
 
-    <!--Meditations to be replaced by C.MI. links when rolled out for student & non-student use-->
-    <string name="meditation_test">kyWeRdcGzKA</string>
-    <string name="meditation_5min">gJ5LtUsHXt4</string>
-    <string name="meditation_10min">4hXYRXaJdtk</string>
-    <string name="meditation_15min">7RDoi3RyIFg</string>
-    <string name="meditation_20min">_wxQGO_Pw-w</string>
-    <string name="meditation_30min">8K6acvCdQqU</string>
-    <string name="meditation_45min">unq70DyzeZI</string>
+    <!-- ******** -->
+    <!-- SETTINGS & MENUS & DIALOGS -->
+    <!-- ******** -->
 
-    <!-- Settings -->
     <!-- durations -->
-    <string name="min_5">5 minutes</string>
-    <string name="min_10">10 minutes</string>
-    <string name="min_15">15 minutes</string>
-    <string name="min_20">20 minutes</string>
-    <string name="min_30">30 minutes</string>
-    <string name="min_45">45 minutes</string>
-    <string name="min_5_value">5</string>
-    <string name="min_10_value">10</string>
-    <string name="min_15_value">15</string>
-    <string name="min_20_value">20</string>
-    <string name="min_30_value">30</string>
-    <string name="min_45_value">45</string>
+    <string name="min_5" translatable="true">5 minutes</string>
+    <string name="min_10" translatable="true">10 minutes</string>
+    <string name="min_15" translatable="true">15 minutes</string>
+    <string name="min_20" translatable="true">20 minutes</string>
+    <string name="min_30" translatable="true">30 minutes</string>
+    <string name="min_45" translatable="true">45 minutes</string>
+    <string name="min_5_value" translatable="false">5</string>
+    <string name="min_10_value" translatable="false">10</string>
+    <string name="min_15_value" translatable="false">15</string>
+    <string name="min_20_value" translatable="false">20</string>
+    <string name="min_30_value" translatable="false">30</string>
+    <string name="min_45_value" translatable="false">45</string>
 
     <!--callback choices-->
-    <string name="sound_callback">Sound</string>
-    <string name="video_callback">Meditation Video</string>
-    <string name="sound_value_callback">Sound</string>
-    <string name="video_value_callback">Meditation Video</string>
+    <string name="sound_callback" translatable="false">Sound</string>
+    <string name="video_callback" translatable="false">Meditation Video</string>
+    <string name="sound_value_callback" translatable="true">Sound</string>
+    <string name="video_value_callback" translatable="true">Meditation Video</string>
+
     <!--app sounds -->
-    <string name="a_tone">A Tone</string>
-    <string name="computer_magic">Computer Magic</string>
-    <string name="metal_gong">Gong</string>
-    <string name="temple_bell">Temple Bell</string>
-    <string name="a_tone_value">a_tone</string>
-    <string name="computer_magic_value">computer_Magic</string>
-    <string name="metal_gong_value">metal_gong</string>
-    <string name="temple_bell_value">temple_bell</string>
-
-    <!-- Activation dialog-->
-    <string name="activation_text">This journal for your meditation practice is developed based on the guidelines of the C.MI. course*. However it can be used by anyone who to keep track of their practice.\n\nIf you are a C.MI. student press the \"C.MI. Student\" button and enter your activation code. Otherwise press the \"free use\" button to continue.</string>
-    <string name="activation_student_bt">C.MI. Student</string>
-    <string name="activation_free_bt">Free use</string>
-    <string name="toast_successful_student_activation">Student features are now unlocked</string>
-    <string name="toast_faulty_student_authentification">The authentification key does not match</string>
-
-    <!-- OverView Activity -->
-    <string name="main_entry_bt">Add new Journal Entry</string>
-    <string name="main_journal_bt">View Journal</string>
-
-    <!-- new entry flow -->
-    <string name="preparation_instruction">Take your time to setup and prepare.\n\nOnce you are ready, click on \"start meditation\".</string>
-    <string name="preparation_start_bt">Start Meditation</string>
-    <string name="category_date">Date:</string>
-    <string name="review_preparation_time">Preparation Time:</string>
-    <string name="review_meditation_time">meditation time</string>
-    <string name="review_prep_label">Preparation time:</string>
-    <string name="review_med_label">Meditation time:</string>
-    <string name="review_assessment_label">Self-assessment:</string>
-    <string name="review_assessment_hint">Write your self-assessment …</string>
-
-    <!-- journal -->
-    <string name="export_journal_bt">Export Journal</string>
-    <string name="journal_total_label">Total:</string>
-    <string name="journal_review_time">Review Time:</string>
-    <string name="journal_session_label">Session:</string>
-    <string name="journal_date_label">Date:</string>
-    <string name="journal_prep_label">Prep:</string>
-    <string name="journal_med_label">Med:</string>
-    <string name="journal_rev_label">Rev:</string>
-    <string name="overview_no_entries">You have not written any journal entries so far.\nStart by tapping \"Add new journal entry \".</string>
-    <string name="review_toast_part_I">As per the C.MI. regulations only a maximum of</string>
-    <string name="review_toast_part_II_prep">mins can be logged. Hence the preparation time has been adjusted accordingly.</string>
-    <string name="review_toast_part_II_review">mins can be logged. Hence the review time has been adjusted accordingly.</string>
-
-    <!-- menu -->
-    <string name="menu_title_settings">Settings</string>
-    <string name="menu_guidelines">Guidelines</string>
-    <string name="menu_information">C.MI. Information</string>
-    <string name="menu_activation">Enter Student Code</string>
-    <string name="menu_upgrade">Upgrade $</string>
+    <string name="a_tone" translatable="true">A Tone</string>
+    <string name="computer_magic" translatable="true">Computer Magic</string>
+    <string name="metal_gong" translatable="true">Gong</string>
+    <string name="temple_bell" translatable="true">Temple Bell</string>
+    <string name="a_tone_value" translatable="false">a_tone</string>
+    <string name="computer_magic_value" translatable="false">computer_Magic</string>
+    <string name="metal_gong_value" translatable="false">metal_gong</string>
+    <string name="temple_bell_value" translatable="false">temple_bell</string>
 
     <!-- preferences -->
-    <string name="settings_callback_needs_upgrade">Callback by sound. To switch to the video option, please select \"Upgrade\" from the menu when viewing your overview, or become a student</string>
+    <string name="settings_callback_needs_upgrade" translatable="true">Callback by sound. To switch to the video option, please select \"Upgrade\" from the menu when viewing your overview, or become a student</string>
 
-    <string name="pref_med_time_title">Meditation Time</string>
-    <string name="pref_time_title">Time of Day</string>
-    <string name="pref_tone_title">Audio from your device</string>
-    <string name="pref_med_reminder_title">Meditation Reminder</string>
-    <string name="pref_title_vibrate">Add vibration to callback</string>
+    <string name="pref_med_time_title" translatable="true">Meditation Time</string>
+    <string name="pref_time_title" translatable="true">Time of Day</string>
+    <string name="pref_tone_title" translatable="true">Audio from your device</string>
+    <string name="pref_med_reminder_title" translatable="true">Meditation Reminder</string>
+    <string name="pref_title_vibrate" translatable="true">Add vibration to callback</string>
 
-    <string name="pref_key_med_time">Meditation Time</string>
-    <string name="pref_key_callback">callback type</string>
-    <string name="pref_key_sounds">callback sound</string>
-    <string name="pref_key_ringtone">ringtone</string>
-    <string name="pref_key_tone">audio from device</string>
-    <string name="pref_med_reminder_key">meditation reminder</string>
-    <string name="pref_key_reminder_time">timeInMinutes</string>
-    <string name="pref_key_vibrate">vibrate at callback</string>
+    <string name="pref_key_med_time" translatable="false">Meditation Time</string>
+    <string name="pref_key_callback" translatable="false">callback type</string>
+    <string name="pref_key_sounds" translatable="false">callback sound</string>
+    <string name="pref_key_ringtone" translatable="false">ringtone</string>
+    <string name="pref_key_tone" translatable="false">audio from device</string>
+    <string name="pref_med_reminder_key" translatable="false">meditation reminder</string>
+    <string name="pref_key_reminder_time" translatable="false">timeInMinutes</string>
+    <string name="pref_key_vibrate" translatable="false">vibrate at callback</string>
 
-    <string name="pref_default_reminder_time">12:00 pm</string>
-
-    <string name="pref_reminder_on">Reminder enabled</string>
-    <string name="pref_reminder_off">Reminder disabled</string>
-    <string name="pref_sum_off_vibrate">don\'t vibrate</string>
-    <string name="pref_sum_on_vibrate">vibrate</string>
+    <string name="pref_default_reminder_time" translatable="false">12:00 pm</string>
+    <string name="pref_reminder_on" translatable="true">Reminder enabled</string>
+    <string name="pref_reminder_off" translatable="true">Reminder disabled</string>
+    <string name="pref_sum_off_vibrate" translatable="true">don\'t vibrate</string>
+    <string name="pref_sum_on_vibrate" translatable="true">vibrate</string>
 
     <!-- sound preference -->
-    <string name="ok">OK</string>
-    <string name="cancel">Cancel</string>
+    <string name="ok" translatable="true">OK</string>
+    <string name="cancel" translatable="true">Cancel</string>
     <string name="ringtoneTitle">Ringtone</string>
     <string name="ringtoneSummary">Ringtone: %s</string>
 
+    <!-- menu -->
+    <string name="menu_title_settings" translatable="true">Settings</string>
+    <string name="menu_guidelines" translatable="true">Guidelines</string>
+    <string name="menu_information" translatable="true">C.MI. Information</string>
+    <string name="menu_activation" translatable="true">Enter Student Code</string>
+    <string name="menu_upgrade" translatable="true">Upgrade $</string>
+
+    <!-- Activation dialog-->
+    <string name="activation_text" translatable="true">This journal for your meditation practice is developed based on the guidelines of the C.MI. course*. However it can be used by anyone who to keep track of their practice.\n\nIf you are a C.MI. student press the \"C.MI. Student\" button and enter your activation code. Otherwise press the \"free use\" button to continue.</string>
+    <string name="activation_student_bt" translatable="true">C.MI. Student</string>
+    <string name="activation_free_bt" translatable="true">Free use</string>
+    <string name="toast_successful_student_activation" translatable="true">Student features are now unlocked</string>
+    <string name="toast_faulty_student_authentification" translatable="true">The authentication key does not match</string>
+
+    <!-- ********** -->
+    <!-- ACTIVITIES -->
+    <!-- ********** -->
+
+    <!-- OverView Activity -->
+    <string name="main_entry_bt" translatable="true">Add new Journal Entry</string>
+    <string name="main_journal_bt" translatable="true">View Journal</string>
+
+    <!-- NewEntry Activity (Fragment flow) -->
+    <string name="preparation_instruction" translatable="true">Take your time to setup and prepare.\n\nOnce you are ready, click on \"start meditation\".</string>
+    <string name="preparation_start_bt" translatable="true">Start Meditation</string>
+    <string name="category_date" translatable="true">Date:</string>
+    <string name="review_preparation_time" translatable="true">Preparation Time:</string>
+    <string name="review_meditation_time" translatable="true">meditation time</string>
+    <string name="review_prep_label" translatable="true">Preparation time:</string>
+    <string name="review_med_label" translatable="true">Meditation time:</string>
+    <string name="review_assessment_label" translatable="true">Self-assessment:</string>
+    <string name="review_assessment_hint" translatable="true">Write your self-assessment …</string>
+
+    <!--Meditations to be replaced by C.MI. links when rolled out for student & non-student use-->
+    <string name="meditation_test" translatable="false">kyWeRdcGzKA</string>
+    <string name="meditation_5min" translatable="false">gJ5LtUsHXt4</string>
+    <string name="meditation_10min" translatable="false">4hXYRXaJdtk</string>
+    <string name="meditation_15min" translatable="false">7RDoi3RyIFg</string>
+    <string name="meditation_20min" translatable="false">_wxQGO_Pw-w</string>
+    <string name="meditation_30min" translatable="false">8K6acvCdQqU</string>
+    <string name="meditation_45min" translatable="false">unq70DyzeZI</string>
+
+    <!-- Journal Activity -->
+    <string name="export_journal_bt" translatable="true">Export Journal</string>
+    <string name="journal_total_label" translatable="true">Total:</string>
+    <string name="journal_review_time" translatable="true">Review Time:</string>
+    <string name="journal_session_label" translatable="true">Session:</string>
+    <string name="journal_date_label" translatable="true">Date:</string>
+    <string name="journal_prep_label" translatable="true">Prep:</string>
+    <string name="journal_med_label" translatable="true">Med:</string>
+    <string name="journal_rev_label" translatable="true">Rev:</string>
+    <string name="overview_no_entries" translatable="true">You have not written any journal entries so far.\nStart by tapping \"Add new journal entry \".</string>
+    <string name="review_toast_part_I" translatable="true">As per the C.MI. regulations only a maximum of</string>
+    <string name="review_toast_part_II_prep" translatable="true">mins can be logged. Hence the preparation time has been adjusted accordingly.</string>
+    <string name="review_toast_part_II_review" translatable="true">mins can be logged. Hence the review time has been adjusted accordingly.</string>
+    <string name="storage_permission_request" translatable="true">Please give the app external storage permission and try again.</string>
+    <string name="medJour_directory_name" translatable="false">meditationJournal</string>
+
+    <!-- Info / Guideline Acitivity -->
+    <string name="guideline_text" translatable="true">This text will offer the C.MI. student access to the provided guidelines, for meditation, logging and submission. This text will be developed based on the course organiser\'s directions. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam id diam maecenas ultricies mi eget. Faucibus interdum posuere lorem ipsum dolor sit amet consectetur. In cursus turpis massa tincidunt dui ut ornare lectus. Nibh tortor id aliquet lectus. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Maecenas ultricies mi eget mauris. Ac auctor augue mauris augue neque gravida in fermentum et. Adipiscing commodo elit at imperdiet dui accumsan sit amet nulla. Arcu dictum varius duis at consectetur lorem. At consectetur lorem donec massa sapien faucibus et molestie ac. Amet massa vitae tortor condimentum lacinia quis vel eros donec. Mauris sit amet massa vitae tortor condimentum lacinia quis vel. \n\nAc odio tempor orci dapibus ultrices in iaculis nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium lectus. Leo integer malesuada nunc vel risus commodo. Mauris ultrices eros in cursus turpis. Eu ultrices vitae auctor eu augue. Sollicitudin tempor id eu nisl nunc mi ipsum. Molestie at elementum eu facilisis sed odio morbi. Tincidunt vitae semper quis lectus nulla. Diam volutpat commodo sed egestas egestas fringilla phasellus. Mattis molestie a iaculis at. Egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. \n\nTellus orci ac auctor augue mauris augue. Nulla facilisi cras fermentum odio eu feugiat pretium nibh. Cursus turpis massa tincidunt dui ut. Habitant morbi tristique senectus et netus et malesuada fames ac. Praesent elementum facilisis leo vel fringilla est. Hac habitasse platea dictumst vestibulum rhoncus. Diam sollicitudin tempor id eu. Tincidunt lobortis feugiat vivamus at augue. Sapien faucibus et molestie ac feugiat. Gravida arcu ac tortor dignissim convallis aenean et tortor at. Tortor vitae purus faucibus ornare suspendisse sed nisi lacus sed. Imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada. Neque laoreet suspendisse interdum consectetur. In fermentum posuere urna nec. Lorem ipsum dolor sit amet consectetur adipiscing. \n\nGravida neque convallis a cras semper. Hac habitasse platea dictumst quisque sagittis purus sit amet. Diam maecenas sed enim ut. Auctor urna nunc id cursus metus aliquam eleifend. Diam ut venenatis tellus in metus vulputate eu. Iaculis nunc sed augue lacus viverra vitae congue. Dolor sit amet consectetur adipiscing elit ut. Tincidunt vitae semper quis lectus nulla at volutpat diam. Ut porttitor leo a diam sollicitudin tempor. Amet consectetur adipiscing elit duis tristique sollicitudin. A pellentesque sit amet porttitor eget dolor morbi. Egestas diam in arcu cursus euismod quis viverra. Eleifend mi in nulla posuere. Morbi tristique senectus et netus et. Arcu bibendum at varius vel pharetra. Et malesuada fames ac turpis egestas. Nullam ac tortor vitae purus faucibus. Imperdiet sed euismod nisi porta lorem mollis aliquam ut. Aliquam nulla facilisi cras fermentum odio eu feugiat. Mattis pellentesque id nibh tortor id aliquet. \n\nUltrices eros in cursus turpis massa tincidunt dui ut ornare. In mollis nunc sed id semper risus. Massa id neque aliquam vestibulum morbi blandit. Consectetur adipiscing elit pellentesque habitant morbi tristique senectus et. Odio aenean sed adipiscing diam donec adipiscing. Magnis dis parturient montes nascetur. Sed adipiscing diam donec adipiscing. Metus aliquam eleifend mi in nulla posuere sollicitudin. Odio aenean sed adipiscing diam donec. Scelerisque felis imperdiet proin fermentum leo vel orci porta. Adipiscing commodo elit at imperdiet dui accumsan. Nunc lobortis mattis aliquam faucibus purus in. Convallis convallis tellus id interdum velit laoreet id. Eu turpis egestas pretium aenean pharetra magna ac placerat. Lorem ipsum dolor sit amet consectetur adipiscing. Eget est lorem ipsum dolor. Scelerisque fermentum dui faucibus in ornare quam viverra orci. Integer quis auctor elit sed. Donec massa sapien faucibus et molestie ac feugiat. Feugiat sed lectus vestibulum mattis.</string>
+    <string name="info_text" translatable="true">This text offers a general overview of the C.MI. program. The text will be accumulated based on the information provided on the website to those interested, along with maybe some extra information, as detailed by the course organiser. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam id diam maecenas ultricies mi eget. Faucibus interdum posuere lorem ipsum dolor sit amet consectetur. In cursus turpis massa tincidunt dui ut ornare lectus. Nibh tortor id aliquet lectus. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Maecenas ultricies mi eget mauris. Ac auctor augue mauris augue neque gravida in fermentum et. Adipiscing commodo elit at imperdiet dui accumsan sit amet nulla. Arcu dictum varius duis at consectetur lorem. At consectetur lorem donec massa sapien faucibus et molestie ac. Amet massa vitae tortor condimentum lacinia quis vel eros donec. Mauris sit amet massa vitae tortor condimentum lacinia quis vel. \n\nAc odio tempor orci dapibus ultrices in iaculis nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium lectus. Leo integer malesuada nunc vel risus commodo. Mauris ultrices eros in cursus turpis. Eu ultrices vitae auctor eu augue. Sollicitudin tempor id eu nisl nunc mi ipsum. Molestie at elementum eu facilisis sed odio morbi. Tincidunt vitae semper quis lectus nulla. Diam volutpat commodo sed egestas egestas fringilla phasellus. Mattis molestie a iaculis at. Egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. \n\nTellus orci ac auctor augue mauris augue. Nulla facilisi cras fermentum odio eu feugiat pretium nibh. Cursus turpis massa tincidunt dui ut. Habitant morbi tristique senectus et netus et malesuada fames ac. Praesent elementum facilisis leo vel fringilla est. Hac habitasse platea dictumst vestibulum rhoncus. Diam sollicitudin tempor id eu. Tincidunt lobortis feugiat vivamus at augue. Sapien faucibus et molestie ac feugiat. Gravida arcu ac tortor dignissim convallis aenean et tortor at. Tortor vitae purus faucibus ornare suspendisse sed nisi lacus sed. Imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada. Neque laoreet suspendisse interdum consectetur. In fermentum posuere urna nec. Lorem ipsum dolor sit amet consectetur adipiscing. \n\nGravida neque convallis a cras semper. Hac habitasse platea dictumst quisque sagittis purus sit amet. Diam maecenas sed enim ut. Auctor urna nunc id cursus metus aliquam eleifend. Diam ut venenatis tellus in metus vulputate eu. Iaculis nunc sed augue lacus viverra vitae congue. Dolor sit amet consectetur adipiscing elit ut. Tincidunt vitae semper quis lectus nulla at volutpat diam. Ut porttitor leo a diam sollicitudin tempor. Amet consectetur adipiscing elit duis tristique sollicitudin. A pellentesque sit amet porttitor eget dolor morbi. Egestas diam in arcu cursus euismod quis viverra. Eleifend mi in nulla posuere. Morbi tristique senectus et netus et. Arcu bibendum at varius vel pharetra. Et malesuada fames ac turpis egestas. Nullam ac tortor vitae purus faucibus. Imperdiet sed euismod nisi porta lorem mollis aliquam ut. Aliquam nulla facilisi cras fermentum odio eu feugiat. Mattis pellentesque id nibh tortor id aliquet. \n\nUltrices eros in cursus turpis massa tincidunt dui ut ornare. In mollis nunc sed id semper risus. Massa id neque aliquam vestibulum morbi blandit. Consectetur adipiscing elit pellentesque habitant morbi tristique senectus et. Odio aenean sed adipiscing diam donec adipiscing. Magnis dis parturient montes nascetur. Sed adipiscing diam donec adipiscing. Metus aliquam eleifend mi in nulla posuere sollicitudin. Odio aenean sed adipiscing diam donec. Scelerisque felis imperdiet proin fermentum leo vel orci porta. Adipiscing commodo elit at imperdiet dui accumsan. Nunc lobortis mattis aliquam faucibus purus in. Convallis convallis tellus id interdum velit laoreet id. Eu turpis egestas pretium aenean pharetra magna ac placerat. Lorem ipsum dolor sit amet consectetur adipiscing. Eget est lorem ipsum dolor. Scelerisque fermentum dui faucibus in ornare quam viverra orci. Integer quis auctor elit sed. Donec massa sapien faucibus et molestie ac feugiat. Feugiat sed lectus vestibulum mattis.</string>
+
+    <!-- ********************* -->
+    <!-- NOTIFICATION & WIDGET -->
+    <!-- ********************* -->
+
     <!-- Notification -->
-    <string name="notification_channel_name">Primary</string>
+    <string name="notification_channel_name" translatable="false">Primary</string>
     <string name="notification_title" translatable="true">You have not meditated today. </string>
     <string name="notification_body" translatable="true">Recharge by taking a break from the world and meditating.</string>
     <string name="ignore_action_title" translatable="true">Not now</string>
     <string name="open_action_title" translatable="true">Open Meditation Journal</string>
-    <string name="expand_and_collapse_text">button to expand or collapse the text</string>
-    <string name="unsaved_alert">You have made changes to this entry. Do you want to discard them?</string>
-    <string name="discard_button">Discard</string>
-    <string name="keep_editing_button">Keep Editing</string>
-    <string name="delete_query">Delete this item? This action cannot be undone</string>
-    <string name="delete_button">Delete</string>
-    <string name="cancel_button">Cancel</string>
-    <string name="pref_save">save</string>
-    <string name="pref_edit">edit</string>
-    <string name="pref_delete">delete</string>
-    <string name="pref_leave_edit_options">leave edit options</string>
+    <string name="expand_and_collapse_text" translatable="true">button to expand or collapse the text</string>
+    <string name="unsaved_alert" translatable="true">You have made changes to this entry. Do you want to discard them?</string>
+    <string name="discard_button" translatable="true">Discard</string>
+    <string name="keep_editing_button" translatable="true">Keep Editing</string>
+    <string name="delete_query" translatable="true">Delete this item? This action cannot be undone</string>
+    <string name="delete_button" translatable="true">Delete</string>
+    <string name="cancel_button" translatable="true">Cancel</string>
+    <string name="pref_save" translatable="true">save</string>
+    <string name="pref_edit" translatable="true">edit</string>
+    <string name="pref_delete" translatable="true">delete</string>
+    <string name="pref_leave_edit_options" translatable="true">leave edit options</string>
 
     <!-- widget-->
-    <string name="add_widget">Add widget</string>
-    <string name="widget_add_entry">add entry</string>
-    <string name="widget_icon">Journal Meditation Icon</string>
-    <string name="total_time_label">Total time: \u0020</string>
-    <string name="widget_last_login">Last entry: \u0020</string>
-    <string name="widget_no_entries">Add your first entry</string>
-    <string name="video_not_available">The video could not be loaded. Hence a sound callback has been implemented.</string>
+    <string name="add_widget" translatable="true">Add widget</string>
+    <string name="widget_add_entry" translatable="true">add entry</string>
+    <string name="widget_icon" translatable="true">Journal Meditation Icon</string>
+    <string name="total_time_label" translatable="true">Total time: \u0020</string>
+    <string name="widget_last_login" translatable="true">Last entry: \u0020</string>
+    <string name="widget_no_entries" translatable="true">Add your first entry</string>
+    <string name="video_not_available" translatable="true">The video could not be loaded. Hence a sound callback has been implemented.</string>
 
-
-    <string name="storage_permission_request">Please give the app external storage permission and try again.</string>
-    <string name="medJour_directory_name">meditationJournal</string>
+    <!-- ********** -->
+    <!-- GOOGLE API -->
+    <!-- ********** -->
 
     <!-- google ads & pay-->
-    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="googlepay_status_unavailable" translatable="false">Unfortunately, Google Pay is not available on this phone.</string>
-    <string name="google_pay_button_contDescrip">Google pay button</string>
-    <string name="dialog_total_label">Total: \$</string>
-    <string name="upgradeItem_videos">Unlock meditation videos</string>
-    <string name="upgradeItem_ads">remove ads</string>
-    <string name="initial_price">0.00</string>
-    <string name="toast_no_upgrade_selected">Please select an item or click cancel.</string>
-    <string name="pref_title_callback">Callback type</string>
-    <string name="time_string_pm">pm</string>
-    <string name="time_string_am">am</string>
-
-    <!-- Info & guideline texts -->
-    <string name="guideline_text">This text will offer the C.MI. student access to the provided guidelines, for meditation, logging and submission. This text will be developed based on the course organiser\'s directions. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam id diam maecenas ultricies mi eget. Faucibus interdum posuere lorem ipsum dolor sit amet consectetur. In cursus turpis massa tincidunt dui ut ornare lectus. Nibh tortor id aliquet lectus. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Maecenas ultricies mi eget mauris. Ac auctor augue mauris augue neque gravida in fermentum et. Adipiscing commodo elit at imperdiet dui accumsan sit amet nulla. Arcu dictum varius duis at consectetur lorem. At consectetur lorem donec massa sapien faucibus et molestie ac. Amet massa vitae tortor condimentum lacinia quis vel eros donec. Mauris sit amet massa vitae tortor condimentum lacinia quis vel. \n\nAc odio tempor orci dapibus ultrices in iaculis nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium lectus. Leo integer malesuada nunc vel risus commodo. Mauris ultrices eros in cursus turpis. Eu ultrices vitae auctor eu augue. Sollicitudin tempor id eu nisl nunc mi ipsum. Molestie at elementum eu facilisis sed odio morbi. Tincidunt vitae semper quis lectus nulla. Diam volutpat commodo sed egestas egestas fringilla phasellus. Mattis molestie a iaculis at. Egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. \n\nTellus orci ac auctor augue mauris augue. Nulla facilisi cras fermentum odio eu feugiat pretium nibh. Cursus turpis massa tincidunt dui ut. Habitant morbi tristique senectus et netus et malesuada fames ac. Praesent elementum facilisis leo vel fringilla est. Hac habitasse platea dictumst vestibulum rhoncus. Diam sollicitudin tempor id eu. Tincidunt lobortis feugiat vivamus at augue. Sapien faucibus et molestie ac feugiat. Gravida arcu ac tortor dignissim convallis aenean et tortor at. Tortor vitae purus faucibus ornare suspendisse sed nisi lacus sed. Imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada. Neque laoreet suspendisse interdum consectetur. In fermentum posuere urna nec. Lorem ipsum dolor sit amet consectetur adipiscing. \n\nGravida neque convallis a cras semper. Hac habitasse platea dictumst quisque sagittis purus sit amet. Diam maecenas sed enim ut. Auctor urna nunc id cursus metus aliquam eleifend. Diam ut venenatis tellus in metus vulputate eu. Iaculis nunc sed augue lacus viverra vitae congue. Dolor sit amet consectetur adipiscing elit ut. Tincidunt vitae semper quis lectus nulla at volutpat diam. Ut porttitor leo a diam sollicitudin tempor. Amet consectetur adipiscing elit duis tristique sollicitudin. A pellentesque sit amet porttitor eget dolor morbi. Egestas diam in arcu cursus euismod quis viverra. Eleifend mi in nulla posuere. Morbi tristique senectus et netus et. Arcu bibendum at varius vel pharetra. Et malesuada fames ac turpis egestas. Nullam ac tortor vitae purus faucibus. Imperdiet sed euismod nisi porta lorem mollis aliquam ut. Aliquam nulla facilisi cras fermentum odio eu feugiat. Mattis pellentesque id nibh tortor id aliquet. \n\nUltrices eros in cursus turpis massa tincidunt dui ut ornare. In mollis nunc sed id semper risus. Massa id neque aliquam vestibulum morbi blandit. Consectetur adipiscing elit pellentesque habitant morbi tristique senectus et. Odio aenean sed adipiscing diam donec adipiscing. Magnis dis parturient montes nascetur. Sed adipiscing diam donec adipiscing. Metus aliquam eleifend mi in nulla posuere sollicitudin. Odio aenean sed adipiscing diam donec. Scelerisque felis imperdiet proin fermentum leo vel orci porta. Adipiscing commodo elit at imperdiet dui accumsan. Nunc lobortis mattis aliquam faucibus purus in. Convallis convallis tellus id interdum velit laoreet id. Eu turpis egestas pretium aenean pharetra magna ac placerat. Lorem ipsum dolor sit amet consectetur adipiscing. Eget est lorem ipsum dolor. Scelerisque fermentum dui faucibus in ornare quam viverra orci. Integer quis auctor elit sed. Donec massa sapien faucibus et molestie ac feugiat. Feugiat sed lectus vestibulum mattis.</string>
-    <string name="info_text">This text offers a general overview of the C.MI. program. The text will be accumulated based on the information provided on the website to those interested, along with maybe some extra information, as detailed by the course organiser. \n\nLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Aliquam id diam maecenas ultricies mi eget. Faucibus interdum posuere lorem ipsum dolor sit amet consectetur. In cursus turpis massa tincidunt dui ut ornare lectus. Nibh tortor id aliquet lectus. Egestas erat imperdiet sed euismod nisi porta lorem mollis. Maecenas ultricies mi eget mauris. Ac auctor augue mauris augue neque gravida in fermentum et. Adipiscing commodo elit at imperdiet dui accumsan sit amet nulla. Arcu dictum varius duis at consectetur lorem. At consectetur lorem donec massa sapien faucibus et molestie ac. Amet massa vitae tortor condimentum lacinia quis vel eros donec. Mauris sit amet massa vitae tortor condimentum lacinia quis vel. \n\nAc odio tempor orci dapibus ultrices in iaculis nunc. Feugiat pretium nibh ipsum consequat nisl vel pretium lectus. Leo integer malesuada nunc vel risus commodo. Mauris ultrices eros in cursus turpis. Eu ultrices vitae auctor eu augue. Sollicitudin tempor id eu nisl nunc mi ipsum. Molestie at elementum eu facilisis sed odio morbi. Tincidunt vitae semper quis lectus nulla. Diam volutpat commodo sed egestas egestas fringilla phasellus. Mattis molestie a iaculis at. Egestas fringilla phasellus faucibus scelerisque eleifend donec pretium vulputate. \n\nTellus orci ac auctor augue mauris augue. Nulla facilisi cras fermentum odio eu feugiat pretium nibh. Cursus turpis massa tincidunt dui ut. Habitant morbi tristique senectus et netus et malesuada fames ac. Praesent elementum facilisis leo vel fringilla est. Hac habitasse platea dictumst vestibulum rhoncus. Diam sollicitudin tempor id eu. Tincidunt lobortis feugiat vivamus at augue. Sapien faucibus et molestie ac feugiat. Gravida arcu ac tortor dignissim convallis aenean et tortor at. Tortor vitae purus faucibus ornare suspendisse sed nisi lacus sed. Imperdiet massa tincidunt nunc pulvinar sapien et ligula ullamcorper malesuada. Neque laoreet suspendisse interdum consectetur. In fermentum posuere urna nec. Lorem ipsum dolor sit amet consectetur adipiscing. \n\nGravida neque convallis a cras semper. Hac habitasse platea dictumst quisque sagittis purus sit amet. Diam maecenas sed enim ut. Auctor urna nunc id cursus metus aliquam eleifend. Diam ut venenatis tellus in metus vulputate eu. Iaculis nunc sed augue lacus viverra vitae congue. Dolor sit amet consectetur adipiscing elit ut. Tincidunt vitae semper quis lectus nulla at volutpat diam. Ut porttitor leo a diam sollicitudin tempor. Amet consectetur adipiscing elit duis tristique sollicitudin. A pellentesque sit amet porttitor eget dolor morbi. Egestas diam in arcu cursus euismod quis viverra. Eleifend mi in nulla posuere. Morbi tristique senectus et netus et. Arcu bibendum at varius vel pharetra. Et malesuada fames ac turpis egestas. Nullam ac tortor vitae purus faucibus. Imperdiet sed euismod nisi porta lorem mollis aliquam ut. Aliquam nulla facilisi cras fermentum odio eu feugiat. Mattis pellentesque id nibh tortor id aliquet. \n\nUltrices eros in cursus turpis massa tincidunt dui ut ornare. In mollis nunc sed id semper risus. Massa id neque aliquam vestibulum morbi blandit. Consectetur adipiscing elit pellentesque habitant morbi tristique senectus et. Odio aenean sed adipiscing diam donec adipiscing. Magnis dis parturient montes nascetur. Sed adipiscing diam donec adipiscing. Metus aliquam eleifend mi in nulla posuere sollicitudin. Odio aenean sed adipiscing diam donec. Scelerisque felis imperdiet proin fermentum leo vel orci porta. Adipiscing commodo elit at imperdiet dui accumsan. Nunc lobortis mattis aliquam faucibus purus in. Convallis convallis tellus id interdum velit laoreet id. Eu turpis egestas pretium aenean pharetra magna ac placerat. Lorem ipsum dolor sit amet consectetur adipiscing. Eget est lorem ipsum dolor. Scelerisque fermentum dui faucibus in ornare quam viverra orci. Integer quis auctor elit sed. Donec massa sapien faucibus et molestie ac feugiat. Feugiat sed lectus vestibulum mattis.</string>
-
+    <string name="banner_ad_unit_id" translatable="false">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="googlepay_status_unavailable" translatable="true">Unfortunately, Google Pay is not available on this phone.</string>
+    <string name="google_pay_button_contDescrip" translatable="true">Google pay button</string>
+    <string name="dialog_total_label" translatable="true">Total: \$</string>
+    <string name="upgradeItem_videos" translatable="true">Unlock meditation videos</string>
+    <string name="upgradeItem_ads" translatable="true">remove ads</string>
+    <string name="initial_price" translatable="false">0.00</string>
+    <string name="toast_no_upgrade_selected" translatable="true">Please select an item or click cancel.</string>
+    <string name="pref_title_callback" translatable="true">Callback type</string>
+    <string name="time_string_pm" translatable="false">pm</string>
+    <string name="time_string_am" translatable="false">am</string>
 </resources>

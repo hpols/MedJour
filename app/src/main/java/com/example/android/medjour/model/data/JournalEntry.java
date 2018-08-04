@@ -8,10 +8,10 @@ import android.arch.persistence.room.PrimaryKey;
 @Entity(tableName = "journal")
 public class JournalEntry {
 
-    public final static String PREP_TIME = "prepTime";
-    public final static String MED_TIME = "medTime";
-    public final static String REV_TIME = "revTime";
-    public final static String ENTRY_DATE = "date";
+    private final static String PREP_TIME = "prepTime";
+    private final static String MED_TIME = "medTime";
+    private final static String REV_TIME = "revTime";
+    private final static String ENTRY_DATE = "date";
 
     @PrimaryKey(autoGenerate = true)
     private int id;
@@ -49,24 +49,12 @@ public class JournalEntry {
         return date;
     }
 
-    public void setDate(String date) {
-        this.date = date;
-    }
-
     public long getPrepTime() {
         return prepTime;
     }
 
-    public void setPrepTime(long prepTime) {
-        this.prepTime = prepTime;
-    }
-
     public long getMedTime() {
         return medTime;
-    }
-
-    public void setMedTime(long medTime) {
-        this.medTime = medTime;
     }
 
     public long getRevTime() {

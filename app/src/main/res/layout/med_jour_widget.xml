@@ -18,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignBottom="@id/widget_icon"
-        android:layout_toLeftOf="@+id/widget_summary"
         android:layout_toStartOf="@+id/widget_summary"
         android:background="@drawable/shadow"
         android:contentDescription="@string/widget_add_entry"
@@ -32,10 +31,8 @@
         android:layout_centerVertical="true"
         android:layout_margin="@dimen/half_space"
         android:layout_toEndOf="@id/widget_icon"
-        android:layout_toRightOf="@id/widget_icon"
         android:lineSpacingMultiplier="1.2"
         android:paddingEnd="@dimen/half_space"
-        android:paddingRight="@dimen/half_space"
         tools:ignore="RtlSymmetry"
         tools:text="Last Entry: 01/01/2018" />
 </RelativeLayout>

@@ -24,7 +24,6 @@
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/std_space"
         android:layout_marginEnd="@dimen/std_space"
-        android:layout_marginRight="@dimen/std_space"
         android:clickable="true"
         android:focusable="true"
         android:visibility="gone"

@@ -37,16 +37,8 @@ public class EntryExecutor {
         return diskIO;
     }
 
-    public Executor mainThread() {
-        return mainThread;
-    }
-
-    public Executor networkIO() {
-        return networkIO;
-    }
-
     private static class MainThreadExecutor implements Executor {
-        private Handler mainThreadHandler = new Handler(Looper.getMainLooper());
+        private final Handler mainThreadHandler = new Handler(Looper.getMainLooper());
 
         @Override
         public void execute(@NonNull Runnable command) {

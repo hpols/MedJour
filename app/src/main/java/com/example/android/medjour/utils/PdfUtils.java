@@ -30,9 +30,9 @@ import timber.log.Timber;
 
 public class PdfUtils {
 
-    private static String RETURN = "\n";
+    private static final String RETURN = "\n";
 
-    private Context ctxt;
+    private final Context ctxt;
 
     public PdfUtils(Context ctxt) {
         this.ctxt = ctxt;

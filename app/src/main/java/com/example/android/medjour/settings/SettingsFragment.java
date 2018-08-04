@@ -16,11 +16,11 @@ import com.example.android.medjour.utils.JournalUtils;
 public class SettingsFragment extends PreferenceFragment implements
         SharedPreferences.OnSharedPreferenceChangeListener {
 
-    SharedPreferences sharedPref;
+    private SharedPreferences sharedPref;
 
     //preferences that need further setup beyond what the xml provides
-    ListPreference callback;
-    SoundPreference sound;
+    private ListPreference callback;
+    private SoundPreference sound;
 
     /**
      * create the Fragment, set the preference summaries and ensure the sound preference is only

@@ -28,7 +28,7 @@ public class NotificationJobService extends JobService {
             protected Object doInBackground(Object[] objects) {
                 Context ctxt = NotificationJobService.this;
                 JournalDb dB = JournalDb.getInstance(ctxt);
-                fireNotification(ctxt, dB);
+                fireNotification(ctxt);
 
                 boolean reschedule = false;
                 jobFinished(job, reschedule);
@@ -55,7 +55,7 @@ public class NotificationJobService extends JobService {
 
     // Only fire one notification per day, regardless of whether the user followed its prompt or
     // not.
-    public void fireNotification(Context ctxt, JournalDb dB) {
+    private void fireNotification(Context ctxt) {
         long timeSinceLastNotification = NotificationUtils.timeSinceLastNot(ctxt);
 
         boolean dayPassedSinceLastNot = false;

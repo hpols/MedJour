@@ -17,7 +17,7 @@ import timber.log.Timber;
 public class SettingsUtils {
 
     public static boolean reminderIsUpdated;
-    private SharedPreferences sharedPref;
+    private final SharedPreferences sharedPref;
     private static final String STARTED_TIME = "started_time";
 
     //Meditation lengths
@@ -29,7 +29,7 @@ public class SettingsUtils {
     private static final int MIN_45 = 45;
 
     //Callback types
-    public static final int APP_SOUND_CB = 1;
+    private static final int APP_SOUND_CB = 1;
     public static final int VIDEO_CB = 2;
 
     public SettingsUtils(Context ctxt) {

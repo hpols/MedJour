@@ -24,21 +24,9 @@ import java.text.NumberFormat;
  */
 public class TimePreference extends DialogPreference implements NumberPicker.Formatter {
 
-    // Predefined constants to simplify time conversion
-    private static final long SECOND = 1000;
-    private static final long MINUTE = 60 * SECOND;
-    private static final long HOUR = 60 * MINUTE;
-
     @Override
     public String format(int value) {
         return String.format("%02d", value);
-    }
-
-    //Storage for a time interval
-    private class Interval {
-        public int mHours;
-        public int mMinutes;
-        public int mSeconds;
     }
 
     // References to the pickers
@@ -120,8 +108,8 @@ public class TimePreference extends DialogPreference implements NumberPicker.For
 
 
             // Get the current value as a string
-            String currentValue = settwoDigit((hourPicker).getValue()) + COLON +
-                    settwoDigit(minutePicker.getValue()) + SPACE + meridianId;
+            String currentValue = setTwoDigit((hourPicker).getValue()) + COLON +
+                    setTwoDigit(minutePicker.getValue()) + SPACE + meridianId;
 
             if (callChangeListener(currentValue)) {
                 persistString(currentValue);
@@ -129,7 +117,7 @@ public class TimePreference extends DialogPreference implements NumberPicker.For
         }
     }
 
-    private String settwoDigit(int value) {
+    private String setTwoDigit(int value) {
         NumberFormat formatter = new DecimalFormat("00");
 
         return formatter.format(value);

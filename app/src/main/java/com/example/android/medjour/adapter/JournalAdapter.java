@@ -13,7 +13,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.example.android.medjour.R;
-import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.utils.JournalUtils;
 
@@ -26,9 +25,8 @@ import timber.log.Timber;
 
 public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalViewHolder> {
 
-    private Context ctxt;
+    private final Context ctxt;
     private List<JournalEntry> journalEntries;
-    private JournalDb dB;
     public boolean entryHasChanged = false; //flag whether there has been a change
 
     private static ArrayList<CardView> cardViewArrayList = new ArrayList<>();
@@ -49,9 +47,8 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
     }
 
     //constructor
-    public JournalAdapter(Context ctxt, JournalDb dB, DialogClicks dialogClicks) {
+    public JournalAdapter(Context ctxt, DialogClicks dialogClicks) {
         this.ctxt = ctxt;
-        this.dB = dB;
         this.dialogClicks = dialogClicks;
     }
 
@@ -165,9 +162,8 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
         boolean isCollapsed = true;
 
-        public JournalViewHolder setAssessment(String assessment) {
+        void setAssessment(String assessment) {
             this.assessment = assessment;
-            return this;
         }
 
         String assessment;

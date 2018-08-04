@@ -31,18 +31,19 @@ import java.util.concurrent.TimeUnit;
  */
 public class ReviewFragment extends Fragment {
 
-    FragmentReviewBinding reviewBinding;
+    private FragmentReviewBinding reviewBinding;
 
-    JournalEntry journalEntry;
-    JournalDb dB;
+    private JournalEntry journalEntry;
+    private JournalDb dB;
 
-    long startReviewTime, reviewTime;
+    private long startReviewTime;
+    private long reviewTime;
 
-    String currentAssessment;
-    String dateDisplay;
-    private String CURRENT_ASSESSMENT = "current assessment key";
-    private String REVIEW_TIME = "review time key";
-    private String DATE_KEY = "date key";
+    private String currentAssessment;
+    private String dateDisplay;
+    private final String CURRENT_ASSESSMENT = "current assessment key";
+    private final String REVIEW_TIME = "review time key";
+    private final String DATE_KEY = "date key";
 
 
     public ReviewFragment() {

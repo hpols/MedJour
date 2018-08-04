@@ -50,9 +50,7 @@ public class NotificationUtils {
     private static final int INTENT_OPEN_CHECKBUDDY = 333;
     private static final int REMINDER_CHANNEL_ID = 123;
 
-    public static final int SET_NOTIFICATION_FOR_TODAY = 0;
-    public static final int SET_NOTIFICATION_FOR_TOMORROW = 1;
-    public static String KEY_LATEST_NOT = "latestNotification";
+    public static final String KEY_LATEST_NOT = "latestNotification";
 
     /**
      * Schedule the notification job
@@ -142,13 +140,13 @@ public class NotificationUtils {
         scheduleNotification(ctxt);
     }
 
-    public static NotificationCompat.Action openApp(Context ctxt) {
+    public static void openApp(Context ctxt) {
         Intent openCheckBuddy = new Intent(ctxt, OverviewActivity.class);
         openCheckBuddy.setAction(NotificationTask.ACTION_OPEN_APP);
         PendingIntent openCheckBuddyPend = PendingIntent.getActivity(ctxt, INTENT_OPEN_CHECKBUDDY,
                 openCheckBuddy, PendingIntent.FLAG_CANCEL_CURRENT);
 
-        return new NotificationCompat.Action(R.mipmap.ic_launcher_round,
+        new NotificationCompat.Action(R.mipmap.ic_launcher_round,
                 ctxt.getString(R.string.open_action_title), openCheckBuddyPend);
     }
 
