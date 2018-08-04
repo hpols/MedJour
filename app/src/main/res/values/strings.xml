@@ -35,10 +35,10 @@
     <string name="computer_magic">Computer Magic</string>
     <string name="metal_gong">Gong</string>
     <string name="temple_bell">Temple Bell</string>
-    <string name="a_tone_value">A Tone</string>
-    <string name="computer_magic_value">Computer Magic</string>
-    <string name="metal_gong_value">Metal Gong</string>
-    <string name="temple_bell_value">Temple Bell</string>
+    <string name="a_tone_value">a_tone</string>
+    <string name="computer_magic_value">computer_Magic</string>
+    <string name="metal_gong_value">metal_gong</string>
+    <string name="temple_bell_value">temple_bell</string>
 
     <!-- Activation dialog-->
     <string name="activation_text">This journal for your meditation practice is developed based on the guidelines of the C.MI. course*. However it can be used by anyone who to keep track of their practice.\n\nIf you are a C.MI. student press the \"C.MI. Student\" button and enter your activation code. Otherwise press the \"free use\" button to continue.</string>

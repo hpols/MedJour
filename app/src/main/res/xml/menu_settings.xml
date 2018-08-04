@@ -20,8 +20,8 @@
         android:defaultValue="@string/temple_bell_value"
         android:key="@string/pref_key_sounds"
         android:title="Choose Callback Sound"
-        auto:appOwnSounds="@array/pref_app_sounds"
-        auto:appOwnSoundsTitles="@array/pref_app_sounds_values"
+        auto:appOwnSounds="@array/pref_app_sounds_values"
+        auto:appOwnSoundsTitles="@array/pref_app_sounds"
         auto:ringtoneType="notification" />
 
     <SwitchPreference
