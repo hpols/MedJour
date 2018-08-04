@@ -54,19 +54,6 @@
                     app:layout_constraintStart_toEndOf="@+id/journal_acc_time_label"
                     app:layout_constraintTop_toTopOf="@+id/journal_acc_time_label"
                     tools:text="10h 35min" />
-
-                <Button
-                    android:id="@+id/export_journal_bt"
-                    style="@style/bgColor_bt"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/half_space"
-                    android:layout_marginEnd="@dimen/half_space"
-                    android:layout_marginTop="@dimen/half_space"
-                    android:text="@string/export_journal_bt"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
     </android.support.constraint.ConstraintLayout>

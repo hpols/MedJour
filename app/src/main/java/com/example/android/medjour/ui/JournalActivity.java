@@ -1,17 +1,12 @@
 package com.example.android.medjour.ui;
 
-import android.Manifest;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
 import android.databinding.DataBindingUtil;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.NavUtils;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,7 +15,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Toast;
 
 import com.example.android.medjour.BuildConfig;
 import com.example.android.medjour.R;
@@ -32,14 +26,9 @@ import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.model.data.JournalEntry;
 import com.example.android.medjour.model.viewModels.JournalViewModel;
 import com.example.android.medjour.utils.JournalUtils;
-import com.example.android.medjour.utils.PdfUtils;
 import com.example.android.medjour.widget.WidgetService;
-import com.itextpdf.text.DocumentException;
 
-import java.io.FileNotFoundException;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 import java.util.List;
 
 import timber.log.Timber;
@@ -52,14 +41,11 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     private JournalViewHolder journalViewHolder;
 
     private JournalEntry currentEntry;
-    private List<JournalEntry> journalEntries;
     private int selectedEntryId;
 
     private boolean showEditOptions;
     private boolean showSave;
     private boolean entryDeleted;
-    private static final String WRITE_PERMIT = "external writing permission";
-    private static final String READ_PERMIT = "external reading permission";
 
 
     @Override
@@ -87,94 +73,12 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
             public void onChanged(@Nullable List<JournalEntry> journalEntries) {
                 Timber.d("Updating entries from LiveData in ViewModel");
                 journalAdapter.setJournalEntries(journalEntries);
-                JournalActivity.this.journalEntries = journalEntries;
             }
         });
 
         //setup the total time Ui.
         setTotalTime();
 
-        //when clicked set the pdf-writing action in motion
-        journalBinder.exportJournalBt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                final PdfUtils pdfUtils = new PdfUtils(JournalActivity.this);
-                if (isStoragePermissionGranted(WRITE_PERMIT)) {
-                    Date date = new Date();
-                    final String fileName = "MeditationJournal"
-                            + new SimpleDateFormat("yyyyMMdd_HHmmss").format(date) + ".pdf";
-
-                    try {
-                        pdfUtils.writePdf(journalEntries, fileName);
-                    } catch (FileNotFoundException | DocumentException e) {
-                        e.printStackTrace();
-                    }
-                    Snackbar snackbar = Snackbar.make(journalBinder.journalFooter,
-                            "Pdf was successfully written", Snackbar.LENGTH_INDEFINITE);
-                    snackbar.setAction("View", new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            pdfUtils.readPdf(fileName);
-                        }
-                    });
-                    snackbar.show();
-                } else {
-                    Toast.makeText(JournalActivity.this,
-                            R.string.storage_permission_request, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
-    }
-
-    /**
-     * ensure external sotrage permission is granted. See: https://stackoverflow.com/a/33162451/7601437
-     *
-     * @param permit what kind of permit are we looking for?
-     * @return boolean indicating whehter permission is granted or denied.
-     */
-    private boolean isStoragePermissionGranted(String permit) {
-
-        String androidPermission = null;
-        switch (permit) {
-            case READ_PERMIT:
-                androidPermission = android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-                break;
-            case WRITE_PERMIT:
-                androidPermission = Manifest.permission.READ_EXTERNAL_STORAGE;
-                break;
-        }
-        if (Build.VERSION.SDK_INT >= 23) {
-            if (checkSelfPermission(androidPermission) == PackageManager.PERMISSION_GRANTED) {
-                Timber.v("External storage permission is granted");
-                return true;
-            } else {
-
-                Timber.v("External storage permission is revoked");
-                ActivityCompat.requestPermissions(this,
-                        new String[]{androidPermission}, 1);
-                return false;
-            }
-        } else { //permission is automatically granted on sdk<23 upon installation
-            Timber.v("External storage permission is granted");
-            return true;
-        }
-    }
-
-    /**
-     * In case of there being no external storage permission granted, make a request to the user.
-     *
-     * @param requestCode  is the code detailing the request
-     * @param permissions  is the permission being requested
-     * @param grantResults is the result of the request
-     */
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            Timber.v("Permission: " + permissions[0] + "was " + grantResults[0]);
-            //resume tasks needing this permission
-        }
     }
 
     /**
