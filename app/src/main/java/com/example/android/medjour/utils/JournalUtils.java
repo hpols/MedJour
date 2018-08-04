@@ -220,6 +220,19 @@ public class JournalUtils {
         editor.apply();
     }
 
+    //TODO: work with long so we can retrieve dd/mm/yyyy pertaining to locale format.
+
+    /**
+     * retrieve the date of the last date from the db
+     *
+     * @param ctxt       the context to call the sharedPreference from
+     * @return the last date
+     */
+    public static String retrieveLastDate(Context ctxt) {
+        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+        return sharedPref.getString(LAST_DATE, "");
+    }
+
     /**
      * update the total time in sharedPreference for future use in Overview, Journal and Widget
      *
@@ -247,19 +260,6 @@ public class JournalUtils {
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putLong(TOTAL_TIME, updatedTotalTime);
         editor.apply();
-    }
-
-    //TODO: work with long so we can retrieve dd/mm/yyyy pertaining to locale format.
-
-    /**
-     * retrieve the date of the last date from the db
-     *
-     * @param ctxt       the context to call the sharedPreference from
-     * @return the last date
-     */
-    public static String retrieveLastDate(Context ctxt) {
-        sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
-        return sharedPref.getString(LAST_DATE, "");
     }
 
     /**

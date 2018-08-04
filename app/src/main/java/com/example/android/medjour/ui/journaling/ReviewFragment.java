@@ -27,7 +27,7 @@ import java.util.Date;
 import java.util.concurrent.TimeUnit;
 
 /**
- * A simple {@link Fragment} subclass.
+ * {@link ReviewFragment} ties up the meditation flow.
  */
 public class ReviewFragment extends Fragment {
 

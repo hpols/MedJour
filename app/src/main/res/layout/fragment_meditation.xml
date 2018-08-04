@@ -17,7 +17,7 @@
 
     </FrameLayout>
 
-    <!-- TODO: for testing purposes. Remove once app is completely functional -->
+    <!-- for testing purposes -->
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/meditation_next_test_bt"
         android:layout_width="wrap_content"

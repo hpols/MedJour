@@ -276,7 +276,6 @@ public class MeditationFragment extends Fragment {
 
         //fade out the timer. The user does not need it and should be encouraged not to repeatedly
         // look at the screen, but to sink into the meditation until the callback is provided.
-        // TODO: add http://techdocs.zebra.com/emdk-for-android/3-1/tutorial/tutMxDisplayManager/
         counterTv.setVisibility(View.VISIBLE);
         counterTv.setAlpha(1);
         counterTv.animate().setDuration(60000).alpha(0).setListener(new Animator.AnimatorListener() {
@@ -478,9 +477,6 @@ public class MeditationFragment extends Fragment {
                                         revertToTimer();
                                     }
                                 });
-
-                                //TODO: whenever the user interacts with the playback, this equals the end of
-                                //their meditation as they are no longer in focus.
 
                                 youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
                             }
