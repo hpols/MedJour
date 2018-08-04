@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:ads="http://schemas.android.com/apk/res-auto">
+    xmlns:tools="http://schemas.android.com/tools">
 
     <android.support.constraint.ConstraintLayout
         android:id="@+id/main_fragment_container"
@@ -11,33 +11,19 @@
         tools:context=".MainActivity">
 
         <TextView
-            android:id="@+id/main_journal_tv"
-            style="@style/text"
-            android:layout_marginBottom="@dimen/std_space"
-            android:padding="@dimen/std_space"
-            android:textSize="20sp"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toTopOf="@+id/main_cumulative_tv"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_chainStyle="packed"
-            tools:text="Journal Number 1 (of 3)" />
-
-        <TextView
             android:id="@+id/main_cumulative_tv"
             style="@style/text"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/std_space"
-            android:layout_marginLeft="@dimen/std_space"
-            android:layout_marginRight="@dimen/std_space"
             android:layout_marginStart="@dimen/std_space"
+            android:layout_marginTop="16dp"
             android:gravity="center_horizontal"
             app:layout_constraintBottom_toTopOf="@+id/guideline"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/main_journal_tv"
+            app:layout_constraintTop_toBottomOf="@+id/imageView"
             tools:text="Cumulative Time: 8h 30 min" />
 
         <android.support.constraint.Guideline
@@ -71,15 +57,28 @@
 
         <com.google.android.gms.ads.AdView
             android:id="@+id/main_adView"
-            ads:adSize="BANNER"
-            ads:adUnitId="@string/banner_ad_unit_id"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
+            ads:adSize="BANNER"
+            ads:adUnitId="@string/banner_ad_unit_id"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
 
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="8dp"
+            android:contentDescription="@string/app_logo_contentDescrip"
+            android:src="@drawable/ic_launcher_foreground"
+            ads:layout_constraintEnd_toEndOf="parent"
+            ads:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toTopOf="@+id/main_cumulative_tv"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
     </android.support.constraint.ConstraintLayout>
 </layout>

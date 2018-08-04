@@ -174,4 +174,5 @@
     <string name="pref_title_callback" translatable="true">Callback type</string>
     <string name="time_string_pm" translatable="false">pm</string>
     <string name="time_string_am" translatable="false">am</string>
+    <string name="app_logo_contentDescrip">App logo</string>
 </resources>

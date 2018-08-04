@@ -92,12 +92,18 @@ public class NotificationUtils {
         return System.currentTimeMillis() - lastNotificationTimeMillis;
     }
 
+    /**
+     * cancel the notification
+     */
     private static void cancelNotification() {
         dispatcher.cancel(NOTIFICATION_JOB_TAG);
-
     }
 
-    //create and set the notification
+    /**
+     * create and set the notification
+     *
+     * @param ctxt is the context within which the notification is built
+     */
     public static synchronized void issueNotification(@NonNull final Context ctxt) {
         NotificationManager notMan = (NotificationManager)
                 ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
@@ -111,7 +117,7 @@ public class NotificationUtils {
 
         NotificationCompat.Builder notBuild =
                 new NotificationCompat.Builder(ctxt, REMINDER_CHANNEL_STRING_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher_round)
+                        .setSmallIcon(R.drawable.ic_launcher_foreground)
                         .setLargeIcon(largeIcon(ctxt))
                         .setContentTitle(ctxt.getString(R.string.notification_title))
                         .setContentText(ctxt.getString(R.string.notification_body))
@@ -130,16 +136,22 @@ public class NotificationUtils {
         notMan.notify(REMINDER_CHANNEL_ID, notBuild.build());
     }
 
-    //clear the notification
+    /**clear the notification
+     *
+     * @param ctxt is the context within which the notification is running
+     */
     public static void clearAllNotifications(Context ctxt) {
         NotificationManager notMan = (NotificationManager)
                 ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
         notMan.cancelAll();
-        //TODO: added these two lines – now no more notification?
         cancelNotification();
         scheduleNotification(ctxt);
     }
 
+    /** call to open the app
+     *
+     * @param ctxt is the context within which the notification is running
+     */
     public static void openApp(Context ctxt) {
         Intent openCheckBuddy = new Intent(ctxt, OverviewActivity.class);
         openCheckBuddy.setAction(NotificationTask.ACTION_OPEN_APP);
@@ -150,6 +162,11 @@ public class NotificationUtils {
                 ctxt.getString(R.string.open_action_title), openCheckBuddyPend);
     }
 
+    /** action to open the app
+     *
+     * @param ctxt is the context within which the notification is running
+     * @return the action
+     */
     private static NotificationCompat.Action openMedJour(Context ctxt) {
         Intent openCheckBuddy = new Intent(ctxt, OverviewActivity.class);
         openCheckBuddy.setAction(NotificationTask.ACTION_OPEN_APP);
@@ -160,6 +177,11 @@ public class NotificationUtils {
                 ctxt.getString(R.string.open_action_title), openCheckBuddyPend);
     }
 
+    /** action to ignore the reminder
+     *
+     * @param ctxt is the context within which the notification is running
+     * @return the action
+     */
     private static NotificationCompat.Action ignoreReminder(Context ctxt) {
         Intent ignoreReminder = new Intent(ctxt, NotificationService.class);
         ignoreReminder.setAction(NotificationTask.ACTION_DISMISS_NOT);
@@ -170,6 +192,11 @@ public class NotificationUtils {
                 ctxt.getString(R.string.ignore_action_title), ignoreReminderPend);
     }
 
+    /** pending intent to create the reminder
+     *
+     * @param ctxt is the context within which the notification is running
+     * @return the pending intent that holds the reminder
+     */
     private static PendingIntent reminderIntent(Context ctxt) {
         Intent startActivity = new Intent(ctxt, OverviewActivity.class);
 
@@ -177,9 +204,14 @@ public class NotificationUtils {
                 PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
+    /** create the large icon
+     *
+     * @param context is the context for the image
+     * @return the bitmap of the icon
+     */
     private static Bitmap largeIcon(Context context) {
         Resources res = context.getResources();
 
-        return BitmapFactory.decodeResource(res, R.mipmap.ic_launcher_round);
+        return BitmapFactory.decodeResource(res, R.drawable.ic_launcher_foreground);
     }
 }
