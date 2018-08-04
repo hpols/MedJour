@@ -31,16 +31,8 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
 
     private static ArrayList<CardView> cardViewArrayList = new ArrayList<>();
 
-    public static ArrayList<CardView> getCardViewArrayList() {
-        return cardViewArrayList;
-    }
 
-    public static void setCardViewArrayList(ArrayList<CardView> cardViewArrayList) {
-        JournalAdapter.cardViewArrayList = cardViewArrayList;
-    }
-
-
-    private DialogClicks dialogClicks;
+    private final DialogClicks dialogClicks;
 
     public interface DialogClicks {
         void getEntryId(int entryId);
@@ -155,7 +147,7 @@ public class JournalAdapter extends RecyclerView.Adapter<JournalAdapter.JournalV
         @BindView(R.id.focus_grabber)
         TextView focusGrabber;
 
-        //the recyclerviewHolder
+        //the recyclerViewHolder
         @BindView(R.id.rv_holder)
             CardView rvHolder;
 

@@ -67,8 +67,8 @@ public class OverviewActivity extends AppCompatActivity
     private ArrayList<UpgradeItem> upgradeItemArrayList;
     private boolean[] upgradeChoice;
     private View dialogPay;
-    private ImageButton googlepayBt;
-    private TextView googlepayTotal;
+    private ImageButton googlePayBt;
+    private TextView googlePayTotal;
     private boolean googlePayAvailable;
     private String priceString;
 
@@ -87,7 +87,6 @@ public class OverviewActivity extends AppCompatActivity
         PreferenceManager.getDefaultSharedPreferences(this)
                 .registerOnSharedPreferenceChangeListener(this);
 
-
         //integrating stetho for debugging
         Stetho.initializeWithDefaults(this);
 
@@ -95,7 +94,7 @@ public class OverviewActivity extends AppCompatActivity
             Timber.plant(new Timber.DebugTree());
         }
 
-        if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_REPEAT)) {
+        if (!JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_REPEAT)) {
             showActivationDialog();
             JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_REPEAT);
         }
@@ -132,8 +131,8 @@ public class OverviewActivity extends AppCompatActivity
 
         //ready payments in case the user wants to upgrade
         //see : https://developers.google.com/pay/api/android/guides/tutorial
-        if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)
-                || !JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
+        if (!JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_STUDENT)
+                || !JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
             paymentsClient = PayUtils.createPaymentsClient(this);
             checkIsReadyToPay();
         }
@@ -149,7 +148,7 @@ public class OverviewActivity extends AppCompatActivity
      * show ad to non-student users
      */
     private void setupAdBanner() {
-        if (!JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
+        if (!JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
             AdRequest adRequest = new AdRequest.Builder()
                     .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                     .build();
@@ -189,7 +188,7 @@ public class OverviewActivity extends AppCompatActivity
                             JournalUtils.setSharedPrefBoo(OverviewActivity.this,
                                     false, JournalUtils.BOO_STUDENT);
                             Toast.makeText(OverviewActivity.this,
-                                    R.string.toast_faulty_student_authentification,
+                                    R.string.toast_faulty_student_authentication,
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -208,6 +207,7 @@ public class OverviewActivity extends AppCompatActivity
         if (totalTime == JournalUtils.NO_TOT_TIME) {
             totalTimeText = getString(R.string.overview_no_entries);
             overviewBinder.mainCumulativeTv.setText(totalTimeText);
+            overviewBinder.mainJournalBt.setVisibility(View.GONE);
         } else {
             totalTimeText = getString(R.string.total_time_label) + JournalUtils.toMinutes(totalTime);
             overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
@@ -247,8 +247,8 @@ public class OverviewActivity extends AppCompatActivity
         MenuItem upgrade = menu.findItem(R.id.menu_activation);
         MenuItem info = menu.findItem(R.id.menu_guidelines);
 
-        if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)
-                || JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
+        if (JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_STUDENT)
+                || JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_FULLY_UPGRADED)) {
             activation.setVisible(false);
             upgrade.setVisible(false);
         } else {
@@ -256,7 +256,7 @@ public class OverviewActivity extends AppCompatActivity
             upgrade.setVisible(true);
         }
 
-        if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
+        if (JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
             info.setTitle(R.string.menu_guidelines);
         } else {
             info.setTitle(R.string.menu_information);
@@ -298,10 +298,10 @@ public class OverviewActivity extends AppCompatActivity
         if (googlePayAvailable) {
 
             //remove items which have already been bought
-            if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_ADS_REMOVED)) {
+            if (JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_ADS_REMOVED)) {
                 upgradeItemArrayList.remove(1);
             }
-            if (JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_VIDEOS_UNLOCKED)) {
+            if (JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_VIDEOS_UNLOCKED)) {
                 upgradeItemArrayList.remove(0);
             }
 
@@ -313,7 +313,7 @@ public class OverviewActivity extends AppCompatActivity
                         + PayUtils.microsToString(currentUpgradeItem.getPriceMicros()) + ")";
             }
 
-            googlepayBt.setOnClickListener(new View.OnClickListener() {
+            googlePayBt.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     if (!priceString.equals(getString(R.string.initial_price))) {
@@ -335,7 +335,7 @@ public class OverviewActivity extends AppCompatActivity
                                 }
                             }
                             priceString = getUpgradePrice(upgradeChoice);
-                            googlepayTotal.setText(priceString);
+                            googlePayTotal.setText(priceString);
                         }
                     })
                     .setView(dialogPay)
@@ -382,9 +382,9 @@ public class OverviewActivity extends AppCompatActivity
             upgradeItemArrayList.add(new UpgradeItem(getString(R.string.upgradeItem_ads), 5 * 1000000));
 
             dialogPay = LayoutInflater.from(this).inflate(R.layout.dialog_googlepay, null);
-            googlepayBt = dialogPay.findViewById(R.id.googlepay_bt);
-            googlepayTotal = dialogPay.findViewById(R.id.dialog_total_tv);
-            googlepayTotal.setText(getString(R.string.initial_price)
+            googlePayBt = dialogPay.findViewById(R.id.googlepay_bt);
+            googlePayTotal = dialogPay.findViewById(R.id.dialog_total_tv);
+            googlePayTotal.setText(getString(R.string.initial_price)
             );
             googlePayAvailable = true;
         } else {
@@ -414,7 +414,7 @@ public class OverviewActivity extends AppCompatActivity
                 }
 
                 // Re-enables the Pay with Google button.
-                googlepayBt.setClickable(true);
+                googlePayBt.setClickable(true);
                 break;
         }
     }
@@ -432,7 +432,7 @@ public class OverviewActivity extends AppCompatActivity
             // If the gateway is set to example, no payment information is returned - instead, the
             // token will only consist of "examplePaymentMethodToken".
             if (token.getToken().equals("examplePaymentMethodToken")) {
-                Snackbar.make(null, "This is but a test implementation of google pay.",
+                Snackbar.make(overviewBinder.mainAdView, R.string.googlePay_test_snack,
                         Snackbar.LENGTH_LONG);
 //                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this)
 //                        .setMessage("This is but a test implementation of google pay.")
@@ -477,13 +477,13 @@ public class OverviewActivity extends AppCompatActivity
     /* This method is called when the Pay with Google button is clicked.*/
     private void requestPayment(String price) {
         // Disables the button to prevent multiple clicks.
-        googlepayBt.setClickable(false);
+        googlePayBt.setClickable(false);
 
         TransactionInfo transaction = PayUtils.createTransaction(price);
         PaymentDataRequest request = PayUtils.createPaymentDataRequest(transaction);
         Task<PaymentData> futurePaymentData = paymentsClient.loadPaymentData(request);
 
-        // AutoResolveHelper awaits the user's chocie and then calls onActivityResult with the result.
+        // AutoResolveHelper awaits the user's choice and then calls onActivityResult with the result.
         AutoResolveHelper.resolveTask(futurePaymentData, this, LOAD_PAYMENT_DATA_REQUEST_CODE);
     }
 

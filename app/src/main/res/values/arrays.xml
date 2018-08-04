@@ -24,7 +24,7 @@
         <item>@string/video_callback</item>
     </string-array>
 
-    <string-array name="pref_entryvalues_callback">
+    <string-array name="pref_entryValues_callback">
         <item>@string/sound_value_callback</item>
         <item>@string/video_value_callback</item>
     </string-array>

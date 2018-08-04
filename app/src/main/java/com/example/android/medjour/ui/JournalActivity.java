@@ -64,7 +64,7 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
         journalBinder.journalRv.setLayoutManager(new LinearLayoutManager(this));
         journalAdapter = new JournalAdapter(this, this);
         journalBinder.journalRv.setAdapter(journalAdapter);
-        Timber.v("adapter and recyclerview setup");
+        Timber.v("adapter and recyclerView setup");
 
         //setup viewModel
         JournalViewModel viewModel = ViewModelProviders.of(this).get(JournalViewModel.class);

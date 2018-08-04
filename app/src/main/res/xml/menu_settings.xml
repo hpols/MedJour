@@ -12,7 +12,7 @@
     <ListPreference
         android:defaultValue="@string/sound_callback"
         android:entries="@array/pref_entries_callback"
-        android:entryValues="@array/pref_entryvalues_callback"
+        android:entryValues="@array/pref_entryValues_callback"
         android:key="@string/pref_key_callback"
         android:title="@string/pref_title_callback" />
 

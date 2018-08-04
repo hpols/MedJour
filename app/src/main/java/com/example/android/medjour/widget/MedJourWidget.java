@@ -25,12 +25,13 @@ public class MedJourWidget extends AppWidgetProvider {
 
         String widgetText;
         if (JournalUtils.retrieveTotalTimeFromPref(ctxt) == JournalUtils.NO_TOT_TIME) {
-            widgetText = ctxt.getString(R.string.overview_no_entries);
+            widgetText = ctxt.getString(R.string.widget_no_entries);
+        } else {
+            widgetText = ctxt.getString(R.string.total_time_label)
+                    + String.valueOf(JournalUtils.toMinutes(JournalUtils.retrieveTotalTimeFromPref(ctxt)))
+                    + "\n" + ctxt.getString(R.string.widget_last_login)
+                    + JournalUtils.retrieveLastDate(ctxt);
         }
-        widgetText = ctxt.getString(R.string.total_time_label)
-                + String.valueOf(JournalUtils.toMinutes(JournalUtils.retrieveTotalTimeFromPref(ctxt)))
-                + "\n" + ctxt.getString(R.string.widget_last_login)
-                + JournalUtils.retrieveLastDate(ctxt);
         // Construct the RemoteViews object
         views.setTextViewText(R.id.widget_summary, widgetText);
 

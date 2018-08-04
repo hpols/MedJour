@@ -26,9 +26,6 @@ public interface JournalDao {
     @Query("SELECT date FROM journal ORDER BY date DESC LIMIT 1")
     String getLastEntryDate();
 
-    @Query("SELECT * FROM journal WHERE id = :entryId")
-    LiveData<JournalEntry> getEntry(int entryId);
-
     //––– UPDATE Methods –––//
 
     @Update(onConflict = OnConflictStrategy.REPLACE)

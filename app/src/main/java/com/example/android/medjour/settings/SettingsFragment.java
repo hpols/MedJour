@@ -47,8 +47,8 @@ public class SettingsFragment extends PreferenceFragment implements
 
         callback = (ListPreference) findPreference(getString(R.string.pref_key_callback));
 
-        if (!JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_VIDEOS_UNLOCKED)
-                && !JournalUtils.getsharedPrefBoo(getActivity(), JournalUtils.BOO_STUDENT)) {
+        if (!JournalUtils.getSharedPrefBoo(getActivity(), JournalUtils.BOO_VIDEOS_UNLOCKED)
+                && !JournalUtils.getSharedPrefBoo(getActivity(), JournalUtils.BOO_STUDENT)) {
             callback.setEnabled(false);
             callback.setSummary(getString(R.string.settings_callback_needs_upgrade));
         } else {

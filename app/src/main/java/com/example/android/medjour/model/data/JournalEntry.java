@@ -16,13 +16,13 @@ public class JournalEntry {
     @PrimaryKey(autoGenerate = true)
     private int id;
     @ColumnInfo(name = ENTRY_DATE)
-    private String date;
+    private final String date;
     @ColumnInfo(name = PREP_TIME)
-    private long prepTime;
+    private final long prepTime;
     @ColumnInfo(name = MED_TIME)
-    private long medTime;
+    private final long medTime;
     @ColumnInfo(name = REV_TIME)
-    private long revTime;
+    private final long revTime;
     private String assessment;
 
     //constructor without ID
@@ -61,10 +61,6 @@ public class JournalEntry {
         return revTime;
     }
 
-    public void setRevTime(long revTime) {
-        this.revTime = revTime;
-    }
-
     public String getAssessment() {
         return assessment;
     }
@@ -75,10 +71,6 @@ public class JournalEntry {
 
     public int getId() {
         return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
     }
 
 }

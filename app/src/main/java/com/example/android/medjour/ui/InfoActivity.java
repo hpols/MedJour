@@ -18,7 +18,7 @@ public class InfoActivity extends AppCompatActivity {
         infoBinding = DataBindingUtil.setContentView(this, R.layout.activity_info);
 
         String displayText;
-        if(JournalUtils.getsharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
+        if(JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_STUDENT)) {
             displayText = getString(R.string.guideline_text);
         } else {
             displayText = getString(R.string.info_text);

@@ -165,7 +165,7 @@ public class SoundPreference extends DialogPreference {
     /**
      * set up the dialog
      *
-     * @param builder is the alertdialog.builder to create the dialog
+     * @param builder is the alertDialog.builder to create the dialog
      */
     @Override
     protected void onPrepareDialogBuilder(AlertDialog.Builder builder) {

@@ -58,10 +58,10 @@ public class SettingsUtils {
     }
 
     public int getMeditationCallback(Context ctxt) {
-        String keyforCallback = ctxt.getString(R.string.pref_key_callback);
+        String keyForCallback = ctxt.getString(R.string.pref_key_callback);
         String defaultCallback = ctxt.getString(R.string.sound_callback);
 
-        String chosenCallback = sharedPref.getString(keyforCallback, defaultCallback);
+        String chosenCallback = sharedPref.getString(keyForCallback, defaultCallback);
         if (chosenCallback.equals(ctxt.getString(R.string.sound_callback))) {
             return APP_SOUND_CB;
         } else {
@@ -95,7 +95,7 @@ public class SettingsUtils {
         return soundToPlay;
     }
 
-    public String getVideofromPrefSetting(Context ctxt) {
+    public String getVideoFromPrefSetting(Context ctxt) {
         String video = null;
         switch (getMeditationLength(ctxt)) {
             case MIN_5:
@@ -135,11 +135,11 @@ public class SettingsUtils {
     }
 
     public int getNotificationTime(Context ctxt) {
-        String keyforReminderTime = ctxt.getString(R.string.pref_key_reminder_time);
+        String keyForReminderTime = ctxt.getString(R.string.pref_key_reminder_time);
         String defaultReminderTime = ctxt.getString(R.string.pref_default_reminder_time);
 
         String chosenTime = PreferenceManager.getDefaultSharedPreferences(ctxt)
-                .getString(keyforReminderTime, defaultReminderTime);
+                .getString(keyForReminderTime, defaultReminderTime);
 
         SimpleDateFormat sdf = new SimpleDateFormat("hh:mm a");
         long timeInMils = 0;

@@ -324,7 +324,7 @@ public class MeditationFragment extends Fragment {
      * get the remaining time based by comparing the first time the fragment was entered to the
      * current time
      *
-     * @return the remaining time in miliseconds as a long
+     * @return the remaining time in milliseconds as a long
      */
     private long getTimeRemaining() {
         return medLengthInMillis - (JournalUtils.getNow() - utils.getStartedTime());
@@ -478,7 +478,7 @@ public class MeditationFragment extends Fragment {
                                     }
                                 });
 
-                                youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
+                                youTubePlayer.loadVideo(utils.getVideoFromPrefSetting(getActivity()));
                             }
                         }
 

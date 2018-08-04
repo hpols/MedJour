@@ -55,7 +55,7 @@ public class NotificationUtils {
     /**
      * Schedule the notification job
      *
-     * @param ctxt the Context within which te notificaiton is scheduled
+     * @param ctxt the Context within which te notification is scheduled
      */
     public static synchronized void scheduleNotification(@NonNull final Context ctxt) {
         if (isInitialized) return;

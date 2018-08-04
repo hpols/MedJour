@@ -11,7 +11,7 @@
         android:layout_width="152dp"
         android:layout_height="48sp"
         android:background="@drawable/googlepay_button_background"
-        android:contentDescription="@string/google_pay_button_contDescrip"
+        android:contentDescription="@string/googlePay_button_contDescrip"
         android:foreground="@drawable/googlepay_button_overlay"
         android:padding="8dp"
         android:src="@drawable/googlepay_button_content" />
@@ -29,7 +29,8 @@
         app:layout_constraintEnd_toStartOf="@+id/dialog_total_tv"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toEndOf="@+id/googlepay_bt"
-        app:layout_constraintTop_toTopOf="@+id/googlepay_bt" />
+        app:layout_constraintTop_toTopOf="@+id/googlepay_bt"
+        android:layout_marginRight="8dp" />
 
     <TextView
         android:id="@+id/dialog_total_tv"

@@ -13,13 +13,9 @@ public class EntryExecutor {
     private static final Object LOCK = new Object();
     private static EntryExecutor instance;
     private final Executor diskIO;
-    private final Executor mainThread;
-    private final Executor networkIO;
 
     private EntryExecutor(Executor diskIO, Executor networkIO, Executor mainThread) {
         this.diskIO = diskIO;
-        this.networkIO = networkIO;
-        this.mainThread = mainThread;
     }
 
     public static EntryExecutor getInstance() {

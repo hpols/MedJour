@@ -19,7 +19,8 @@
         android:labelFor="@+id/rv_total_tv"
         android:text="@string/journal_session_label"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="@dimen/half_space" />
 
     <TextView
         android:id="@+id/rv_total_tv"
@@ -30,7 +31,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
         app:layout_constraintStart_toEndOf="@+id/rv_total_label"
         app:layout_constraintTop_toTopOf="@+id/rv_total_label"
-        tools:text="35 min" />
+        tools:text="35 min"
+        android:layout_marginLeft="@dimen/half_space" />
 
     <TextView
         android:id="@+id/rv_date_label"
@@ -42,7 +44,8 @@
         android:text="@string/journal_date_label"
         app:layout_constraintBottom_toBottomOf="@+id/rv_total_label"
         app:layout_constraintEnd_toStartOf="@+id/rv_date_tv"
-        app:layout_constraintTop_toTopOf="@+id/rv_total_label" />
+        app:layout_constraintTop_toTopOf="@+id/rv_total_label"
+        android:layout_marginRight="@dimen/std_space" />
 
     <TextView
         android:id="@+id/rv_date_tv"
@@ -53,7 +56,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_date_label"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/rv_date_label"
-        tools:text="01/01/2018" />
+        tools:text="01/01/2018"
+        android:layout_marginRight="@dimen/std_space" />
 
     <TextView
         android:id="@+id/rv_prep_label"
@@ -73,7 +77,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_prep_label"
         app:layout_constraintStart_toEndOf="@+id/rv_prep_label"
         app:layout_constraintTop_toTopOf="@+id/rv_prep_label"
-        tools:text="5 min" />
+        tools:text="5 min"
+        android:layout_marginLeft="@dimen/half_space" />
 
     <TextView
         android:id="@+id/rv_med_label"
@@ -96,7 +101,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_med_label"
         app:layout_constraintStart_toEndOf="@+id/rv_med_label"
         app:layout_constraintTop_toTopOf="@+id/rv_med_label"
-        tools:text="20 min" />
+        tools:text="20 min"
+        android:layout_marginLeft="@dimen/half_space" />
 
     <TextView
         android:id="@+id/rv_review_label"
@@ -120,7 +126,8 @@
         app:layout_constraintBottom_toBottomOf="@+id/rv_review_label"
         app:layout_constraintStart_toEndOf="@+id/rv_review_label"
         app:layout_constraintTop_toTopOf="@+id/rv_review_label"
-        tools:text="10 min" />
+        tools:text="10 min"
+        android:layout_marginLeft="@dimen/half_space" />
 
     <TextView
         android:id="@+id/rv_assessment_tv"
@@ -135,5 +142,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/rv_med_tv"
         app:layout_constraintTop_toBottomOf="@+id/rv_date_tv"
-        tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit." />
+        tools:text="Extract of the review written by the user. The user can tap on the entry to read it in full and/or edit."
+        android:layout_marginRight="@dimen/border_margin"
+        android:layout_marginLeft="@dimen/half_space" />
 </android.support.constraint.ConstraintLayout>

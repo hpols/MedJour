@@ -26,7 +26,6 @@ public class JournalUtils {
     private static final String LAST_DATE = "last_date";
     public static final String PREP_FLAG = "preparation_call";
     public static final String REVIEW_FLAG = "review_call";
-    public static final String WIDGET_CALL = "widget_actvity";
 
     public static final int NOT_SILENCE = 100;
     public static final int NOT_NORMAL = 200;
@@ -49,7 +48,7 @@ public class JournalUtils {
     /**
      * get the current time.
      *
-     * @return the time in miliseconds as a long
+     * @return the time in milliseconds as a long
      */
     public static long getNow() {
         return System.currentTimeMillis();
@@ -85,7 +84,7 @@ public class JournalUtils {
      * @param BOOLEAN_CODE is a unique code identifying the boolean to be retrieved
      * @return the boolean value
      */
-    public static boolean getsharedPrefBoo(Context ctxt, int BOOLEAN_CODE) {
+    public static boolean getSharedPrefBoo(Context ctxt, int BOOLEAN_CODE) {
         String BOOLEAN_KEY = null;
         boolean defBoo = false;
 
@@ -174,7 +173,7 @@ public class JournalUtils {
     /**
      * convert the retrieved/stored milliseconds into readable time
      *
-     * @param timeInMillis a long in miliseconds
+     * @param timeInMillis a long in milliseconds
      * @return a String to display the time
      */
     public static String toMinutes(long timeInMillis) {
@@ -264,7 +263,7 @@ public class JournalUtils {
 
     /**
      * Changes the ringer mode on the device to either silent or back to normal.
-     * See Shushme app from AND-udacity course
+     * See ShushMe app from AND-Udacity course
      *
      * @param ctxt             is the context for the audio service
      * @param notificationMode is the audio-notification setting (silent or normal) to be set

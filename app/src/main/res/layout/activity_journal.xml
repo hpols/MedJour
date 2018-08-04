@@ -43,7 +43,8 @@
                     android:text="@string/journal_total_label"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginLeft="@dimen/half_space" />
 
                 <TextView
                     android:id="@+id/journal_acc_time_tv"
@@ -53,7 +54,8 @@
                     app:layout_constraintBottom_toBottomOf="@+id/journal_acc_time_label"
                     app:layout_constraintStart_toEndOf="@+id/journal_acc_time_label"
                     app:layout_constraintTop_toTopOf="@+id/journal_acc_time_label"
-                    tools:text="10h 35min" />
+                    tools:text="10h 35min"
+                    android:layout_marginLeft="@dimen/std_space" />
             </android.support.constraint.ConstraintLayout>
         </android.support.v7.widget.CardView>
     </android.support.constraint.ConstraintLayout>

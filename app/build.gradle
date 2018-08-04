@@ -12,7 +12,7 @@ android {
     compileSdkVersion 27
     defaultConfig {
         applicationId "com.example.android.medjour"
-        minSdkVersion 19
+        minSdkVersion 15
         targetSdkVersion 27
         versionCode 1
         versionName "1.0"
@@ -45,17 +45,13 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    //views & logging
+    //Butterknife & logging
     implementation 'com.jakewharton.timber:timber:4.6.1'
-
-    //Logging
     implementation 'com.jakewharton:butterknife:8.8.1'
-
-    //ButterKnife
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
-    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     // Youtube Api
+    implementation files('libs/YouTubeAndroidPlayerApi.jar')
 
     //UI dependencies
     implementation 'com.android.support.constraint:constraint-layout:1.1.2'
@@ -79,12 +75,7 @@ dependencies {
     //debug helper
     implementation 'com.facebook.stetho:stetho:1.5.0'
 
-    //creating, storing and reading pdfs
-    implementation 'com.itextpdf:itextg:5.5.10'
-    implementation 'lib.kashif:folderpicker:2.4'
-
     //google ads & pay
     implementation 'com.google.android.gms:play-services-ads:15.0.1'
     implementation 'com.google.android.gms:play-services-wallet:15.0.1'
-
 }

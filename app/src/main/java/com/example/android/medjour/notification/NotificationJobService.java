@@ -6,7 +6,6 @@ import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
-import com.example.android.medjour.model.data.JournalDb;
 import com.example.android.medjour.utils.JournalUtils;
 import com.example.android.medjour.utils.NotificationUtils;
 import com.firebase.jobdispatcher.JobParameters;
@@ -27,11 +26,9 @@ public class NotificationJobService extends JobService {
             @Override
             protected Object doInBackground(Object[] objects) {
                 Context ctxt = NotificationJobService.this;
-                JournalDb dB = JournalDb.getInstance(ctxt);
                 fireNotification(ctxt);
 
-                boolean reschedule = false;
-                jobFinished(job, reschedule);
+                jobFinished(job, false);
                 return null;
             }
 

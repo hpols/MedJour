@@ -22,7 +22,7 @@ import java.util.List;
 /**
  * see: https://developers.google.com/pay/api/android/guides/tutorial
  * and: https://github.com/google-pay/android-quickstart
- * {@link PayUtils} enable google pay API funtionality in the app.
+ * {@link PayUtils} enable google pay API functionality in the app.
  */
 public class PayUtils {
 

@@ -17,7 +17,8 @@
         android:solidColor="@color/colorPrimaryDark"
         android:theme="@style/AppTheme.Picker"
         app:layout_constraintEnd_toStartOf="@+id/dialog_minute_np"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginLeft="@dimen/half_space" />
     <!-- minute -->
     <NumberPicker
         android:id="@+id/dialog_minute_np"
@@ -31,7 +32,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dialog_amPm_tb"
         app:layout_constraintStart_toEndOf="@+id/dialog_hour_np"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginLeft="@dimen/half_space" />
     <!-- AM / PM -->
     <ToggleButton
         android:id="@+id/dialog_amPm_tb"
@@ -47,5 +49,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/dialog_minute_np"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/dialog_minute_np"
-        app:layout_constraintTop_toTopOf="@+id/dialog_minute_np" />
+        app:layout_constraintTop_toTopOf="@+id/dialog_minute_np"
+        android:layout_marginRight="@dimen/half_space"
+        android:layout_marginLeft="@dimen/std_space" />
 </android.support.constraint.ConstraintLayout>

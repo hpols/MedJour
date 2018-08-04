@@ -22,7 +22,8 @@
         android:background="@drawable/shadow"
         android:contentDescription="@string/widget_add_entry"
         android:src="@android:drawable/ic_input_add"
-        android:tint="@color/colorLightAccent" />
+        android:tint="@color/colorLightAccent"
+        android:layout_toLeftOf="@+id/widget_summary" />
 
     <!-- padding only needed on the right -->
     <TextView
@@ -34,5 +35,7 @@
         android:lineSpacingMultiplier="1.2"
         android:paddingEnd="@dimen/half_space"
         tools:ignore="RtlSymmetry"
-        tools:text="Last Entry: 01/01/2018" />
+        tools:text="Last Entry: 01/01/2018"
+        android:layout_toRightOf="@id/widget_icon"
+        android:paddingRight="@dimen/half_space" />
 </RelativeLayout>

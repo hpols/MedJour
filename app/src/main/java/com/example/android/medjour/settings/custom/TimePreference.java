@@ -15,7 +15,7 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
 /**
- * A timepicker would be the obvious choice, yet seeing it would require upping the sdk to api21 to
+ * A timePicker would be the obvious choice, yet seeing it would require upping the sdk to api21 to
  * be able to customize the color, so we would not have white numbers on white background, this is
  * the next best solution.
  * <p>
