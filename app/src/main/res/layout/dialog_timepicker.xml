@@ -1,23 +1,6 @@
-<?xml version="1.0" encoding="utf-8"?><!--
-    **
-    ** Copyright 2007, The Android Open Source Project
-    **
-    ** Licensed under the Apache License, Version 2.0 (the "License");
-    ** you may not use this file except in compliance with the License.
-    ** You may obtain a copy of the License at
-    **
-    **     http://www.apache.org/licenses/LICENSE-2.0
-    **
-    ** Unless required by applicable law or agreed to in writing, software
-    ** distributed under the License is distributed on an "AS IS" BASIS,
-    ** WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-    ** See the License for the specific language governing permissions and
-    ** limitations under the License.
-    */
-    --><!-- Layout of time picker-->
+<?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/timePickerLayout"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -26,25 +9,25 @@
     <!-- hour -->
     <NumberPicker
         android:id="@+id/dialog_hour_np"
-        android:layout_width="70dip"
+        android:layout_width="@dimen/picker_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/half_space"
         android:focusable="true"
+        android:focusableInTouchMode="true"
         android:solidColor="@color/colorPrimaryDark"
         android:theme="@style/AppTheme.Picker"
-        android:focusableInTouchMode="true"
         app:layout_constraintEnd_toStartOf="@+id/dialog_minute_np"
         app:layout_constraintStart_toStartOf="parent" />
     <!-- minute -->
     <NumberPicker
         android:id="@+id/dialog_minute_np"
-        android:layout_width="70dip"
+        android:layout_width="@dimen/picker_width"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
+        android:layout_marginStart="@dimen/half_space"
         android:focusable="true"
+        android:focusableInTouchMode="true"
         android:solidColor="@color/colorPrimaryDark"
         android:theme="@style/AppTheme.Picker"
-        android:focusableInTouchMode="true"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/dialog_amPm_tb"
         app:layout_constraintStart_toEndOf="@+id/dialog_hour_np"
@@ -55,17 +38,14 @@
         style="?android:attr/textAppearanceLargeInverse"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
-        android:paddingEnd="20dip"
-        android:paddingStart="20dip"
-        android:textColor="@color/colorLightAccent"
+        android:layout_marginEnd="@dimen/half_space"
+        android:layout_marginStart="@dimen/std_space"
         android:background="@color/colorPrimaryDark"
+        android:textColor="@color/colorLightAccent"
         android:textOff="@string/time_string_pm"
         android:textOn="@string/time_string_am"
         app:layout_constraintBottom_toBottomOf="@+id/dialog_minute_np"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/dialog_minute_np"
         app:layout_constraintTop_toTopOf="@+id/dialog_minute_np" />
 </android.support.constraint.ConstraintLayout>
