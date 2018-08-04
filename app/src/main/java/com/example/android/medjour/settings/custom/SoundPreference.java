@@ -3,12 +3,14 @@ package com.example.android.medjour.settings.custom;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.SharedPreferences;
 import android.content.res.TypedArray;
 import android.database.Cursor;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.DialogPreference;
+import android.preference.PreferenceManager;
 import android.util.AttributeSet;
 
 import com.example.android.medjour.R;
@@ -58,8 +60,10 @@ public class SoundPreference extends DialogPreference {
         this(ctxt, null);
     }
 
-    public String getValue() {
-        return value;
+    private String getValue(Context ctxt) {
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(ctxt);
+
+        return sharedPref.getString(ctxt.getString(R.string.pref_key_tone), ctxt.getString(R.string.temple_bell_value));
     }
 
     /**
@@ -227,7 +231,7 @@ public class SoundPreference extends DialogPreference {
     }
 
     /**
-     * Retrieve the defaulValue
+     * Retrieve the defaultValue
      *
      * @param a     as the typeArray
      * @param index is the index of the value
@@ -246,19 +250,19 @@ public class SoundPreference extends DialogPreference {
     @Override
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
 
-        if (restoreValue)
-            value = getPersistedString("");
-        else {
-            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
-
-                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
-                if (index >= 0)
-                    value = String.valueOf(getSummary());
-                else value = (String) defaultValue;
-
-            } else value = (String) defaultValue;
-
-            persistString(value);
-        }
+        //if (restoreValue)
+            value = defaultValue.toString();
+//        else {
+//            if (appOwnSounds != null && defaultValue != null && defaultValue.toString().length() > 0) {
+//
+//                int index = Arrays.asList(appOwnSounds).indexOf((CharSequence) defaultValue);
+//                if (index >= 0)
+//                    value = String.valueOf(getSummary());
+//                else value = (String) defaultValue;
+//
+//            } else value = (String) defaultValue;
+//
+//            persistString(value);
+//        }
     }
 }

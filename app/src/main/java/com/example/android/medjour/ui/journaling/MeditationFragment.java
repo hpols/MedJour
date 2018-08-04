@@ -10,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.media.Ringtone;
 import android.media.RingtoneManager;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -44,7 +46,10 @@ import butterknife.ButterKnife;
 import timber.log.Timber;
 
 /**
- * A simple {@link MeditationFragment} subclass.
+ * {@link MeditationFragment} is the core of the journal flow. No input is expected from the user,
+ * who is expected to be meditating throughout the time of this fragment being active. There for the
+ * fragment has an inbuilt backup system incase the user has chosen to use the video callback, in
+ * case the vide does not load or there is no internet.
  */
 public class MeditationFragment extends Fragment {
     private String MED_TIME = "meditation time";
@@ -64,12 +69,13 @@ public class MeditationFragment extends Fragment {
     //all sorts of time related info we want to keep track of …
     long medStartTime, medLength, medLengthInMillis, timeRemaining;
 
+    // Counter implementation: http://fedepaol.github.io/blog/2016/06/20/how-to-a-timer/
     private CountDownTimer countDownTimer;
     private boolean timerIsRunning = false;
 
-    ToReviewCallback reviewCallback;
-
     boolean isVideo, videoError;
+
+    ToReviewCallback reviewCallback;
 
     public interface ToReviewCallback {
         void toReview(long meditationTime);
@@ -78,25 +84,28 @@ public class MeditationFragment extends Fragment {
     // YoutubePlayer implementation:
     // https://stackoverflow.com/questions/26458919/integrating-youtube-to-fragment#comment77123807_26459181
     // http://www.androhub.com/implement-youtube-player-fragment-android-app/
-
-    // Counter implementation: http://fedepaol.github.io/blog/2016/06/20/how-to-a-timer/
-
     private YouTubePlayerSupportFragment youTubePlayerFragment; //the player fragment
     private YouTubePlayer youTubePlayer; //the player
 
+    /**
+     * ensure the host activity has the callback is in place
+     *
+     * @param ctxt is the context
+     */
     @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        // This ensures that the host activity has implemented the callback interface
-        // If not, it throws an exception
+    public void onAttach(Context ctxt) {
+        super.onAttach(ctxt);
         try {
-            reviewCallback = (MeditationFragment.ToReviewCallback) context;
+            reviewCallback = (MeditationFragment.ToReviewCallback) ctxt;
         } catch (ClassCastException e) {
-            throw new ClassCastException(context.toString()
+            throw new ClassCastException(ctxt.toString()
                     + " must implement toReviewCallback");
         }
     }
 
+    /**
+     * if the activity resumes: remove the Alarm and reapply the timer.
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -106,15 +115,24 @@ public class MeditationFragment extends Fragment {
         }
     }
 
+    /**
+     * as the activity pauses remove the timer and setup the alarm
+     */
     @Override
     public void onPause() {
         super.onPause();
-        if (timerIsRunning && !isVideo) {
+        if (timerIsRunning) {
             countDownTimer.cancel();
             setAlarm();
         }
     }
 
+    /**
+     * once the activity is created retrieve any saved instances and – if the sound-callback is
+     * enabled – set up and start the timer based on the retrieved data.
+     *
+     * @param savedInstanceState is the data stored before the activity was destroyed
+     */
     @Override
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
@@ -131,9 +149,10 @@ public class MeditationFragment extends Fragment {
             }
         }
 
-        //for debugging/testing purposes:
-        // this button goes direct to the next fragment of the new-entry flow.
-        // Keep it hidden when not debugging
+        /**for debugging/testing purposes: this button goes direct to the next fragment of the
+         * new-entry flow. Keep it hidden when not debugging
+         *
+         */
         if (BuildConfig.DEBUG) {
             TestFb.setVisibility(View.VISIBLE);
             TestFb.setOnClickListener(new View.OnClickListener() {
@@ -145,6 +164,14 @@ public class MeditationFragment extends Fragment {
         }
     }
 
+    /**
+     * create the view based on the provided xml, along with the basic variables needed
+     *
+     * @param inflater           is the LayoutInflater for the fragment
+     * @param container          is the ViewGroup within which the fragment is inflated
+     * @param savedInstanceState is any data saved before the activity was destroyed
+     * @return the view containing the Fragment.
+     */
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -165,6 +192,7 @@ public class MeditationFragment extends Fragment {
         timeRemaining = medLengthInMillis;
         isVideo = utils.getMeditationCallback(getActivity()) == SettingsUtils.VIDEO_CB;
 
+        //keep the color animation going
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             root.setBackgroundColor(ContextCompat.getColor(getActivity(), R.color.indigo));
         }
@@ -177,7 +205,58 @@ public class MeditationFragment extends Fragment {
     }
 
     /**
-     * setup the countedown timer ready to use
+     * save the remaining time before the activity gets destroyed
+     *
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putLong(MED_TIME, getTimeRemaining());
+    }
+
+    /**
+     * Once the view is fully created determine whether the user has set a video or audio callback
+     * and setup the chosen callback
+     *
+     * @param view               is the finished created view
+     * @param savedInstanceState is any data stored before the activity was destroyed
+     */
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (isVideo) {
+            counterTv.setVisibility(View.GONE); // no need for the counterTv when video is playing
+            //ready the youtube fragment if this is the initial create
+            if (savedInstanceState == null) {
+                youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
+                youTubePlayerFragment.setRetainInstance(true);
+
+                FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
+                transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
+            }
+
+            if (youTubePlayerFragment.getRetainInstance()) {
+                playVideo();
+            } else {
+                revertToTimer();
+            }
+        } else {
+            if (!timerIsRunning) {
+                utils.setStartedTime(JournalUtils.getNow());
+                startTimer();
+                timerIsRunning = true;
+            }
+        }
+    }
+
+    // ––––––––––––––––––––––––––– //
+    // –––––– TIMER METHODS –––––– //
+    // ––––––––––––––––––––––––––– //
+
+    /**
+     * setup the countdown timer ready to use
      *
      * @param length the remaining time to be count down
      */
@@ -198,34 +277,9 @@ public class MeditationFragment extends Fragment {
         };
     }
 
-    @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putLong(MED_TIME, getTimeRemaining());
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        if (isVideo) {
-            counterTv.setVisibility(View.GONE); // no need for the counterTv when video is playing
-            //ready the youtube fragment if this is the initial create
-            youTubePlayerFragment = YouTubePlayerSupportFragment.newInstance();
-
-            FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
-            transaction.add(R.id.youtube_player_fragment, youTubePlayerFragment).commit();
-
-            playVideo();
-        } else {
-            if (!timerIsRunning) {
-                utils.setStartedTime(JournalUtils.getNow());
-                startTimer();
-                timerIsRunning = true;
-            }
-        }
-    }
-
+    /**
+     * start the timer
+     */
     private void startTimer() {
         countDownTimer.start();
 
@@ -254,6 +308,9 @@ public class MeditationFragment extends Fragment {
         });
     }
 
+    /**
+     * initialize the timer
+     */
     private void initTimer() {
         long startTime = utils.getStartedTime();
         if (startTime > 0) {
@@ -273,10 +330,19 @@ public class MeditationFragment extends Fragment {
         updateTimeUi(timeRemaining);
     }
 
+    /**
+     * get the remaining time based by comparing the first time the fragemnt was entered to the
+     * current time
+     *
+     * @return
+     */
     private long getTimeRemaining() {
         return medLengthInMillis - (JournalUtils.getNow() - utils.getStartedTime());
     }
 
+    /** When the timer has hit 0 play selected sound and move onto the next view.
+     *
+     */
     private void onTimerFinish() {
         utils.setStartedTime(0);
         timeRemaining = medLengthInMillis;
@@ -291,6 +357,10 @@ public class MeditationFragment extends Fragment {
         GoToReview();
     }
 
+    /** keep the timer Ui updated whilst it is displayed
+     *
+     * @param millisUntilFinished is the time still left on the clock
+     */
     private void updateTimeUi(long millisUntilFinished) {
 
         String timeDisplay = String.format("%02d",
@@ -302,7 +372,9 @@ public class MeditationFragment extends Fragment {
         counterTv.setText(String.valueOf(timeDisplay));
     }
 
-    //ensure the device wakes up so as to play the notification to end the meditation time
+    /**
+     * ensure the device wakes up so as to play the notification to end the meditation time
+     */
     public void setAlarm() {
         long wakeUpTime = utils.getStartedTime() + medLengthInMillis;
         AlarmManager am = (AlarmManager) getActivity().getSystemService(Context.ALARM_SERVICE);
@@ -317,7 +389,9 @@ public class MeditationFragment extends Fragment {
         }
     }
 
-    //cancel the device-wake-up when no longer needed
+    /**
+     * cancel the device-wake-up when no longer needed
+     */
     public void removeAlarm() {
         Intent intent = new Intent(getActivity(), TimerExpiredReceiver.class);
         PendingIntent sender = PendingIntent.getBroadcast(getActivity(), 0, intent,
@@ -326,125 +400,9 @@ public class MeditationFragment extends Fragment {
         am.cancel(sender);
     }
 
-    //setup and play the chosen video
-    private void playVideo() {
-
-        youTubePlayerFragment.initialize(BuildConfig.API_KEY,
-                new YouTubePlayer.OnInitializedListener() {
-                    @Override
-                    public void onInitializationSuccess(YouTubePlayer.Provider provider,
-                                                        YouTubePlayer player, boolean b) {
-                        if (!b) {
-                            youTubePlayer = player;
-
-                            //when video has finished automatically move forward to next fragment
-                            youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer
-                                    .PlayerStateChangeListener() {
-                                @Override
-                                public void onLoading() {
-
-                                }
-
-                                @Override
-                                public void onLoaded(String s) {
-
-                                }
-
-                                @Override
-                                public void onAdStarted() {
-
-                                }
-
-                                @Override
-                                public void onVideoStarted() {
-
-                                }
-
-                                @Override
-                                public void onVideoEnded() {
-                                    GoToReview();
-                                }
-
-                                @Override
-                                public void onError(YouTubePlayer.ErrorReason errorReason) {
-                                    //for whatever reason … the video is not working today, but the
-                                    // meditator's eyes might well already be shut. So plan B: revert
-                                    // to sound-callback
-                                    if (!timerIsRunning) {
-                                        utils.setStartedTime(JournalUtils.getNow());
-                                        startTimer();
-                                        timerIsRunning = true;
-                                    }
-                                    Toast.makeText(getActivity(), R.string.video_not_available,
-                                            Toast.LENGTH_SHORT).show();
-                                    videoError = true;
-                                }
-                            });
-
-                            //TODO: whenever the user interacts with the playback, this equals the end of
-                            //their meditation as they are no longer in focus.
-
-                            youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
-
-                        } else {
-                            //seek to remainder of time, so as to stay close to the users chosen
-                            // meditation time.
-                            while (youTubePlayer.getCurrentTimeMillis() < timeRemaining) {
-                                youTubePlayer.pause();
-                            }
-                            youTubePlayer.seekToMillis((int) timeRemaining);
-                            youTubePlayer.play();
-                        }
-                    }
-
-                    @Override
-                    public void onInitializationFailure(YouTubePlayer.Provider provider,
-                                                        YouTubeInitializationResult
-                                                                youTubeInitializationResult) {
-                        Timber.e("Youtube Player could not be initialized.");
-                        //for whatever reason … the video is not working today, but the
-                        // meditator's eyes might well already be shut. So plan B: revert
-                        // to sound-callback
-                        if (!timerIsRunning) {
-                            utils.setStartedTime(JournalUtils.getNow());
-                            startTimer();
-                            timerIsRunning = true;
-                        }
-                        Toast.makeText(getActivity(), R.string.video_not_available,
-                                Toast.LENGTH_SHORT).show();
-                        videoError = true;
-                    }
-                });
-    }
-
-    //go to the next fragment of the new-entry-flow
-    private void GoToReview() {
-        long medTime = System.currentTimeMillis() - medStartTime;
-        reviewCallback.toReview(medTime);
-
-        //add vibration if the user has selected this option in the settings.
-        //based on: https://stackoverflow.com/a/13950364/7601437
-        if (utils.vibrateEnabled(getActivity())) {
-            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-            // Vibrate for 500 milliseconds
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                vib.vibrate(VibrationEffect.createOneShot(500,
-                        VibrationEffect.DEFAULT_AMPLITUDE));
-            } else {
-                //deprecated in API 26
-                vib.vibrate(500);
-            }
-        }
-        if (videoError) {//repeat message at meditation end to ensure the user is not puzzled
-            Toast.makeText(getActivity(), R.string.video_not_available,
-                    Toast.LENGTH_SHORT).show();
-            videoError = false;
-        }
-    }
-
     /**
      * {@link TimerExpiredReceiver} is a {@link BroadcastReceiver} providing the end of meditation
-     * signal if the device has gone to sleep.
+     * signal if the device has gone to sleep (which it most probably will have).
      */
     public class TimerExpiredReceiver extends BroadcastReceiver {
         private String NOT_CALLBACK = "notification_callback";
@@ -472,6 +430,127 @@ public class MeditationFragment extends Fragment {
             notMan.notify(0, not);
 
             GoToReview();
+        }
+    }
+
+    // ––––––––––––––––––––––––– //
+    //–––––– VIDEO METHODS ––––––//
+    // ––––––––––––––––––––––––– //
+
+    /**
+     * setup and play the chosen video
+     */
+    private void playVideo() {
+
+        //ensure there is internet connectivity. If not use sound callback
+        ConnectivityManager connectMan = (ConnectivityManager)
+                getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
+        assert connectMan != null;
+        NetworkInfo netInfo = connectMan.getActiveNetworkInfo();
+        if (netInfo != null && netInfo.isConnectedOrConnecting()) {
+
+            youTubePlayerFragment.initialize(BuildConfig.API_KEY,
+                    new YouTubePlayer.OnInitializedListener() {
+                        @Override
+                        public void onInitializationSuccess(YouTubePlayer.Provider provider,
+                                                            YouTubePlayer player, boolean b) {
+                            if (!b) {
+                                youTubePlayer = player;
+
+                                //when video has finished automatically move forward to next fragment
+                                youTubePlayer.setPlayerStateChangeListener(new YouTubePlayer
+                                        .PlayerStateChangeListener() {
+                                    @Override
+                                    public void onLoading() {
+                                    }
+
+                                    @Override
+                                    public void onLoaded(String s) {
+                                    }
+
+                                    @Override
+                                    public void onAdStarted() {
+                                    }
+
+                                    @Override
+                                    public void onVideoStarted() {
+                                    }
+
+                                    @Override
+                                    public void onVideoEnded() {
+                                        GoToReview();
+                                    }
+
+                                    @Override
+                                    public void onError(YouTubePlayer.ErrorReason errorReason) {
+                                       revertToTimer();
+                                    }
+                                });
+
+                                //TODO: whenever the user interacts with the playback, this equals the end of
+                                //their meditation as they are no longer in focus.
+
+                                youTubePlayer.loadVideo(utils.getVideofromPrefSetting(getActivity()));
+
+                            } else {
+                                int restRunTime = youTubePlayer.getDurationMillis() - (int) timeRemaining;
+                                youTubePlayer.seekToMillis(restRunTime);
+                            }
+                        }
+
+                        @Override
+                        public void onInitializationFailure(YouTubePlayer.Provider provider,
+                                                            YouTubeInitializationResult
+                                                                    youTubeInitializationResult) {
+                            Timber.e("Youtube Player could not be initialized.");
+
+                            revertToTimer();
+                        }
+                    });
+        } else {
+            revertToTimer();
+        }
+    }
+
+    /**
+     * for whatever reason the video is not working today, but the meditator's eyes might well
+     * already be shut. So plan B: revert to sound-callback
+     */
+    private void revertToTimer() {
+        if (!timerIsRunning) {
+            utils.setStartedTime(JournalUtils.getNow());
+            startTimer();
+            timerIsRunning = true;
+        }
+        Toast.makeText(getActivity(), R.string.video_not_available,
+                Toast.LENGTH_SHORT).show();
+        videoError = true;
+    }
+
+    /**
+     * go to the next fragment of the new-entry-flow
+     */
+    private void GoToReview() {
+        long medTime = System.currentTimeMillis() - medStartTime;
+        reviewCallback.toReview(medTime);
+
+        //add vibration if the user has selected this option in the settings.
+        //based on: https://stackoverflow.com/a/13950364/7601437
+        if (utils.vibrateEnabled(getActivity())) {
+            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            // Vibrate for 500 milliseconds
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                vib.vibrate(VibrationEffect.createOneShot(500,
+                        VibrationEffect.DEFAULT_AMPLITUDE));
+            } else {
+                //deprecated in API 26
+                vib.vibrate(500);
+            }
+        }
+        if (videoError) {//repeat message at meditation end to ensure the user is not puzzled
+            Toast.makeText(getActivity(), R.string.video_not_available,
+                    Toast.LENGTH_SHORT).show();
+            videoError = false;
         }
     }
 }

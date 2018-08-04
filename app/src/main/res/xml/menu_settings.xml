@@ -20,8 +20,8 @@
         android:defaultValue="@string/temple_bell_value"
         android:key="@string/pref_key_sounds"
         android:title="Choose Callback Sound"
-        auto:appOwnSounds="@array/extraRingtones"
-        auto:appOwnSoundsTitles="@array/extraRingtoneTitles"
+        auto:appOwnSounds="@array/pref_app_sounds"
+        auto:appOwnSoundsTitles="@array/pref_app_sounds_values"
         auto:ringtoneType="notification" />
 
     <SwitchPreference
@@ -42,5 +42,5 @@
         android:defaultValue="@string/pref_default_reminder_time"
         android:dependency="@string/pref_med_reminder_key"
         android:key="@string/pref_key_reminder_time"
-        android:title="@string/pref_time_title"/>
+        android:title="@string/pref_time_title" />
 </PreferenceScreen>

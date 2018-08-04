@@ -19,20 +19,6 @@
         <item>@string/min_45_value</item>
     </string-array>
 
-    <string-array name="extraRingtones">
-        <item>@string/a_tone_value</item>
-        <item>@string/computer_magic_value</item>
-        <item>@string/metal_gong_value</item>
-        <item>@string/temple_bell_value</item>
-    </string-array>
-
-    <string-array name="extraRingtoneTitles">
-        <item>@string/a_tone</item>
-        <item>@string/computer_magic</item>
-        <item>@string/metal_gong</item>
-        <item>@string/temple_bell</item>
-    </string-array>
-
     <string-array name="pref_entries_callback">
        <item>@string/sound_callback</item>
         <item>@string/video_callback</item>
