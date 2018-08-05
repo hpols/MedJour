@@ -5,7 +5,7 @@ android {
         config {
             keyAlias 'medjour'
             keyPassword 'password'
-            storeFile file('/Users/HildePols/AndroidStudioProjects/MedJour/keystore.jks')
+            storeFile file('$rootDir/keystore.jks')
             storePassword 'password'
         }
     }
