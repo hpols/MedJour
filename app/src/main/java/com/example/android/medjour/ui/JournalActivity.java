@@ -52,10 +52,15 @@ public class JournalActivity extends AppCompatActivity implements JournalAdapter
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         journalBinder = DataBindingUtil.setContentView(this, R.layout.activity_journal);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         if (BuildConfig.DEBUG) {
             Timber.plant(new Timber.DebugTree());
+        }
+
+        setSupportActionBar(journalBinder.journalAppbar.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
         dB = JournalDb.getInstance(getApplicationContext());

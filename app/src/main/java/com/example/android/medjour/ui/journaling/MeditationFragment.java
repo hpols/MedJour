@@ -156,7 +156,7 @@ public class MeditationFragment extends Fragment {
             TestFb.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    GoToReview();
+                    goToReview();
                 }
             });
         }
@@ -344,7 +344,7 @@ public class MeditationFragment extends Fragment {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        GoToReview();
+        goToReview();
     }
 
     /**
@@ -420,7 +420,7 @@ public class MeditationFragment extends Fragment {
                     (NotificationManager) ctxt.getSystemService(Context.NOTIFICATION_SERVICE);
             notMan.notify(0, not);
 
-            GoToReview();
+            goToReview();
         }
     }
 
@@ -469,7 +469,7 @@ public class MeditationFragment extends Fragment {
 
                                     @Override
                                     public void onVideoEnded() {
-                                        GoToReview();
+                                        goToReview();
                                     }
 
                                     @Override
@@ -514,7 +514,7 @@ public class MeditationFragment extends Fragment {
     /**
      * go to the next fragment of the new-entry-flow
      */
-    private void GoToReview() {
+    private void goToReview() {
         long medTime = System.currentTimeMillis() - medStartTime;
         reviewCallback.toReview(medTime);
 

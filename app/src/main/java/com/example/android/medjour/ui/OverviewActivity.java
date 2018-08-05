@@ -94,12 +94,19 @@ public class OverviewActivity extends AppCompatActivity
             Timber.plant(new Timber.DebugTree());
         }
 
+        //setup actionbar
+        setSupportActionBar(overviewBinder.mainAppbar.toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setTitle(R.string.app_name);
+        }
+
+
         if (!JournalUtils.getSharedPrefBoo(this, JournalUtils.BOO_REPEAT)) {
             showActivationDialog();
             JournalUtils.setSharedPrefBoo(this, true, JournalUtils.BOO_REPEAT);
         }
 
-        overviewBinder.mainJournalBt.setOnClickListener(new View.OnClickListener() {
+        overviewBinder.overviewButton.mainJournalBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent journalIntent = new Intent(OverviewActivity.this,
@@ -109,13 +116,13 @@ public class OverviewActivity extends AppCompatActivity
         });
 
         if (JournalUtils.hasMeditatedToday(this)) {
-            overviewBinder.mainEntryBt.setEnabled(false);
+            overviewBinder.overviewButton.mainEntryBt.setEnabled(false);
         } else {
-            overviewBinder.mainEntryBt.setEnabled(true);
+            overviewBinder.overviewButton.mainEntryBt.setEnabled(true);
         }
 
 
-        overviewBinder.mainEntryBt.setOnClickListener(new View.OnClickListener() {
+        overviewBinder.overviewButton.mainEntryBt.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent newEntryIntent = new Intent(OverviewActivity.this,
@@ -206,13 +213,13 @@ public class OverviewActivity extends AppCompatActivity
         long totalTime = JournalUtils.retrieveTotalTimeFromPref(this);
         if (totalTime == JournalUtils.NO_TOT_TIME) {
             totalTimeText = getString(R.string.overview_no_entries);
-            overviewBinder.mainCumulativeTv.setText(totalTimeText);
-            overviewBinder.mainJournalBt.setVisibility(View.GONE);
+            overviewBinder.overviewInfo.mainCumulativeTv.setText(totalTimeText);
+            overviewBinder.overviewButton.mainJournalBt.setVisibility(View.GONE);
         } else {
             totalTimeText = getString(R.string.total_time_label) + JournalUtils.toMinutes(totalTime);
-            overviewBinder.mainJournalBt.setVisibility(View.VISIBLE);
+            overviewBinder.overviewButton.mainJournalBt.setVisibility(View.VISIBLE);
         }
-        overviewBinder.mainCumulativeTv.setText(totalTimeText);
+        overviewBinder.overviewInfo.mainCumulativeTv.setText(totalTimeText);
     }
 
     /**
@@ -238,6 +245,10 @@ public class OverviewActivity extends AppCompatActivity
         super.onResume();
         setupCountAndButtons();
     }
+
+    //  TODO: Required
+    //
+    //You're supposed to implement a Toolbar along with AppBar, and not just the common ActionBar.
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -434,11 +445,6 @@ public class OverviewActivity extends AppCompatActivity
             if (token.getToken().equals("examplePaymentMethodToken")) {
                 Snackbar.make(overviewBinder.mainAdView, R.string.googlePay_test_snack,
                         Snackbar.LENGTH_LONG);
-//                android.app.AlertDialog alertDialog = new android.app.AlertDialog.Builder(this)
-//                        .setMessage("This is but a test implementation of google pay.")
-//                        .setPositiveButton(getString(R.string.ok), null)
-//                        .create();
-//                alertDialog.show();
 
                 for (int i = 0; i < upgradeChoice.length; i++) {
                     if (upgradeChoice[i]) {

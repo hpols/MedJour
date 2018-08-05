@@ -1,14 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
-    <TextView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/info_tv"
-        style="@style/text"
-        android:layout_width="match_parent"
+    <android.support.constraint.ConstraintLayout
         android:layout_height="match_parent"
-        android:padding="@dimen/std_space"
-        tools:context=".ui.InfoActivity">
+        android:layout_width="match_parent">
 
-    </TextView>
+        <include
+            android:id="@+id/info_appbar"
+            layout="@layout/toolbar"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/info_tv"
+            style="@style/text"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:padding="@dimen/std_space"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/info_appbar"
+            tools:context=".ui.InfoActivity">
+
+        </TextView>
+    </android.support.constraint.ConstraintLayout>
 </layout>
