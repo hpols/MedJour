@@ -3,10 +3,10 @@ apply plugin: 'com.android.application'
 android {
     signingConfigs {
         config {
-            keyAlias 'medJourSigning'
-            keyPassword 'p@ssw0rd'
-            storeFile file('$rootDir/keystore.jks')
-            storePassword 'p@ssw0rd'
+            keyAlias 'medjour'
+            keyPassword 'password'
+            storeFile file('/Users/HildePols/AndroidStudioProjects/MedJour/keystore.jks')
+            storePassword 'password'
         }
     }
     compileSdkVersion 27

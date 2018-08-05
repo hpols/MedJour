@@ -11,14 +11,6 @@
         <item name="android:alertDialogTheme">@style/DialogTheme</item>
     </style>
 
-    <!-- theme for new entries -->
-    <style name="EntryTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
-        <item name="colorAccent">@color/colorAccent</item>
-        <item name="android:windowBackground">@color/colorPrimary</item>
-    </style>
-
     <!-- ToolBar -->
     <style name="ToolbarStyle" parent="Theme.AppCompat">
         <item name="actionMenuTextColor">@color/colorLightAccent</item>
